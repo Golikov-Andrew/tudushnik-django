@@ -1,0 +1,8 @@
+app_tdm/.env
+venv
+
+__pycache__/
+*/__pycache__/
+*.py[cod]
+.pyc
+*.pyc
