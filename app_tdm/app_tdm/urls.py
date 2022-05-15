@@ -16,14 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from custom_auth.models import AuthUser
+from tudushnik.views import pageNotFound
 from .settings import DEBUG
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', AuthUser)
-
+    # path('auth/', include('custom_auth.urls')),
+    path('', include('tudushnik.urls'))
 ]
+
+handler404 = pageNotFound
+
 if DEBUG:
     import os  # only if you haven't already imported this
     import socket  # only if you haven't already imported this

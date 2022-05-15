@@ -1,0 +1,40 @@
+/** {*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*}*/
+
+/*@media (min-width: 500px) {*/
+/*}*/
+
+.header-container, #content-container{
+    display: flex;
+    /*align-items: flex-end;*/
+    /*flex-direction: column;*/
+    flex-wrap: wrap;
+    outline: 1px solid black;
+}
+
+div{
+    outline: 1px solid black;
+}
+
+.navbar-link{
+
+}
+
+.header-container{
+    padding: 10px;
+    outline: 1px solid black;
+}
+
+.logo-container, .page-sidebar-left {
+    flex: 1;
+}
+
+.navbar-container, .page-content {
+    flex: 6;
+}
+
+.profile-container, .page-sidebar-right {
+    flex: 1;
+}

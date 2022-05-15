@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'tudushnik/favicon.ico' %}">
+    <title>tudushnik | {{ title }}</title>
+
+    <link rel="stylesheet" href="{% static 'tudushnik/css/styles.css' %}">
+    {% block local_styles %}
+    {% endblock local_styles %}
+</head>
+<body>
+<header class="header-container">
+
+    <div class="logo-container">
+        <h1>TUDUSHNIK</h1>
+    </div>
+
+    <nav class="navbar-container">
+        <a class="navbar-link" href="{% url 'homepage' %}">Главная</a>
+        <a class="navbar-link" href="{% url 'projects_page' %}">Проекты</a>
+        <a class="navbar-link" href="{% url 'tasks_page' %}">Задачи</a>
+        <a class="navbar-link" href="{% url 'tags_page' %}">Тэги</a>
+        {% if user.is_superuser %}
+            <a class="navbar-link" href="/admin">Админка</a>
+        {% endif %}
+    </nav>
+
+    <div class="profile-container">
+        {% if request.user.is_authenticated %}
+            <a class="navbar-link" href="{% url 'profile' %}">Профиль</a>
+            <a class="navbar-link" href="{% url 'logout' %}">Выйти</a>
+        {% else %}
+            <a class="navbar-link" href="{% url 'login' %}">Войти</a>
+            <a class="navbar-link" href="{% url 'register' %}">Регистрация</a>
+        {% endif %}
+
+        {#        <a class="navbar-link" href="{% url 'login' %}">Войти</a>#}
+        {#        <a class="navbar-link" href="{% url 'logout' %}">Выход</a>#}
+    </div>
+
+</header>
+
+<div id="content-container">
+    <div class="page-sidebar-left">
+        {% block sidebar_left %}
+        {% endblock sidebar_left %}
+    </div>
+
+    <div class="page-content">
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    <div class="page-sidebar-right">
+        {% block sidebar_right %}
+        {% endblock sidebar_right %}
+    </div>
+
+</div>
+
+
+
+
+{% block local_scripts %}
+{% endblock local_scripts %}
+</body>
+</html>

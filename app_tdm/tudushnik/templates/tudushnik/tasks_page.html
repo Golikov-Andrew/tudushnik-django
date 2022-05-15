@@ -1,0 +1,28 @@
+{% extends 'tudushnik/base.html' %}
+
+{% block sidebar_left %}
+    <ul>
+        <li>tool 1</li>
+        <li>tool 2</li>
+    </ul>
+{% endblock sidebar_left %}
+
+{% block content %}
+    <h1>Задачи</h1>
+    <br>
+    <a href="{% url 'add_task' %}">Добавить задачу</a>
+{#    TODO: add_task #}
+{#    <a href="#">Добавить задачу</a>#}
+    {% for task in tasks %}
+        <div>
+            {{ task.title }}
+        </div>
+    {% endfor %}
+{% endblock content %}
+
+{% block sidebar_right %}
+    <ul>
+        <li>tool 1</li>
+        <li>tool 2</li>
+    </ul>
+{% endblock sidebar_right %}
