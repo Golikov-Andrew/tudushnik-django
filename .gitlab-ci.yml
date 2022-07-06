@@ -5,6 +5,8 @@ stages:
   - deploy
 
 variables:
+  GIT_CURL_VERBOSE: 1
+  GIT_TRACE: 1
   DOCKER_TLS_CERTDIR: ""
 
 flake8:
