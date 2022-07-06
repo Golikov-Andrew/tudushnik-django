@@ -1,0 +1,17 @@
+FROM python:3.8
+
+WORKDIR /usr/src/app_tdm
+COPY requirements.txt .
+
+
+RUN /usr/local/bin/python -m pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY . .
+# EXPOSE 8000
+# ENTRYPOINT ["python3"]
+# CMD ["python3","manage.py","migrate"]
+# CMD ["python3","manage.py","runserver","0.0.0.0:8000"]

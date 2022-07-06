@@ -24,7 +24,7 @@ services:
   python_server:
     build:
       context: .
-      dockerfile: Dockerfile-python
+      dockerfile: Dockerfile.python
     depends_on:
       - tdm_db
     ports:
