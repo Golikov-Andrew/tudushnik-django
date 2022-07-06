@@ -11,7 +11,7 @@ variables:
 
 flake8:
   stage: linting
-  image: registry.gitlab.com/pipeline-components/flake8:latest
+  image: python:3.8
   script:
     - flake8 --verbose .
   allow_failure: true
