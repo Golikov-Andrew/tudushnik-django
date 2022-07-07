@@ -25,7 +25,7 @@ docker build:
   services:
     - docker:dind
   script:
-    - echo $CI_JOB_TOKEN | docker login $CI_REGISTRY --username $GITLAB_CI_TOKEN --password-stdin 
+    - docker login $CI_REGISTRY --username $GITLAB_CI_TOKEN -p $CI_JOB_TOKEN
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -f Dockerfile.python
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   tags:
