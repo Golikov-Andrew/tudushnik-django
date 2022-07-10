@@ -1,0 +1,27 @@
+{% extends 'tudushnik/base.html' %}
+
+
+{% block content %}
+
+    <div>
+        Создана: {{ object.created_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Обновлена: {{ object.updated_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Начало: {{ object.begin_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Выполнена: {{ object.is_done }}
+    </div>
+    <br>
+    <div>
+        <h4>Содержание</h4>
+        <span>
+            {{ object.content }}
+        </span>
+    </div>
+
+{% endblock content %}
+

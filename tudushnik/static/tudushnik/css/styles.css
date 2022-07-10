@@ -5,36 +5,66 @@
 
 /*@media (min-width: 500px) {*/
 /*}*/
+div.pagination{
+    display:flex;
+}
+div.pagination_per_page,
+div.pagination_pages,
+div.pagination_len
+{
+    flex: 4;
+}
 
-.header-container, #content-container{
+.header-container, #content-container {
     display: flex;
     /*align-items: flex-end;*/
     /*flex-direction: column;*/
     flex-wrap: wrap;
-    outline: 1px solid black;
+    /*outline: 1px solid black;*/
 }
-
-div{
-    outline: 1px solid black;
-}
-
-.navbar-link{
-
-}
-
-.header-container{
+td, th{
     padding: 10px;
-    outline: 1px solid black;
+}
+div {
+    /*outline: 1px solid black;*/
+}
+
+.navbar-link {
+    padding: 12px;
+    text-decoration: none;
+    color: black;
+}
+
+.navbar-link:hover {
+    cursor: pointer;
+    background-color: gray;
+    color: white;
+}
+
+.navbar-link.navbar-link-active{
+    font-weight: bold;
+}
+
+.header-container {
+    padding: 10px;
+    /*outline: 1px solid black;*/
 }
 
 .logo-container, .page-sidebar-left {
+    padding-left: 50px;
     flex: 1;
 }
 
+.navbar-container {
+    text-align: center;
+}
+
 .navbar-container, .page-content {
-    flex: 6;
+    flex: 12;
+    padding: 30px;
 }
 
 .profile-container, .page-sidebar-right {
     flex: 1;
+    padding: 30px;
 }

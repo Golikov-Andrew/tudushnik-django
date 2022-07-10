@@ -1,24 +1,7 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
-
-class Project(models.Model):
-    title = models.CharField(max_length=150, db_index=True)
-    description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # def get_absolute_url(self):
-    #     return reverse('project', kwargs={'project_id': self.pk})
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = 'Project'
-        verbose_name_plural = 'Projects'
-        ordering = ['title']
+from tudushnik.models.project import Project
 
 
 class Task(models.Model):
@@ -37,10 +20,10 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
-    # def get_absolute_url(self):
-    #     return reverse('view_news', kwargs={'pk': self.pk})
+    def get_absolute_url(self):
+        return reverse('task_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = 'Task'
         verbose_name_plural = 'Tasks'
-        ordering = ['-created_at', 'title']
+        ordering = ['-updated_at', 'title']

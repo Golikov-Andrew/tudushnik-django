@@ -1,0 +1,33 @@
+{% load custom_filters %}
+<div class="pagination">
+    <div class="pagination_per_page">
+        <label for="pagination_limit">Кол-во на странице: </label>
+        <select id="pagination_limit">
+            <option value="5" {{ limit|is_selected:'5' }}>5</option>
+            <option value="10" {{ limit|is_selected:'10' }}>10</option>
+            <option value="20" {{ limit|is_selected:'20' }}>20</option>
+        </select>
+    </div>
+    <div class="pagination_pages">
+            <span class="step-links">
+        {% if page_obj.has_previous %}
+            <button class="btn_pagination_ctrl" data-href="?page=1">&lt;&lt;-</button>
+            <button class="btn_pagination_ctrl" data-href="?page={{ page_obj.previous_page_number }}">&lt;-</button>
+        {% endif %}
+
+                <span class="current">
+            Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+        </span>
+
+                {% if page_obj.has_next %}
+                    <button class="btn_pagination_ctrl" data-href="?page={{ page_obj.next_page_number }}">-&gt;</button>
+                    <button class="btn_pagination_ctrl"
+                            data-href="?page={{ page_obj.paginator.num_pages }}">-&gt;&gt;</button>
+                {% endif %}
+    </span>
+    </div>
+    <div class="pagination_len">
+        <span>Всего записей:{{ len_records }}</span>
+    </div>
+</div>
+<br>

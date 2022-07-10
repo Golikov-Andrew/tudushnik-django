@@ -1,37 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-
-from .models import *
-
-
-class AddProjectForm(forms.ModelForm):
-    class Meta:
-        model = Project
-        fields = ['title', 'description']
-        widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'form-input'
-            }),
-            'description': forms.Textarea(attrs={
-                'cols': 60,
-                'rows': 10
-            }),
-        }
-
-
-class AddTaskForm(forms.ModelForm):
-    class Meta:
-        model = Task
-        fields = ['title', 'content', 'project']
-        widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'form-input'
-            }),
-            'content': forms.Textarea(attrs={
-                'cols': 60,
-                'rows': 10
-            }),
-        }
+from django.contrib.auth.models import User
 
 
 class RegisterUserForm(UserCreationForm):

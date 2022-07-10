@@ -1,28 +1,17 @@
 {% extends 'tudushnik/base.html' %}
+{% load static %}
 
-{% block sidebar_left %}
-    <ul>
-        <li>tool 1</li>
-        <li>tool 2</li>
-    </ul>
-{% endblock sidebar_left %}
 
 {% block content %}
-    <h1>Задачи</h1>
-    <br>
+    {% include 'tudushnik/_pagination.html' %}
+
     <a href="{% url 'add_task' %}">Добавить задачу</a>
-{#    TODO: add_task #}
-{#    <a href="#">Добавить задачу</a>#}
-    {% for task in tasks %}
-        <div>
-            {{ task.title }}
-        </div>
-    {% endfor %}
+    <br>
+    {% include 'tudushnik/_tasks_table.html' %}
 {% endblock content %}
 
-{% block sidebar_right %}
-    <ul>
-        <li>tool 1</li>
-        <li>tool 2</li>
-    </ul>
-{% endblock sidebar_right %}
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/tasks_page.js' %}"></script>
+{% endblock local_scripts %}

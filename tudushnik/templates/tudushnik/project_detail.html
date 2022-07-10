@@ -1,0 +1,34 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <div>
+        Создан: {{ object.created_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
+    </div>
+    <br>
+    <div>
+        <h4>Описание</h4>
+        <span>
+            {{ object.description }}
+        </span>
+    </div>
+    <div>
+        <h4>Задачи</h4>
+        {% include 'tudushnik/_pagination.html' %}
+        <a href="{% url 'add_task_to_project' project_pk=object.pk %}">Добавить задачу</a>
+        <br>
+        {% include 'tudushnik/_tasks_table.html' %}
+    </div>
+
+{% endblock content %}
+
+
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+{% endblock local_scripts %}

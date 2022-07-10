@@ -84,10 +84,6 @@ WSGI_APPLICATION = 'app_tdm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-print(sys.argv)
-host_address = 'tdm_db'
-if 'localdev' in sys.argv:
-    host_address = 'localhost'
 
 DATABASES = {
     'default': {
@@ -95,8 +91,8 @@ DATABASES = {
         'NAME': str(os.getenv('TDM_DATABASE_DTBS')),
         'USER': str(os.getenv('TDM_DATABASE_USER')),
         'PASSWORD': str(os.getenv('TDM_DATABASE_PSWD')),
-        'HOST': host_address,
-        'PORT': 5432,
+        'HOST': 'localhost',
+        'PORT': 5435,
     }
 }
 

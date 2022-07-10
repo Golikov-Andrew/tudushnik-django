@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,7 @@
     <title>tudushnik | {{ title }}</title>
 
     <link rel="stylesheet" href="{% static 'tudushnik/css/styles.css' %}">
+    <input type="text" hidden value="{{ csrf_token }}" name="csrfmiddlewaretoken">
     {% block local_styles %}
     {% endblock local_styles %}
 </head>
@@ -18,12 +20,13 @@
     </div>
 
     <nav class="navbar-container">
-        <a class="navbar-link" href="{% url 'homepage' %}">Главная</a>
-        <a class="navbar-link" href="{% url 'projects_page' %}">Проекты</a>
-        <a class="navbar-link" href="{% url 'tasks_page' %}">Задачи</a>
-        <a class="navbar-link" href="{% url 'tags_page' %}">Тэги</a>
+        <a class="{{ title|create_class_of_navbar_link_by_title:'Главная' }}" href="{% url 'homepage' %}">Главная</a>
+        <a class="{{ title|create_class_of_navbar_link_by_title:'Проекты' }}"
+           href="{% url 'projects_page' %}">Проекты</a>
+        <a class="{{ title|create_class_of_navbar_link_by_title:'Задачи' }}" href="{% url 'tasks_page' %}">Задачи</a>
+        <a class="{{ title|create_class_of_navbar_link_by_title:'Тэги' }}" href="{% url 'tags_page' %}">Тэги</a>
         {% if user.is_superuser %}
-            <a class="navbar-link" href="/admin">Админка</a>
+            <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>
         {% endif %}
     </nav>
 
@@ -35,9 +38,6 @@
             <a class="navbar-link" href="{% url 'login' %}">Войти</a>
             <a class="navbar-link" href="{% url 'register' %}">Регистрация</a>
         {% endif %}
-
-        {#        <a class="navbar-link" href="{% url 'login' %}">Войти</a>#}
-        {#        <a class="navbar-link" href="{% url 'logout' %}">Выход</a>#}
     </div>
 
 </header>
@@ -49,6 +49,9 @@
     </div>
 
     <div class="page-content">
+        <h1>{{ title }}</h1>
+
+
         {% block content %}
         {% endblock content %}
     </div>
@@ -61,8 +64,7 @@
 </div>
 
 
-
-
+<script type="text/javascript" src="{% static 'tudushnik/js/utils.js' %}"></script>
 {% block local_scripts %}
 {% endblock local_scripts %}
 </body>
