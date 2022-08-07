@@ -31,7 +31,7 @@ docker build:
   tags:
     - docker
 
-deploy-to-dev:
+deploy:
   stage: deploy
   image: docker/compose:latest
   services:
