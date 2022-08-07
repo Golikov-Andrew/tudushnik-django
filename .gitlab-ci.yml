@@ -41,3 +41,5 @@ deploy:
     - docker-compose --version
   script:
     - docker-compose down
+  tags:
+    - docker
