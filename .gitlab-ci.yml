@@ -30,3 +30,12 @@ docker build:
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   tags:
     - docker
+
+deploy-to-dev:
+  stage: deploy
+  image: docker/compose:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+    - docker-compose --version
