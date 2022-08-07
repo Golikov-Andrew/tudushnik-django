@@ -42,5 +42,6 @@ deploy:
     - echo $TDM_DATABASE_DTBS
   script:
     - docker-compose down
+    - docker-compose up -d
   tags:
     - docker
