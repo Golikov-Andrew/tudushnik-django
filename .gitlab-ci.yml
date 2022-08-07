@@ -42,6 +42,7 @@ deploy:
     - echo $TDM_DATABASE_DTBS
   script:
     - docker-compose down
-    - docker-compose up -d
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker-compose up
   tags:
     - docker

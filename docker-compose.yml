@@ -22,9 +22,10 @@ services:
       - tdm
     
   python_server:
-    build:
-      context: .
-      dockerfile: Dockerfile.python
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.python
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     depends_on:
       - tdm_db
     ports:
