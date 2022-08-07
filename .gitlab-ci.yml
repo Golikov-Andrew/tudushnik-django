@@ -39,3 +39,5 @@ deploy:
   before_script:
     - docker info
     - docker-compose --version
+  script:
+    - docker-compose down
