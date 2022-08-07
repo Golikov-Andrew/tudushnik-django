@@ -39,6 +39,7 @@ deploy:
   before_script:
     - docker info
     - docker-compose --version
+    - echo $TDM_DATABASE_DTBS
   script:
     - docker-compose down
   tags:
