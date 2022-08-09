@@ -10,7 +10,7 @@ services:
       POSTGRES_DB: "${TDM_DATABASE_DTBS}"
       POSTGRES_USER: "${TDM_DATABASE_USER}"
       POSTGRES_PASSWORD: "${TDM_DATABASE_PSWD}"
-      PGDATA: "/var/lib/postgresql/data/pgdata"
+      #PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
      - "5432:5432"
     
