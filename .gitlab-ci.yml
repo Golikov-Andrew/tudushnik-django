@@ -61,6 +61,6 @@ deploy to dev:
     # - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     # - docker run -d -p 8000:8000 $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     - docker compose up -d
-    - docker compose exec python_server python3 manage.py migrate
+    # - docker compose exec python_server python3 manage.py migrate
   tags:
     - dev-shell
