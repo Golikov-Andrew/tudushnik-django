@@ -52,8 +52,8 @@ docker build:
 
 deploy to dev:
   stage: deploy
-  before_script:
-    - chown -R gitlab-runner:gitlab-runner .
+  # before_script:
+  #   - chown -R gitlab-runner:gitlab-runner .
   script:
    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
    # - docker compose down
