@@ -54,8 +54,10 @@ deploy to dev:
   stage: deploy
   script:
    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker compose down
+    #- docker compose down
     - ls -la
-    - docker compose up --build -d
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    - docker run -d -p 8000:8000 -n tdm $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    #- docker compose up --build -d
   tags:
     - dev-shell
