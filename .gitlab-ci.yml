@@ -31,18 +31,25 @@ docker build:
   tags:
     - docker
 
-deploy:
+# deploy:
+#   stage: deploy
+#   image: docker/compose:latest
+#   services:
+#     - docker:dind
+#   before_script:
+#     - docker info
+#     - docker-compose --version
+#     - echo $TDM_DATABASE_DTBS
+#   script:
+#     - docker-compose down
+#     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+#     - docker-compose up
+#   tags:
+#     - docker
+
+deploy to dev:
   stage: deploy
-  image: docker/compose:latest
-  services:
-    - docker:dind
-  before_script:
-    - docker info
-    - docker-compose --version
-    - echo $TDM_DATABASE_DTBS
   script:
-    - docker-compose down
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker-compose up
-  tags:
-    - docker
+    - docker-compose down
+    - docker-compose up -d
