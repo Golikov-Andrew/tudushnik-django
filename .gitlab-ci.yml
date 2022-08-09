@@ -9,6 +9,9 @@ variables:
   GIT_TRACE: 1
   DOCKER_TLS_CERTDIR: ""
 
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
 flake8:
   stage: linting
   image: python:3.8
@@ -25,7 +28,7 @@ docker build:
   services:
     - docker:dind
   script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    #- docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -f Dockerfile.python .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   tags:
@@ -50,8 +53,8 @@ docker build:
 deploy to dev:
   stage: deploy
   script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker-compose down
-    - docker-compose up -d
+   # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker compose down
+    - docker compose up -d
   tags:
     - dev-shell
