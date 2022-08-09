@@ -55,6 +55,7 @@ deploy to dev:
   script:
    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker compose down
-    - docker compose up -d
+    - ls -la
+    - docker compose up --build -d
   tags:
     - dev-shell
