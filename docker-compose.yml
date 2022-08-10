@@ -7,9 +7,9 @@ services:
     restart: always
     
     environment:
-      POSTGRES_DB: "${TDM_DATABASE_DTBS}"
-      POSTGRES_USER: "${TDM_DATABASE_USER}"
-      POSTGRES_PASSWORD: "${TDM_DATABASE_PSWD}"
+      POSTGRES_DB: tdm_db #"${TDM_DATABASE_DTBS}"
+      POSTGRES_USER: tdm_user #"${TDM_DATABASE_USER}"
+      POSTGRES_PASSWORD: tdm_pa$$word_2 #"${TDM_DATABASE_PSWD}"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
      - "5432:5432"
