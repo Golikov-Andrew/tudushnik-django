@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'app_tdm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': str(os.getenv('TDM_DATABASE_DTBS')),
-        'USER': str(os.getenv('TDM_DATABASE_USER')),
-        'PASSWORD': str(os.getenv('TDM_DATABASE_PSWD')),
+        'NAME': os.environ.get('TDM_DATABASE_DTBS'),
+        'USER': os.environ.get('TDM_DATABASE_USER'),
+        'PASSWORD': os.environ.get('TDM_DATABASE_PSWD'),
         'HOST': 'tdm_db',
         'PORT': 5432,
     }

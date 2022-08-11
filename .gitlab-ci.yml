@@ -8,6 +8,9 @@ variables:
   GIT_CURL_VERBOSE: 1
   GIT_TRACE: 1
   DOCKER_TLS_CERTDIR: ""
+  TDM_DATABASE_DTBS: $TDM_DATABASE_DTBS
+  TDM_DATABASE_USER: $TDM_DATABASE_USER
+  TDM_DATABASE_PSWD: $TDM_DATABASE_PSWD
 
 before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
@@ -50,11 +53,11 @@ docker build:
 #   tags:
 #     - docker
 
-deploy to dev:
-  stage: deploy
+# deploy to dev:
+#   stage: deploy
   # before_script:
   #   - chown -R gitlab-runner:gitlab-runner .
-  script:
+  # script:
    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker compose down
     - ls -la
@@ -62,5 +65,8 @@ deploy to dev:
     # - docker run -d -p 8000:8000 $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     - docker compose up -d
     # - docker compose exec python_server python3 manage.py migrate
-  tags:
-    - dev-shell
+  # tags:
+  #   - dev-shell
+
+deploy to dev:
+  stage: deploy
