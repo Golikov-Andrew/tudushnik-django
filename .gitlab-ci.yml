@@ -82,6 +82,7 @@ deploy to dev:
     POSTGRES_HOST_AUTH_METHOD: trust
   script:
     - echo $TDM_DATABASE_DTBS
+    - echo $TDM_DATABASE_USER
     - pip install -r requirements.txt
     - python3 --version
     - python3 manage.py migrate
