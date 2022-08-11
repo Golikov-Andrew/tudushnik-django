@@ -75,6 +75,11 @@ deploy to dev:
   services:
     - name: postgres:14
       alias: tdm_db
+  variables: 
+    TDM_DATABASE_DTBS: $TDM_DATABASE_DTBS
+    TDM_DATABASE_USER: $TDM_DATABASE_USER
+    TDM_DATABASE_PSWD: $TDM_DATABASE_PSWD
+    POSTGRES_HOST_AUTH_METHOD: trust
   script:
     - echo $TDM_DATABASE_DTBS
     - pip install -r requirements.txt
