@@ -90,7 +90,8 @@ DATABASES = {
         'NAME': os.environ.get('TDM_DATABASE_DTBS'),
         'USER': os.environ.get('TDM_DATABASE_USER'),
         'PASSWORD': os.environ.get('TDM_DATABASE_PSWD'),
-        'HOST': 'tdm_db',
+        #'HOST': 'tdm_db',
+        'HOST': 'postgres',
         'PORT': 5432,
     }
 }
