@@ -34,7 +34,7 @@ services:
       - tdm_db
     ports:
       - 8000:8000
-    command: python3 manage.py migrate && python3 /usr/src/app_tdm/manage.py runserver 0.0.0.0:8000
+    command: python3 /usr/src/app_tdm/manage.py runserver 0.0.0.0:8000
     #command: python3 /usr/src/app_tdm/manage.py migrate && python3 /usr/src/app_tdm/manage.py collectstatic && python3 /usr/src/app_tdm/manage.py createsuperuser && python3 manage.py runserver 0.0.0.0:8000
     #command: bash init.sh && python3 manage.py runserver 0.0.0.0:8000
     volumes:
