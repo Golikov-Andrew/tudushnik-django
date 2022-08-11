@@ -26,6 +26,10 @@ services:
     #   context: .
     #   dockerfile: Dockerfile.python
     image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    environment:
+      POSTGRES_DB: "${TDM_DATABASE_DTBS}"
+      POSTGRES_USER: "${TDM_DATABASE_USER}"
+      POSTGRES_PASSWORD: "${TDM_DATABASE_PSWD}"
     depends_on:
       - tdm_db
     ports:
