@@ -78,3 +78,5 @@ deploy to dev:
     - pip install -r requirements.txt
     - python3 --version
     - python3 manage.py migrate
+  tags:
+    - docker
