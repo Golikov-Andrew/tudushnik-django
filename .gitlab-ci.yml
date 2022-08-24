@@ -69,8 +69,8 @@ docker build:
   # tags:
   #   - dev-shell
 
-deploy to dev:
-  stage: deploy
+test migrations:
+  stage: test
   image: python:3.8
   services:
     - name: postgres:14
@@ -81,8 +81,6 @@ deploy to dev:
     POSTGRES_PASSWORD: $TDM_DATABASE_PSWD
     POSTGRES_HOST_AUTH_METHOD: trust
   script:
-    - echo $POSTGRES_DB
-    - echo $POSTGRES_USER
     - pip install -r requirements.txt
     - python3 --version
     - python3 manage.py migrate
