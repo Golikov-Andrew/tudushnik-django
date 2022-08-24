@@ -1,6 +1,6 @@
 - hosts: localhost
   become: yes
-  become_user: ubuntu
+  become_user: root
   tasks:
     - name: Log into docker registry
       community.docker.docker_login:
