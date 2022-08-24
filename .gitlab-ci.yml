@@ -76,13 +76,13 @@ deploy to dev:
     - name: postgres:14
       alias: tdm_db
   variables: 
-    TDM_DATABASE_DTBS: $TDM_DATABASE_DTBS
-    TDM_DATABASE_USER: $TDM_DATABASE_USER
-    TDM_DATABASE_PSWD: $TDM_DATABASE_PSWD
+    POSTGRES_DB: $TDM_DATABASE_DTBS
+    POSTGRES_USER: $TDM_DATABASE_USER
+    POSTGRES_PASSWORD: $TDM_DATABASE_PSWD
     POSTGRES_HOST_AUTH_METHOD: trust
   script:
-    - echo $TDM_DATABASE_DTBS
-    - echo $TDM_DATABASE_USER
+    - echo $POSTGRES_DB
+    - echo $POSTGRES_USER
     - pip install -r requirements.txt
     - python3 --version
     - python3 manage.py migrate
