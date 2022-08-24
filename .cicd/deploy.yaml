@@ -1,5 +1,6 @@
 - hosts: localhost
   become: yes
+  become_user: ansible
   tasks:
     - name: Log into docker registry
       community.docker.docker_login:
