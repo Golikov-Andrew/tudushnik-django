@@ -25,6 +25,10 @@
         state: started
         command: python3 /usr/src/app_tdm/manage.py runserver 0.0.0.0:8000
         ports: 8000:8000
+        env:
+          TDM_DATABASE_DTBS: "{{ tdm_database_dtbs }}"
+          TDM_DATABASE_USER: "{{ tdm_database_user }}"
+          TDM_DATABASE_PSWD: "{{ tdm_database_pswd }}"
     
     - name: Run a postgresql container
       community.docker.docker_container:
