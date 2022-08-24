@@ -2,18 +2,18 @@
   become: yes
   tasks:
     - name: Log into docker registry
-      docker_login:
+      community.general.docker_login:
         registry: $CI_REGISTRY
         username: gitlab-ci-token
         password: $CI_JOB_TOKEN
 
     - name: Pull docker image
-      docker_image:
+      community.docker.docker_image:
         name: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLU
         repository: $CI_REGISTRY
     
     - name: Run the container
-      docker_container:
+      community.docker.docker_container:
         image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLU
         name: tdm_container
         state: started
