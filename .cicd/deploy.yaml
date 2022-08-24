@@ -2,6 +2,9 @@
   # become: yes
   # become_user: ansible
   tasks:
+    - name: Print vars
+      ansible.builtin.debug:
+        msg: vars {{ CI_REGISTRY }} {{ $CI_REGISTRY }}
     - name: Log into docker registry
       community.docker.docker_login:
         registry: $CI_REGISTRY
