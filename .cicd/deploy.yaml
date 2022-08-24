@@ -4,12 +4,12 @@
   tasks:
     - name: Print vars
       ansible.builtin.debug:
-        msg: vars {{ ci_registry }} {{ ci_registry_user }} {{ ci_registry_password }}
+        msg: vars {{ ci_registry }} {{ gitlab_user_login }} {{ ci_registry_password }}
     - name: Log into docker registry
       community.docker.docker_login:
         registry: "{{ ci_registry }}"
         # registry_url: https://gl.someproject.ru
-        username: ci_registry_user #rag #"{{ gitlab_ci_token }}"
+        username: gitlab_user_login #ci_registry_user #rag #"{{ gitlab_ci_token }}"
         password: ci_registry_password #KDzHhtwAvyJawd78as69 #"{{ ci_job_token }}"
 
     - name: Pull docker image
