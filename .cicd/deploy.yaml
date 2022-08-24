@@ -12,13 +12,14 @@
         username: "{{ ci_registry_user }}" #gitlab_user_login #ci_registry_user #rag #"{{ gitlab_ci_token }}"
         password: "{{ ci_registry_password }}" #KDzHhtwAvyJawd78as69 #"{{ ci_job_token }}"
 
-    - name: Pull docker image
-      community.docker.docker_image:
-        name: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
-        repository: $CI_REGISTRY
+    # - name: Pull docker image
+    #   community.docker.docker_image:
+    #     name: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
+    #     repository: $CI_REGISTRY
     
     - name: Run the container
       community.docker.docker_container:
         image: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
         name: tdm_container
+        pull: true
         state: started
