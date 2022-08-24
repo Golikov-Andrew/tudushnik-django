@@ -17,7 +17,7 @@
     #     name: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
     #     repository: $CI_REGISTRY
     
-    - name: Run the container
+    - name: Run an app container
       community.docker.docker_container:
         image: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
         name: tdm_container
@@ -25,3 +25,15 @@
         state: started
         command: python3 /usr/src/app_tdm/manage.py runserver 0.0.0.0:8000
         ports: 8000:8000
+    
+    - name: Run a postgresql container
+      community.docker.docker_container:
+        image: postgres:14
+        name: db_tdm
+        state: started
+        ports: 5432:5432
+        env:
+          POSTGRES_DB: "{{ tdm_database_dtbs }}"
+          POSTGRES_USER: "{{ tdm_database_user }}"
+          POSTGRES_PASSWORD: "{{ tdm_database_pswd }}"
+          POSTGRES_HOST_AUTH_METHOD: trust

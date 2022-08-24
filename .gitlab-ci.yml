@@ -99,7 +99,7 @@ deploy to dev:
     - ls -la
     - ansible-galaxy install -f -r ./requirements.yml
     - echo $GITLAB_USER_LOGIN
-    - ansible-playbook ./deploy.yaml -u ansible -i "./inventories/dev/hosts" -e "ci_registry=${CI_REGISTRY} gitlab_ci_token=${gitlab-ci-token} ci_job_token=${CI_JOB_TOKEN} ci_registry_image=${CI_REGISTRY_IMAGE} ci_commit_ref_slug=${CI_COMMIT_REF_SLUG} ci_registry_user=${CI_REGISTRY_USER} ci_registry_password=${CI_REGISTRY_PASSWORD} gitlab_user_login=${GITLAB_USER_LOGIN}"
+    - ansible-playbook ./deploy.yaml -u ansible -i "./inventories/dev/hosts" -e "ci_registry=${CI_REGISTRY} gitlab_ci_token=${gitlab-ci-token} ci_job_token=${CI_JOB_TOKEN} ci_registry_image=${CI_REGISTRY_IMAGE} ci_commit_ref_slug=${CI_COMMIT_REF_SLUG} ci_registry_user=${CI_REGISTRY_USER} ci_registry_password=${CI_REGISTRY_PASSWORD} gitlab_user_login=${GITLAB_USER_LOGIN} tdm_database_dtbs=${TDM_DATABASE_DTBS} tdm_database_user=${TDM_DATABASE_USER}"
   tags:
     - dev-shell
 
