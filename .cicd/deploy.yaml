@@ -4,20 +4,20 @@
   tasks:
     - name: Print vars
       ansible.builtin.debug:
-        msg: vars {{ CI_REGISTRY }}
+        msg: vars {{ ci_registry }}
     - name: Log into docker registry
       community.docker.docker_login:
-        registry: $CI_REGISTRY
-        username: gitlab-ci-token
-        password: $CI_JOB_TOKEN
+        registry: "{{ ci_registry }}"
+        username: "{{ gitlab_ci_token }}"
+        password: "{{ ci_job_token }}"
 
     - name: Pull docker image
       community.docker.docker_image:
-        name: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLU
+        name: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
         repository: $CI_REGISTRY
     
     - name: Run the container
       community.docker.docker_container:
-        image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLU
+        image: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
         name: tdm_container
         state: started

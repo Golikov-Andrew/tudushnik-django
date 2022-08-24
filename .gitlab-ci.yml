@@ -98,7 +98,7 @@ deploy to dev:
     - pip install -r requirements.txt
     - ls -la
     - ansible-galaxy install -f -r ./requirements.yml
-    - ansible-playbook ./deploy.yaml -u ansible -i "./inventories/dev/hosts"
+    - ansible-playbook ./deploy.yaml -u ansible -i "./inventories/dev/hosts" -e "ci_registry=${CI_REGISTRY} gitlab_ci_token=${gitlab-ci-token} ci_job_token=${CI_JOB_TOKEN} ci_registry_image=${CI_REGISTRY_IMAGE} ci_commit_ref_slug=${CI_COMMIT_REF_SLUG}"
   tags:
     - dev-shell
 
