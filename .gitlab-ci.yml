@@ -96,6 +96,7 @@ deploy to dev:
     - python3 -m venv ansible-venv
     - source ansible-venv/bin/activate
     - pip install -r requirements.txt
+    - ansible-galaxy install -f -r ./requirements.yml
     - ansible-playbook ./deploy.yaml -i "./inventories/dev/hosts"
   tags:
     - dev-shell
