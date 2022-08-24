@@ -9,8 +9,8 @@
       community.docker.docker_login:
         # registry: "{{ ci_registry }}"
         registry_url: https://gl.someproject.ru
-        username: "{{ gitlab_ci_token }}"
-        password: "{{ ci_job_token }}"
+        username: rag #"{{ gitlab_ci_token }}"
+        password: KDzHhtwAvyJawd78as69 #"{{ ci_job_token }}"
 
     - name: Pull docker image
       community.docker.docker_image:
