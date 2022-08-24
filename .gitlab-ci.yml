@@ -98,7 +98,7 @@ deploy to dev:
     - pip install -r requirements.txt
     - ls -la
     - ansible-galaxy install -f -r ./requirements.yml
-    - ansible-playbook ./deploy.yaml -i "./inventories/dev/hosts"
+    - ansible-playbook ./deploy.yaml -u ansible -i "./inventories/dev/hosts"
   tags:
     - dev-shell
 
