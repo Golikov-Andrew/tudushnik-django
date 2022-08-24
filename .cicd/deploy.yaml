@@ -4,7 +4,7 @@
   tasks:
     - name: Print vars
       ansible.builtin.debug:
-        msg: vars {{ ci_registry }} {{ gitlab_ci_token }} {{ ci_job_token }}
+        msg: vars {{ ci_registry }} {{ ci_registry_user }} {{ ci_registry_password }}
     - name: Log into docker registry
       community.docker.docker_login:
         registry: "{{ ci_registry }}"
