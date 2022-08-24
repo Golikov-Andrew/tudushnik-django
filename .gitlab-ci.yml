@@ -97,3 +97,6 @@ deploy to dev:
     - source ansible-venv/bin/activate
     - pip install -r requirements.txt
     - ansible-playbook ./deploy.yaml -i "./inventories/dev/hosts"
+  tags:
+    - dev-shell
+
