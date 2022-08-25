@@ -38,7 +38,7 @@
     - name: Run a postgresql container
       community.docker.docker_container:
         image: postgres:14
-        name: db_tdm
+        name: tdm_db
         state: started
         ports: 5432:5432
         env:
