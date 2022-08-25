@@ -3,7 +3,7 @@
 # User credentials
 user=admin
 email=admin@example.com
-password=pass
+password=DfkthmtdbxUtyyflmtdbx_22
 
 python3 manage.py migrate
 python3 manage.py collectstatic
