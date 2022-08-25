@@ -33,7 +33,7 @@
           TDM_DATABASE_USER: "{{ tdm_database_user }}"
           TDM_DATABASE_PSWD: "{{ tdm_database_pswd }}"
         networks:
-          - tdm_nework
+          - name: tdm_nework
     
     - name: Run a postgresql container
       community.docker.docker_container:
@@ -47,4 +47,4 @@
           POSTGRES_PASSWORD: "{{ tdm_database_pswd }}"
           POSTGRES_HOST_AUTH_METHOD: trust
         networks:
-          - tdm_network
+          - name: tdm_network
