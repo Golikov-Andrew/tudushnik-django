@@ -11,7 +11,8 @@ ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY . .
-# EXPOSE 8000
+EXPOSE 8000
+CMD sh init.sh && python3 manage.py runserver 0.0.0.0:8000
 # ENTRYPOINT ["python3"]
 # CMD ["python3","manage.py","migrate"]
 #CMD ["python3","manage.py","runserver","0.0.0.0:8000"]
