@@ -83,7 +83,8 @@ test migrations:
   script:
     - pip install -r requirements.txt
     - python3 --version
-    - python3 manage.py migrate
+    - sh init.sh
+    # - python3 manage.py migrate
   tags:
     - docker
 
