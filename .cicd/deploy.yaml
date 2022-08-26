@@ -53,6 +53,7 @@
     - name: Run Prometheus container
       community.docker.docker_container:
         image: prom/prometheus
+        name: tdm_prom
         ports:
           - 9090:9090
         volumes:
