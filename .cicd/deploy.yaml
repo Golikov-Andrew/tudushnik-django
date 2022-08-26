@@ -32,7 +32,7 @@
           POSTGRES_DB: "{{ tdm_database_dtbs }}"
           POSTGRES_USER: "{{ tdm_database_user }}"
           POSTGRES_PASSWORD: "{{ tdm_database_pswd }}"
-          # POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_HOST_AUTH_METHOD: trust
         networks:
           - name: tdm_network
 
