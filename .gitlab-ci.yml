@@ -94,7 +94,7 @@ deploy to dev:
     - chown -R gitlab-runner:gitlab-runner .
     - docker stop tdm_container
     - docker stop tdm_db
-    - docker stop tdm_prom
+    - docker stop tdm_prom || true
     - docker rm tdm_container
     - docker rm tdm_db
     - docker rm tdm_prom
