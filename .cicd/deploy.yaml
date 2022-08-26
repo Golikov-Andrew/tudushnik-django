@@ -62,7 +62,7 @@
         volumes:
           - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
         networks:
-          - tdm_network
+          - name: tdm_network
     - name: Run cAdvisor container
       community.docker.docker_container:
         image: gcr.io/cadvisor/cadvisor:latest
@@ -77,4 +77,4 @@
           - /sys:/sys:ro
           - /var/lib/docker/:/var/lib/docker:ro
         networks:
-          - tdm_network
+          - name: tdm_network
