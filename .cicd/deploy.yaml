@@ -55,6 +55,8 @@
       community.docker.docker_container:
         image: prom/prometheus
         name: tdm_prom
+        pull: true
+        state: started
         ports:
           - 9090:9090
         volumes:
@@ -65,6 +67,8 @@
       community.docker.docker_container:
         image: gcr.io/cadvisor/cadvisor:latest
         name: tdm_cadvisor
+        pull: true
+        state: started
         ports:
           - 8080:8080
         volumes:
