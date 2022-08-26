@@ -92,11 +92,9 @@ deploy to dev:
   stage: deploy
   before_script:
     - chown -R gitlab-runner:gitlab-runner .
-    - docker stop tdm_container
-    - docker stop tdm_db
+    - docker stop tdm_container && docker rm tdm_container || true
+    - docker stop tdm_db && docker rm tdm_db || true
     - docker stop tdm_prom && docker rm tdm_prom || true
-    - docker rm tdm_container
-    - docker rm tdm_db
   script:
     - cd .cicd
     - python3 -m venv ansible-venv
