@@ -15,22 +15,30 @@
 
             </th>
             <th>
-                id
+                <div>id</div>
+                {{ 'id'|create_table_column_search_and_sorting_widget:3 }}
             </th>
             <th>
 
             </th>
             <th>
-                Название
+                <div>Название</div>
+                {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
             </th>
             <th>
-                Описание
+                <div>Описание</div>
+
+                {{ 'description'|create_table_column_search_and_sorting_widget:3 }}
             </th>
             <th>
-                Создан
+                <div>Создан</div>
+
+                {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
             </th>
             <th>
-                Обновлён
+                <div>Обновлён</div>
+
+                {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
             </th>
         </tr>
         {% for item in page_obj %}
@@ -77,4 +85,5 @@
     <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/projects_page.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
 {% endblock local_scripts %}

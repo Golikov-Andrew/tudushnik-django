@@ -8,8 +8,7 @@
 {% endblock sidebar_left %}
 
 {% block content %}
-    <h1>{{ title }}</h1>
-    <br>
+
     <a href="{% url 'add_tag' %}">Добавить тэг</a>
     {% for project in projects %}
         <div>

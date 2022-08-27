@@ -15,6 +15,11 @@
     <div>
         Выполнена: {{ object.is_done }}
     </div>
+    <div>
+        Проект: <a href="{% url 'project_detail' object.project_id %}">
+        {{ object.project.title }}
+    </a>
+    </div>
     <br>
     <div>
         <h4>Содержание</h4>

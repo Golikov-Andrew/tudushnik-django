@@ -6,7 +6,6 @@ function item_delete_handle_response(json_data, redirect_url) {
             window.location.href = redirect_url
         }
     }
-
 }
 
 function init_btns_item_delete(entity_name, redirect_url) {

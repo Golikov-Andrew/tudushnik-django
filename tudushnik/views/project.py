@@ -37,7 +37,7 @@ class ProjectDetailView(DetailView):
     def get_queryset(self):
         return Project.objects.all()
 
-    def get_object(self):
+    def get_object(self, query_set=None):
         obj = super().get_object()
         return obj
 

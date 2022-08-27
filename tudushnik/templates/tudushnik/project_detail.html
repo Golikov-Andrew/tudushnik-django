@@ -5,6 +5,13 @@
 {% block content %}
 
     <div>
+        <button class="btn_item_delete" data-item-title="{{ object.title }}"
+                data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2613;
+        </button>
+        <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
+    </div>
+    <br>
+    <div>
         Создан: {{ object.created_at|date:'Y-m-d H:i' }}
     </div>
     <div>
@@ -31,4 +38,5 @@
 {% block local_scripts %}
     <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/projects_page.js' %}"></script>
 {% endblock local_scripts %}

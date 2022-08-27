@@ -30,8 +30,9 @@ div {
 }
 
 .navbar-link {
-    padding: 12px;
+    display: inline-block;
     text-decoration: none;
+    padding: 4px 12px 4px 12px;
     color: black;
 }
 
@@ -64,7 +65,10 @@ div {
     padding: 30px;
 }
 
-.profile-container, .page-sidebar-right {
-    flex: 1;
+.profile-container {
+    flex: 3;
     padding: 30px;
+}
+.page-sidebar-right{
+    flex: 1;
 }

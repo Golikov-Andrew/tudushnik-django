@@ -1,9 +1,46 @@
 {% extends 'tudushnik/base.html' %}
 
 
-
 {% block content %}
-    <h1>Профиль</h1>
-    <span>Привет, {{ user.username }}</span>
+    <p>
+        <span>Привет, {{ user.username }}</span>
+    </p>
+    <table>
+    <tbody>
+    <tr>
+        <td>
+            Логин:
+        </td>
+        <td>
+            {{ user.username }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Email:
+        </td>
+        <td>
+            {{ user.email }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Админские права:
+        </td>
+        <td>
+            {{ user.is_staff }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Аватарка:
+        </td>
+        <td>
+            Тут будет возможность загружать аватарку
+        </td>
+    </tr>
+    </tbody>
+    </table>
+
 {% endblock content %}
 

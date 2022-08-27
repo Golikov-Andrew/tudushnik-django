@@ -1,19 +1,37 @@
 {% extends 'tudushnik/base.html' %}
 
 {% block sidebar_left %}
-{#    <ul>#}
-{#        <li>tool 1</li>#}
-{#        <li>tool 2</li>#}
-{#    </ul>#}
+    {#    <ul>#}
+    {#        <li>tool 1</li>#}
+    {#        <li>tool 2</li>#}
+    {#    </ul>#}
 {% endblock sidebar_left %}
 
 {% block content %}
-    Добро пожаловать в приложение тудушник!
+    <p>
+    <span>
+        Добро пожаловать в иновационное бизнес-приложение для планирования своих дел и контроля времени "Тудушник"!
+    </span><br>
+        <span>
+        Здесь вы сможете создавать проекты, в них задачи, планировать процессы во времени, и многое другое!
+    </span><br>
+        {% if not request.user.is_authenticated %}
+            <span>
+        Для начала работы вам необходимо <a href="{% url 'register' %}">зарегистрироваться</a>
+                или <a href="{% url 'login' %}">войти</a>
+    </span><br>
+        {% else %}
+            <span>
+        Для начала создайте Проект. Затем в нём Задачу.
+    </span><br>
+        {% endif %}
+    </p>
+
 {% endblock content %}
 
 {% block sidebar_right %}
-{#    <ul>#}
-{#        <li>tool 1</li>#}
-{#        <li>tool 2</li>#}
-{#    </ul>#}
+    {#    <ul>#}
+    {#        <li>tool 1</li>#}
+    {#        <li>tool 2</li>#}
+    {#    </ul>#}
 {% endblock sidebar_right %}

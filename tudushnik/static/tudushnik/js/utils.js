@@ -59,3 +59,47 @@ function send_post_formdata(e, url, formdata, func_on_success) {
     xhr.send(formdata);
     e.preventDefault();
 }
+
+function build_query_string(query_string_dictionary) {
+    let new_query_string = []
+    for (let k in query_string_dictionary) {
+        new_query_string.push(k + '=' + query_string_dictionary[k])
+    }
+    return '?' + new_query_string.join('&')
+}
+
+function getStrOrJSON(str) {
+    let result;
+    if ((str.slice(0, 1) === '{' && str.slice(-1) === '}') || (str.slice(0, 1) === '[' && str.slice(-1) === ']')) {
+        result = JSON.parse(str)
+    } else {
+        result = str
+    }
+    return result
+}
+
+function tryToStringify(obj){
+    let result;
+    if (Array.isArray(obj)) {
+        console.log('is array')
+        result = JSON.stringify(obj)
+    } else {
+        result = obj
+    }
+    return result
+}
+
+// http://localhost:8080/projects/?limit=10&search={%22id%22:%22val1%22,%22title%22:%22fdkjsfjk%22}&sku_list=[%22abc1%22,%22abc2%22,%22abc3%22]
+function get_query_string_dictionary() {
+    let result = {}
+    let urlSearchParams = new URLSearchParams(window.location.search);
+    result = Object.fromEntries(urlSearchParams.entries());
+    for (let k in result) {
+        result[k] = getStrOrJSON(result[k])
+    }
+    return result
+}
+let qs = get_query_string_dictionary()
+console.log(qs)
+let sf = tryToStringify(qs)
+console.log(build_query_string(qs))
