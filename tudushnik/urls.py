@@ -3,8 +3,9 @@ from django.urls import path
 from .views import index
 from .views.auth import LoginUser, profile, logout_user, RegisterUser
 from .views.project import add_project, ProjectListView, ProjectDetailView, project_delete, ProjectUpdateView
-from .views.tag import tags_page, add_tag
-from .views.task import tasks_page, add_task, TaskListView, TaskDetailView, task_delete, TaskUpdateView, \
+from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, add_tag
+
+from .views.task import add_task, TaskListView, TaskDetailView, task_delete, TaskUpdateView, \
     add_task_to_project
 
 urlpatterns = [
@@ -22,9 +23,11 @@ urlpatterns = [
     path('tasks/create', add_task, name='add_task'),
     path('tasks/add_to_project/<int:project_pk>/', add_task_to_project, name='add_task_to_project'),
 
+    path('tags/', TagListView.as_view(), name='tags_page'),
+    path('tags/detail/<int:pk>/', TagDetailView.as_view(), name='tag_detail'),
+    path('tags/delete/<int:pk>/', tag_delete, name='tag_delete'),
+    path('tags/edit/<int:pk>/', TagUpdateView.as_view(), name='tag_edit'),
     path('tags/create', add_tag, name='add_tag'),
-
-    path('tags/', tags_page, name='tags_page'),
 
     path('login/', LoginUser.as_view(), name='login'),
     path('register/', RegisterUser.as_view(), name='register'),

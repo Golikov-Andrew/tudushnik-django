@@ -22,6 +22,12 @@
     </div>
     <br>
     <div>
+        Тэги:
+        {% for item in object.tags.all %}
+            <span style="background-color: {{ item.color }}">{{ item.title }}</span>
+        {% endfor %}
+    </div>
+    <div>
         <h4>Содержание</h4>
         <span>
             {{ object.content }}

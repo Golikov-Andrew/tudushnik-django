@@ -1,4 +1,5 @@
 {% extends 'tudushnik/base.html' %}
+{% load static %}
 
 
 {% block content %}
@@ -9,4 +10,9 @@
     </form>
 
 {% endblock content %}
+
+
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/duration_annotation.js' %}"></script>
+{% endblock local_scripts %}
 

@@ -72,3 +72,14 @@ div {
 .page-sidebar-right{
     flex: 1;
 }
+.hidden{
+    display: none;
+}
+
+.table_column_sorting.active{
+    background-color: #55bb55;
+}
+.hidden_form_elem{
+    position: fixed;
+    left: -1000px;
+}

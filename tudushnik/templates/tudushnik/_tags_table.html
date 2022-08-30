@@ -1,0 +1,56 @@
+<table>
+    <tbody>
+    <tr>
+        <th>
+
+        </th>
+        <th>
+            id
+        </th>
+        <th>
+
+        </th>
+        <th>
+            Название
+        </th>
+        <th>
+            Создан
+        </th>
+        <th>
+            Обновлён
+        </th>
+        <th>
+            Цвет
+        </th>
+    </tr>
+    {% for item in page_obj %}
+        <tr>
+            <td>
+                <input type="checkbox">
+            </td>
+            <td>
+                {{ item.pk }}
+            </td>
+            <td>
+                <a href="{% url 'tag_detail' pk=item.pk %}">&#128065;</a>
+                <button class="btn_item_delete" data-item-title="{{ item.title }}"
+                        data-post-url="{% url 'tag_delete' pk=item.pk %}">&#x2613;
+                </button>
+                <a href="{% url 'tag_edit' pk=item.pk %}">&#9998;</a>
+            </td>
+            <td>
+                {{ item.title }}
+            </td>
+            <td>
+                {{ item.created_at|date:'Y-m-d H:i' }}
+            </td>
+            <td>
+                {{ item.updated_at|date:'Y-m-d H:i' }}
+            </td><td>
+            <input type="color" value="{{ item.color }}" disabled>
+
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

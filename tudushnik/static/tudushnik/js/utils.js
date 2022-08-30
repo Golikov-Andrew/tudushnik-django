@@ -89,17 +89,16 @@ function tryToStringify(obj){
     return result
 }
 
-// http://localhost:8080/projects/?limit=10&search={%22id%22:%22val1%22,%22title%22:%22fdkjsfjk%22}&sku_list=[%22abc1%22,%22abc2%22,%22abc3%22]
-function get_query_string_dictionary() {
-    let result = {}
-    let urlSearchParams = new URLSearchParams(window.location.search);
-    result = Object.fromEntries(urlSearchParams.entries());
-    for (let k in result) {
-        result[k] = getStrOrJSON(result[k])
+function get_dict_from_list_by_key_val(list, key, val, def=false){
+    for (let i = 0, c; i < list.length; i++) {
+        c = list[i]
+        if(c[key]===val){
+            return c
+        }
     }
-    return result
+    return def
 }
-let qs = get_query_string_dictionary()
-console.log(qs)
-let sf = tryToStringify(qs)
-console.log(build_query_string(qs))
+
+function div(val, by){
+    return (val - val % by) / by;
+}

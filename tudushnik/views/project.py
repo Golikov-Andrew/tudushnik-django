@@ -1,32 +1,51 @@
+import json
+
 from django.contrib.auth import get_user
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.utils import timezone
-from django.views.generic import ListView, CreateView, DetailView, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView
 
 from tudushnik.forms.project import AddProjectForm, ProjectUpdateForm
 from tudushnik.models.project import Project
+from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
+from tudushnik.models.user_profile_settings import manage_user_settings
 
 
 class ProjectListView(ListView):
     model = Project
     template_name = 'tudushnik/projects_page.html'
-    # context_object_name = 'projects'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Проекты'
         per_page = self.request.GET.get('limit')
-        if per_page is None:
-            per_page = 5
-        all_projects = Project.objects.filter(owner_id=self.request.user.id).all()
+        search_section = self.request.GET.get('search')
+        sorting_section = self.request.GET.get('sorting')
+        per_page = manage_user_settings(self.request.user.id, per_page)
+        all_projects = Project.objects.filter(owner_id=self.request.user.id)
+        all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
+        if search_section is not None:
+            search_section_obj = json.loads(search_section)
+            kw = dict()
+            for key, value in search_section_obj.items():
+                kw[key + '__icontains'] = value
+            all_projects = all_projects.filter(**kw)
+        if sorting_section is not None:
+            sorting_section_list = json.loads(sorting_section)
+            ls = list()
+            for item in sorting_section_list:
+                ls.append(item['v'] + item['n'])
+            print(ls)
+            all_projects = all_projects.order_by(*ls)
+
         paginator = Paginator(all_projects, int(per_page))
         page_number = self.request.GET.get('page')
         context['page_obj'] = paginator.get_page(page_number)
         context['limit'] = per_page
         context['len_records'] = len(all_projects)
+        context['all_tags'] = all_tags
         return context
 
 
@@ -43,18 +62,33 @@ class ProjectDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Project.objects.filter(owner_id=self.request.user.id)
         context['title'] = context["project"]
-        # project = Project.objects.filter(owner_id=self.request.user.id, pk=self.request).all()
-        all_tasks = Task.objects.filter(project=context['project'])
+        all_tasks = Task.objects.filter(project=context['project']).select_related().prefetch_related('tags')
         per_page = self.request.GET.get('limit')
-        if per_page is None:
-            per_page = 5
+        search_section = self.request.GET.get('search')
+        sorting_section = self.request.GET.get('sorting')
+        per_page = manage_user_settings(self.request.user.id, per_page)
+        all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
+        if search_section is not None:
+            search_section_obj = json.loads(search_section)
+            kw = dict()
+            for key, value in search_section_obj.items():
+                kw[key + '__icontains'] = value
+            all_tasks = all_tasks.filter(**kw)
+        if sorting_section is not None:
+            sorting_section_list = json.loads(sorting_section)
+            ls = list()
+            for item in sorting_section_list:
+                ls.append(item['v'] + item['n'])
+            print(ls)
+            all_tasks = all_tasks.order_by(*ls)
+
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
         context['page_obj'] = paginator.get_page(page_number)
         context['limit'] = per_page
-        context['len_records'] = len(all_tasks)
+        context['len_records'] = paginator.count
+        context['all_tags'] = all_tags
         return context
 
 
@@ -63,8 +97,6 @@ class ProjectUpdateView(UpdateView):
     # fields = ['title', 'description']
     template_name_suffix = '_update_form'
     form_class = ProjectUpdateForm
-
-
 
     # def get_queryset(self):
     #     return Project.objects.all()

@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <table>
     <tbody>
     <tr>
@@ -5,28 +6,48 @@
 
         </th>
         <th>
-            id
+            <div>id</div>
+            {{ 'id'|create_table_column_search_and_sorting_widget:3 }}
         </th>
         <th>
 
         </th>
         <th>
-            Выполнена?
+            <div>Выполнена?</div>
+            {{ 'is_done'|create_table_column_search_and_sorting_widget:3 }}
         </th>
         <th>
-            Проект
+            <div>Проект</div>
+            {{ 'project__title'|create_table_column_search_and_sorting_widget:3 }}
         </th>
         <th>
-            Название
+            <div>Название</div>
+            {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
         </th>
         <th>
-            Содержимое
+            <div>Содержимое</div>
+            {{ 'content'|create_table_column_search_and_sorting_widget:3 }}
         </th>
         <th>
-            Создана
+            <div>Создана</div>
+            {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
         </th>
         <th>
-            Обновлена
+            <div>Обновлена</div>
+            {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Начало</div>
+            {{ 'begin_at'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Продолжительность</div>
+            {{ 'duration'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Тэги</div>
+            {{ 'tags'|create_table_column_multi_filter_widget:all_tags }}
+
         </th>
     </tr>
     {% for item in page_obj %}
@@ -48,7 +69,8 @@
                 {{ item.is_done }}
             </td>
             <td>
-                {{ item.project }}
+                <a href="{% url 'project_detail' item.project_id %}">
+                    {{ item.project }}</a>
             </td>
             <td>
                 {{ item.title }}
@@ -61,6 +83,17 @@
             </td>
             <td>
                 {{ item.updated_at|date:'Y-m-d H:i' }}
+            </td>
+            <td>
+                {{ item.begin_at|date:'Y-m-d H:i' }}
+            </td>
+            <td>
+                {{ item.duration|duration_humanize }}
+            </td>
+            <td>
+                {% for item in item.tags.all %}
+                    <span style="background-color: {{ item.color }}">{{ item.title }}</span>
+                {% endfor %}
             </td>
 
         </tr>

@@ -1,0 +1,21 @@
+{% extends 'tudushnik/base.html' %}
+
+
+{% block content %}
+
+    <div>
+        Создан: {{ object.created_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
+    </div>
+    <br>
+    <div>
+        Текст: {{ object.title }}
+    </div>
+    <div>
+        Цвет: <input type="color" value="{{ object.color }}" disabled>
+    </div>
+
+{% endblock content %}
+

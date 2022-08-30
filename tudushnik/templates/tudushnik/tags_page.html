@@ -1,25 +1,17 @@
 {% extends 'tudushnik/base.html' %}
+{% load static %}
 
-{% block sidebar_left %}
-{#    <ul>#}
-{#        <li>tool 1</li>#}
-{#        <li>tool 2</li>#}
-{#    </ul>#}
-{% endblock sidebar_left %}
 
 {% block content %}
+    {% include 'tudushnik/_pagination.html' %}
 
-    <a href="{% url 'add_tag' %}">Добавить тэг</a>
-    {% for project in projects %}
-        <div>
-            {{ project.title }}
-        </div>
-    {% endfor %}
+    <a href="{% url 'add_tag' %}">Создать тэг</a>
+    <br>
+    {% include 'tudushnik/_tags_table.html' %}
 {% endblock content %}
 
-{% block sidebar_right %}
-{#    <ul>#}
-{#        <li>tool 1</li>#}
-{#        <li>tool 2</li>#}
-{#    </ul>#}
-{% endblock sidebar_right %}
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/tags_page.js' %}"></script>
+{% endblock local_scripts %}
