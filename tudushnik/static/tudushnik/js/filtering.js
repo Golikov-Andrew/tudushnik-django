@@ -1,50 +1,73 @@
-let inps_table_column_search = document.getElementsByClassName('inp_table_column_search')
-for (let i = 0, c; i < inps_table_column_search.length; i++) {
-    c = inps_table_column_search[i]
-    c.addEventListener('change', (ev) => {
+let slcts_table_column_multi_filter = document.getElementsByClassName('slct_table_column_multi_filter')
+for (let i = 0, c, selected_options; i < slcts_table_column_multi_filter.length; i++) {
+    c = slcts_table_column_multi_filter[i]
+    c.addEventListener('focusout', (ev) => {
         let urlSearchParams = new URLSearchParams(window.location.search);
-        let current_search = urlSearchParams.get('search')
-        let search_attribute = c.closest('div.search_and_sorting_widget').getAttribute('data-field-name')
-        if (current_search !== null) {
-            current_search = JSON.parse(current_search)
-            if (c.value !== '') {
-                current_search[search_attribute] = c.value
+        let current_filter = urlSearchParams.get('filter')
+        let filter_attribute = c.closest('div.multi_filter_widget').getAttribute('data-field-name')
+        if (current_filter !== null) {
+            current_filter = JSON.parse(current_filter)
+            if (c.selectedOptions.length !== 0) {
+                current_filter[filter_attribute] = []
+                selected_options = c.selectedOptions
+                for (let j = 0; j < selected_options.length; j++) {
+                    current_filter[filter_attribute].push(selected_options[j].value)
+                }
             } else {
-                delete current_search[search_attribute]
+                delete current_filter[filter_attribute]
             }
 
         } else {
-            current_search = {}
-            current_search[search_attribute] = c.value
+            current_filter = {}
+            current_filter[filter_attribute] = []
+            selected_options = c.selectedOptions
+            for (let j = 0; j < selected_options.length; j++) {
+                current_filter[filter_attribute].push(selected_options[j].value)
+            }
         }
-        let changed_search = JSON.stringify(current_search)
-        if (changed_search !== '{}') {
-            urlSearchParams.set('search', changed_search)
+        let changed_filter = JSON.stringify(current_filter)
+        if (changed_filter !== '{}') {
+            urlSearchParams.set('filter', changed_filter)
         } else {
-            urlSearchParams.delete('search')
+            urlSearchParams.delete('filter')
         }
 
 
-        window.location.href = window.location.origin +
+        let target_href = window.location.origin +
             window.location.pathname + '?' + urlSearchParams.toString()
+        console.log(decodeURI(target_href))
+        window.location.href = target_href
     })
 }
 
-function init_inps_table_column_search() {
+function init_slcts_table_column_multi_filter() {
     let urlSearchParams = new URLSearchParams(window.location.search);
-    let current_search = urlSearchParams.get('search')
-    if (current_search !== null) {
-        current_search = JSON.parse(current_search)
-        let search_value;
-        let target_elem;
-        for (let k in current_search) {
-            search_value = current_search[k]
-            target_elem = document.querySelector(
-                `div.search_and_sorting_widget[data-field-name="${k}"] > input.inp_table_column_search`
+    let current_filter = urlSearchParams.get('filter')
+    if (current_filter !== null) {
+        current_filter = JSON.parse(current_filter)
+        let filter_value;
+        let target_elems;
+        let selected_options;
+        for (let k in current_filter) {
+            filter_value = current_filter[k]
+            target_elems = document.querySelectorAll(
+                `div.multi_filter_widget[data-field-name="${k}"] > select.slct_table_column_multi_filter > option`
             )
-            target_elem.value = search_value
+            for (let j = 0, cur_opt; j < target_elems.length; j++) {
+                cur_opt = target_elems[j]
+                for (let i = 0; i < filter_value.length; i++) {
+                    if(cur_opt.value===filter_value[i]){
+                        cur_opt.setAttribute('selected', 'selected')
+                    }
+                }
+            }
+
+
+            // selected_options = target_elem.querySelectorAll('option')
+            // debugger;
+            // target_elem.selectedOptions = selected_options
         }
     }
 }
 
-init_inps_table_column_search()
+init_slcts_table_column_multi_filter()

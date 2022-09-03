@@ -1,9 +1,12 @@
 import json
 from datetime import datetime
+from functools import reduce
 
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views.generic import ListView, DetailView, UpdateView
 
 from tudushnik.forms.task import AddTaskForm, TaskUpdateForm
@@ -23,6 +26,7 @@ class TaskListView(ListView):
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
         sorting_section = self.request.GET.get('sorting')
+        filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
         all_projects = Project.objects.filter(owner_id=self.request.user.id).all()
         all_tasks = Task.objects.filter(project__in=all_projects).select_related().prefetch_related('tags')
@@ -41,6 +45,18 @@ class TaskListView(ListView):
                 ls.append(item['v'] + item['n'])
             print(ls)
             all_tasks = all_tasks.order_by(*ls)
+        if filter_section is not None:
+            filter_section_obj = json.loads(filter_section)
+
+            q_list = list()
+            for key, value in filter_section_obj.items():
+                for v in value:
+                    kw = dict()
+                    kw[key + '__id'] = v
+                    q_list.append(kw)
+
+            # all_tasks = all_tasks.filter([ i for i in reduce(lambda q, f: q | Q(f), q_list, Q() )])
+            all_tasks = all_tasks.filter(Q(tags__id__in=[1, 2]))
 
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
@@ -78,6 +94,8 @@ class TaskUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         test = Project.objects.filter(owner_id=self.request.user.id).all()
         context['form'].fields['project'].queryset = test
+        begin_at_formated_value = context['object'].begin_at.strftime('%Y-%m-%dT%H:%M:%S')
+        context['form'].initial['begin_at'] = begin_at_formated_value
         return context
 
 

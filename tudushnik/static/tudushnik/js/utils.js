@@ -102,3 +102,7 @@ function get_dict_from_list_by_key_val(list, key, val, def=false){
 function div(val, by){
     return (val - val % by) / by;
 }
+
+function addMultiEventListener(el, s, fn){
+    s.forEach(e => el.addEventListener(e, fn, false))
+}

@@ -14,7 +14,7 @@ class Task(models.Model):
     content = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    begin_at = models.DateTimeField(default=timezone.now())
+    begin_at = models.DateTimeField(null=True)
     # begin_at = models.DateTimeField(auto_now_add=True)
     # photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Изображение', blank=True)
     is_done = models.BooleanField(default=False)
