@@ -2,8 +2,9 @@ import json
 from datetime import datetime
 from functools import reduce
 
+
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -28,8 +29,14 @@ class TaskListView(ListView):
         sorting_section = self.request.GET.get('sorting')
         filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
+
         all_projects = Project.objects.filter(owner_id=self.request.user.id).all()
-        all_tasks = Task.objects.filter(project__in=all_projects).select_related().prefetch_related('tags')
+        # all_tasks = Task.objects.filter(project__in=all_projects).select_related().prefetch_related('tags')
+        all_tasks = Task.objects.filter(project__in=all_projects).all()
+
+        # all_projects = Project.objects.filter(owner_id=self.request.user.id).prefetch_related('tasks').prefetch_related('tags')
+        # all_tasks = Task.objects.filter(project__in=all_projects).select_related().prefetch_related('tags')
+
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
 
         if search_section is not None:
@@ -48,15 +55,18 @@ class TaskListView(ListView):
         if filter_section is not None:
             filter_section_obj = json.loads(filter_section)
 
-            q_list = list()
+            kw = dict()
             for key, value in filter_section_obj.items():
+                k = key + '__in'
+                if k not in kw:
+                    kw[k] = list()
                 for v in value:
-                    kw = dict()
-                    kw[key + '__id'] = v
-                    q_list.append(kw)
+                    kw[k].append(v)
+                # q_list.append(kw)
 
             # all_tasks = all_tasks.filter([ i for i in reduce(lambda q, f: q | Q(f), q_list, Q() )])
-            all_tasks = all_tasks.filter(Q(tags__id__in=[1, 2]))
+            # all_tasks = all_tasks.filter(tags__in=[1, 2]).annotate(dcount=Count('tags'))
+            all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
 
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
@@ -109,6 +119,7 @@ def add_task(request):
     else:
         form = AddTaskForm(instance=Task(owner=request.user, begin_at=datetime.now().strftime('%Y-%m-%dT%H:%M')))
         form.fields['project'].queryset = Project.objects.filter(owner_id=request.user.id).all()
+        form.fields['tags'].queryset = Tag.objects.filter(owner_id=request.user.id).all()
     return render(request, 'tudushnik/add_task.html', {'form': form, 'title': 'Добавление задачи'})
 
 
