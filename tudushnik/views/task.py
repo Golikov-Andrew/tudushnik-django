@@ -1,8 +1,9 @@
 import json
 from datetime import datetime
 from functools import reduce
+from urllib.parse import unquote
 
-
+import pytz as pytz
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.http import JsonResponse
@@ -22,13 +23,16 @@ class TaskListView(ListView):
     template_name = 'tudushnik/tasks_page.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(TaskListView, self).get_context_data(**kwargs)
         context['title'] = 'Задачи'
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
         sorting_section = self.request.GET.get('sorting')
         filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
+
+        # tz = self.request.COOKIES.get('timezone')
+        # tz = 'UTC' if tz is None else tz
 
         all_projects = Project.objects.filter(owner_id=self.request.user.id).all()
         # all_tasks = Task.objects.filter(project__in=all_projects).select_related().prefetch_related('tags')
@@ -68,12 +72,19 @@ class TaskListView(ListView):
             # all_tasks = all_tasks.filter(tags__in=[1, 2]).annotate(dcount=Count('tags'))
             all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
 
+        # if tz is not None:
+        #     tz = unquote(tz)
+        #     print('tz', tz)
+        #     for task in all_tasks:
+        #         task.__setattr__('begin_at', timezone.localtime(task.begin_at, pytz.timezone(tz)))
+
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
         context['page_obj'] = paginator.get_page(page_number)
         context['limit'] = per_page
         context['len_records'] = len(all_tasks)
         context['all_tags'] = all_tags
+        # context['client_timezone'] = self.request.content_params['client_timezone']
 
         return context
 
@@ -117,7 +128,7 @@ def add_task(request):
             form.save()
             return redirect('tasks_page')
     else:
-        form = AddTaskForm(instance=Task(owner=request.user, begin_at=datetime.now().strftime('%Y-%m-%dT%H:%M')))
+        form = AddTaskForm(instance=Task(owner=request.user, begin_at=timezone.now().strftime('%Y-%m-%dT%H:%M')))
         form.fields['project'].queryset = Project.objects.filter(owner_id=request.user.id).all()
         form.fields['tags'].queryset = Tag.objects.filter(owner_id=request.user.id).all()
     return render(request, 'tudushnik/add_task.html', {'form': form, 'title': 'Добавление задачи'})
@@ -133,7 +144,7 @@ def add_task_to_project(request, project_pk):
     else:
         proj = Project.objects.filter(owner_id=request.user.id, pk=project_pk)
         form = AddTaskForm(
-            instance=Task(project=proj.first(), owner=request.user, begin_at=datetime.now().strftime('%Y-%m-%dT%H:%M'))
+            instance=Task(project=proj.first(), owner=request.user, begin_at=timezone.now().strftime('%Y-%m-%dT%H:%M'))
             # instance=Task(project=proj.first(), owner=request.user, begin_at=datetime.now().timestamp())
         )
         form.fields['project'].queryset = proj.all()

@@ -16,11 +16,12 @@ def is_selected(choosen_val, val: str):
         return 'selected'
     return ''
 
+
 def duration_humanize(dur_val):
     result = list()
     dur_val = int(dur_val)
-    hours = (dur_val)// (60 * 60)
-    minutes = (dur_val - (hours * 60 * 60))// 60
+    hours = (dur_val) // (60 * 60)
+    minutes = (dur_val - (hours * 60 * 60)) // 60
     seconds = dur_val - ((hours * 60 * 60) + (minutes * 60))
     if hours != 0:
         result.append(f'{hours} часов')
@@ -32,7 +33,6 @@ def duration_humanize(dur_val):
     return ', '.join(result)
 
 
-
 def create_table_column_search_and_sorting_widget(data_field_name: str, search_input_size: int):
     return mark_safe(f"""
     <div class="search_and_sorting_widget" data-field-name="{data_field_name}">
@@ -41,6 +41,7 @@ def create_table_column_search_and_sorting_widget(data_field_name: str, search_i
                     <button class="table_column_sorting" value="-">&darr;</button>
                 </div>
     """)
+
 
 def create_table_column_multi_filter_widget(data_field_name: str, val_list: list):
     options = list()
@@ -52,6 +53,11 @@ def create_table_column_multi_filter_widget(data_field_name: str, val_list: list
     {''.join(options)}
     </select></div>
     """)
+
+
+@register.simple_tag
+def define(val=None):
+    return val
 
 
 register.filter('create_class_of_navbar_link_by_title', create_class_of_navbar_link_by_title)

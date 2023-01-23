@@ -1,4 +1,7 @@
 {% load custom_filters %}
+
+
+
 <table>
     <tbody>
     <tr>
@@ -86,6 +89,7 @@
             </td>
             <td>
                 {{ item.begin_at|date:'Y-m-d H:i' }}
+{#                {{ item.begin_at|localtime }}#}
             </td>
             <td>
                 {{ item.duration|duration_humanize }}

@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# from tudushnik.views import pageNotFound
+# from tudushnik.views import pageNotFoundF
 
 load_dotenv()
 
@@ -57,7 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'tudushnik.middleware.DetectTimeZoneMiddleware'
 
 ]
 
