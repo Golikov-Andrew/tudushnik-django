@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from tudushnik.forms.user import RegisterUserForm, LoginUserForm
+from tudushnik.middleware import set_client_timezone
 
 
 class RegisterUser(CreateView):
@@ -26,10 +27,12 @@ class LoginUser(LoginView):
         return reverse_lazy('profile')
 
 
-def profile(request):
-    return render(request, 'tudushnik/profile.html', {'title': 'Профиль'})
+def profile(request, **kwargs):
+    set_client_timezone(request, kwargs)
+    kwargs.update({'title': 'Профиль'})
+    return render(request, 'tudushnik/profile.html', kwargs)
 
 
-def logout_user(request):
+def logout_user(request, **kwargs):
     logout(request)
     return redirect('login')

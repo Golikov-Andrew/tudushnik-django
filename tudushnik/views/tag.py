@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, UpdateView
 
 from tudushnik.forms.tag import TagUpdateForm, AddTagForm
+from tudushnik.middleware import set_client_timezone
 
 from tudushnik.models.tag import Tag
 
@@ -25,6 +26,7 @@ class TagListView(ListView):
         context['page_obj'] = paginator.get_page(page_number)
         context['limit'] = per_page
         context['len_records'] = len(all_tags)
+        set_client_timezone(self.request, context)
         return context
 
 

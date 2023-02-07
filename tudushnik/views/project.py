@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, UpdateView
 
 from tudushnik.forms.project import AddProjectForm, ProjectUpdateForm
+from tudushnik.middleware import set_client_timezone
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
@@ -46,6 +47,7 @@ class ProjectListView(ListView):
         context['limit'] = per_page
         context['len_records'] = len(all_projects)
         context['all_tags'] = all_tags
+        set_client_timezone(self.request, context)
         return context
 
 

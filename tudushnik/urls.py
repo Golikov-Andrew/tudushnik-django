@@ -10,6 +10,7 @@ from .views.task import add_task, TaskListView, TaskDetailView, task_delete, Tas
 
 urlpatterns = [
     path('', index, name='homepage'),
+
     path('projects/', ProjectListView.as_view(), name='projects_page'),
     path('projects/detail/<int:pk>/', ProjectDetailView.as_view(), name='project_detail'),
     path('projects/delete/<int:pk>/', project_delete, name='project_delete'),

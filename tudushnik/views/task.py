@@ -1,9 +1,8 @@
 import json
 from datetime import datetime
-from functools import reduce
-from urllib.parse import unquote
 
-import pytz as pytz
+import pytz
+
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.http import JsonResponse
@@ -12,6 +11,7 @@ from django.utils import timezone
 from django.views.generic import ListView, DetailView, UpdateView
 
 from tudushnik.forms.task import AddTaskForm, TaskUpdateForm
+from tudushnik.middleware import set_client_timezone
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
@@ -30,9 +30,6 @@ class TaskListView(ListView):
         sorting_section = self.request.GET.get('sorting')
         filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
-
-        # tz = self.request.COOKIES.get('timezone')
-        # tz = 'UTC' if tz is None else tz
 
         all_projects = Project.objects.filter(owner_id=self.request.user.id).all()
         # all_tasks = Task.objects.filter(project__in=all_projects).select_related().prefetch_related('tags')
@@ -72,19 +69,13 @@ class TaskListView(ListView):
             # all_tasks = all_tasks.filter(tags__in=[1, 2]).annotate(dcount=Count('tags'))
             all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
 
-        # if tz is not None:
-        #     tz = unquote(tz)
-        #     print('tz', tz)
-        #     for task in all_tasks:
-        #         task.__setattr__('begin_at', timezone.localtime(task.begin_at, pytz.timezone(tz)))
-
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
         context['page_obj'] = paginator.get_page(page_number)
         context['limit'] = per_page
         context['len_records'] = len(all_tasks)
         context['all_tags'] = all_tags
-        # context['client_timezone'] = self.request.content_params['client_timezone']
+        set_client_timezone(self.request, context)
 
         return context
 
@@ -120,18 +111,32 @@ class TaskUpdateView(UpdateView):
         return context
 
 
-def add_task(request):
+def add_task(request, *args, **kwargs):
+    cur_tz = set_client_timezone(request, kwargs)
     if request.method == 'POST':
         form = AddTaskForm(request.POST, request.FILES)
         form.instance.owner = request.user
+
+        offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
+        if str(offset) != '0:00:00':
+            form.instance.begin_at = form.instance.begin_at - offset
+
         if form.is_valid():
             form.save()
             return redirect('tasks_page')
     else:
-        form = AddTaskForm(instance=Task(owner=request.user, begin_at=timezone.now().strftime('%Y-%m-%dT%H:%M')))
+        form = AddTaskForm(
+            instance=Task(
+                owner=request.user,
+                begin_at=timezone.localtime(
+                    timezone.now(), pytz.timezone(cur_tz)
+                ).strftime('%Y-%m-%dT%H:%M')
+            )
+        )
         form.fields['project'].queryset = Project.objects.filter(owner_id=request.user.id).all()
         form.fields['tags'].queryset = Tag.objects.filter(owner_id=request.user.id).all()
-    return render(request, 'tudushnik/add_task.html', {'form': form, 'title': 'Добавление задачи'})
+    kwargs.update({'form': form, 'title': 'Добавление задачи'})
+    return render(request, 'tudushnik/add_task.html', kwargs)
 
 
 def add_task_to_project(request, project_pk):
@@ -145,13 +150,12 @@ def add_task_to_project(request, project_pk):
         proj = Project.objects.filter(owner_id=request.user.id, pk=project_pk)
         form = AddTaskForm(
             instance=Task(project=proj.first(), owner=request.user, begin_at=timezone.now().strftime('%Y-%m-%dT%H:%M'))
-            # instance=Task(project=proj.first(), owner=request.user, begin_at=datetime.now().timestamp())
         )
         form.fields['project'].queryset = proj.all()
     return render(request, 'tudushnik/add_task_to_project.html', {'form': form, 'title': 'Добавление задачи в проект'})
 
 
-def task_delete(request, pk: int):
+def task_delete(request, pk: int, *args, **kwargs):
     if request.method == 'POST':
         target_object = Task.objects.filter(owner_id=request.user.id, pk=pk).first()
         target_object.delete()

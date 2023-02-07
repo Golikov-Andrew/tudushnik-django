@@ -1,19 +1,13 @@
-# from django.contrib.auth import logout, login, get_user
-# from django.contrib.auth.views import LoginView
-from django.http import HttpResponseNotFound, HttpResponse
-from django.shortcuts import render, redirect
-# from django.urls import reverse_lazy
-# from django.views.generic import CreateView
+from django.http import HttpResponseNotFound
+from django.shortcuts import render
+
+from tudushnik.middleware import set_client_timezone
 
 
-# from .forms import AddProjectForm, RegisterUserForm, LoginUserForm, AddTaskForm
-# from .models import *
-
-
-def index(request):
-    return render(request, 'tudushnik/homepage.html', {'title': 'Главная'})
-
-
+def index(request, **kwargs):
+    kwargs.update({'title': 'Главная'})
+    set_client_timezone(request, kwargs)
+    return render(request, 'tudushnik/homepage.html', kwargs)
 
 
 def pageNotFound(request, exception):
