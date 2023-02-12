@@ -91,6 +91,7 @@ class ProjectDetailView(DetailView):
         context['limit'] = per_page
         context['len_records'] = paginator.count
         context['all_tags'] = all_tags
+        set_client_timezone(self.request, context)
         return context
 
 
@@ -123,7 +124,7 @@ class ProjectUpdateView(UpdateView):
 #     })
 
 
-def add_project(request):
+def add_project(request, *args, **kwargs):
     if request.method == 'POST':
         form = AddProjectForm(request.POST, request.FILES)
         if form.is_valid():
@@ -135,7 +136,7 @@ def add_project(request):
     return render(request, 'tudushnik/add_project.html', {'form': form, 'title': 'Добавление проекта'})
 
 
-def project_delete(request, pk: int):
+def project_delete(request, pk: int, *args, **kwargs):
     if request.method == 'POST':
         target_object = Project.objects.filter(owner_id=request.user.id, pk=pk).first()
         target_object.delete()

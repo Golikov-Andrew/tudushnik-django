@@ -1,4 +1,5 @@
 import json
+import time
 from datetime import datetime
 
 import pytz
@@ -139,20 +140,38 @@ def add_task(request, *args, **kwargs):
     return render(request, 'tudushnik/add_task.html', kwargs)
 
 
-def add_task_to_project(request, project_pk):
+def add_task_to_project(request, project_pk, *args, **kwargs):
+    cur_tz = set_client_timezone(request, kwargs)
     if request.method == 'POST':
         form = AddTaskForm(request.POST, request.FILES)
         form.instance.owner = request.user
+
+        offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
+        if str(offset) != '0:00:00':
+            time.sleep(3)
+            begin = form.instance.begin_at
+            print('debug', begin)
+
+            form.instance.begin_at = begin - offset
+
         if form.is_valid():
             form.save()
             return redirect('project_detail', pk=project_pk)
     else:
         proj = Project.objects.filter(owner_id=request.user.id, pk=project_pk)
         form = AddTaskForm(
-            instance=Task(project=proj.first(), owner=request.user, begin_at=timezone.now().strftime('%Y-%m-%dT%H:%M'))
+            instance=Task(
+                project=proj.first(),
+                owner=request.user,
+                begin_at=timezone.localtime(
+                    timezone.now(), pytz.timezone(cur_tz)
+                ).strftime('%Y-%m-%dT%H:%M')
+            )
         )
         form.fields['project'].queryset = proj.all()
-    return render(request, 'tudushnik/add_task_to_project.html', {'form': form, 'title': 'Добавление задачи в проект'})
+
+    kwargs.update({'form': form, 'title': 'Добавление задачи в проект'})
+    return render(request, 'tudushnik/add_task_to_project.html', kwargs)
 
 
 def task_delete(request, pk: int, *args, **kwargs):
