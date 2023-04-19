@@ -1,0 +1,80 @@
+- hosts: localhost
+  # become: yes
+  # become_user: ansible
+  tasks:
+    - name: Print vars
+      ansible.builtin.debug:
+        msg: vars {{ ci_registry }} {{ gitlab_user_login }} {{ ci_registry_password }}
+    - name: Log into docker registry
+      community.docker.docker_login:
+        registry: "{{ ci_registry }}"
+        # registry_url: https://gl.someproject.ru
+        username: "{{ ci_registry_user }}" #gitlab_user_login #ci_registry_user #rag #"{{ gitlab_ci_token }}"
+        password: "{{ ci_registry_password }}" #KDzHhtwAvyJawd78as69 #"{{ ci_job_token }}"
+
+    # - name: Pull docker image
+    #   community.docker.docker_image:
+    #     name: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
+    #     repository: $CI_REGISTRY
+    - name: Create tdm network
+      community.docker.docker_network:
+        name: tdm_network
+
+
+    
+    - name: Run a postgresql container
+      community.docker.docker_container:
+        image: postgres:14
+        name: tdm_db
+        state: started
+        ports: 5432:5432
+        env:
+          POSTGRES_DB: "{{ tdm_database_dtbs }}"
+          POSTGRES_USER: "{{ tdm_database_user }}"
+          POSTGRES_PASSWORD: "{{ tdm_database_pswd }}"
+          POSTGRES_HOST_AUTH_METHOD: trust
+        networks:
+          - name: tdm_network
+
+    - name: Run an app container
+      community.docker.docker_container:
+        image: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
+        name: tdm_container
+        pull: true
+        state: started
+        # command: python3 /usr/src/app_tdm/manage.py runserver 0.0.0.0:8000
+        ports: 8000:8000
+        env:
+          TDM_DATABASE_DTBS: "{{ tdm_database_dtbs }}"
+          TDM_DATABASE_USER: "{{ tdm_database_user }}"
+          TDM_DATABASE_PSWD: "{{ tdm_database_pswd }}"
+        networks:
+          - name: tdm_network
+
+    - name: Run Prometheus container
+      community.docker.docker_container:
+        image: prom/prometheus
+        name: tdm_prom
+        pull: true
+        state: started
+        ports:
+          - 9090:9090
+        volumes:
+          - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+        networks:
+          - name: tdm_network
+    - name: Run cAdvisor container
+      community.docker.docker_container:
+        image: gcr.io/cadvisor/cadvisor:latest
+        name: tdm_cadvisor
+        pull: true
+        state: started
+        ports:
+          - 8080:8080
+        volumes:
+          - /:/rootfs:ro
+          - /var/run:/var/run:rw
+          - /sys:/sys:ro
+          - /var/lib/docker/:/var/lib/docker:ro
+        networks:
+          - name: tdm_network

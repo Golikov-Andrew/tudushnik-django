@@ -31,8 +31,8 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.10.10.250', '10.10.12.250', '10.10.10.151', '10.10.12.151', '.tdm-test.someproject.ru']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.tdm-test.someproject.ru']
 # Application definition
 
 INSTALLED_APPS = [
@@ -93,10 +93,13 @@ if 'localdev' in sys.argv:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': str(os.getenv('TDM_DATABASE_DTBS')),
-        'USER': str(os.getenv('TDM_DATABASE_USER')),
-        'PASSWORD': str(os.getenv('TDM_DATABASE_PSWD')),
-        'HOST': host_address,
+
+        'NAME': os.environ.get('TDM_DATABASE_DTBS'),
+        'USER': os.environ.get('TDM_DATABASE_USER'),
+        'PASSWORD': os.environ.get('TDM_DATABASE_PSWD'),
+        'HOST': 'tdm_db',
+        # 'HOST': 'postgres',
+
         'PORT': 5432,
     }
 }

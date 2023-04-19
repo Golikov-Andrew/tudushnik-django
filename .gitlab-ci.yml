@@ -1,0 +1,108 @@
+stages:
+  - linting
+  - test
+  - build
+  - deploy
+
+variables:
+  GIT_CURL_VERBOSE: 1
+  GIT_TRACE: 1
+  DOCKER_TLS_CERTDIR: ""
+  TDM_DATABASE_DTBS: $TDM_DATABASE_DTBS
+  TDM_DATABASE_USER: $TDM_DATABASE_USER
+  TDM_DATABASE_PSWD: $TDM_DATABASE_PSWD
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+# before_script:
+#   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+flake8:
+  stage: linting
+  image: python:3.8
+  script:
+    - pip install flake8
+    - flake8 --verbose .
+  allow_failure: true
+  tags:
+    - docker
+
+docker build:
+  stage: build
+  image: docker:20.10
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -f Dockerfile.python .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  tags:
+    - docker
+
+# deploy:
+#   stage: deploy
+#   image: docker/compose:latest
+#   services:
+#     - docker:dind
+#   before_script:
+#     - docker info
+#     - docker-compose --version
+#     - echo $TDM_DATABASE_DTBS
+#   script:
+#     - docker-compose down
+#     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+#     - docker-compose up
+#   tags:
+#     - docker
+
+# deploy to dev:
+#   stage: deploy
+#   before_script:
+#     - chown -R gitlab-runner:gitlab-runner .
+#   script:
+#     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+#     - docker compose down
+#     - ls -la
+#     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    # - docker run -d -p 8000:8000 $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    # - docker compose up -d
+    # - docker compose exec python_server python3 manage.py migrate
+  # tags:
+  #   - dev-shell
+
+test migrations:
+  stage: test
+  image: python:3.8
+  services:
+    - name: postgres:14
+      alias: tdm_db
+  variables: 
+    POSTGRES_DB: $TDM_DATABASE_DTBS
+    POSTGRES_USER: $TDM_DATABASE_USER
+    POSTGRES_PASSWORD: $TDM_DATABASE_PSWD
+    POSTGRES_HOST_AUTH_METHOD: trust
+  script:
+    - pip install -r requirements.txt
+    - python3 --version
+    - sh init.sh
+    # - python3 manage.py migrate
+  tags:
+    - docker
+
+deploy to dev:
+  stage: deploy
+  before_script:
+    - chown -R gitlab-runner:gitlab-runner .
+    - docker stop tdm_container && docker rm tdm_container || true
+    - docker stop tdm_db && docker rm tdm_db || true
+    - docker stop tdm_prom && docker rm tdm_prom || true
+  script:
+    - cd .cicd
+    - python3 -m venv ansible-venv
+    - source ansible-venv/bin/activate
+    - pip install -r requirements.txt
+    - ls -la
+    - ansible-galaxy install -f -r ./requirements.yml
+    - ansible-playbook ./deploy.yaml -u ansible -i "./inventories/dev/hosts" -e "ci_registry=${CI_REGISTRY} gitlab_ci_token=${gitlab-ci-token} ci_job_token=${CI_JOB_TOKEN} ci_registry_image=${CI_REGISTRY_IMAGE} ci_commit_ref_slug=${CI_COMMIT_REF_SLUG} ci_registry_user=${CI_REGISTRY_USER} ci_registry_password=${CI_REGISTRY_PASSWORD} gitlab_user_login=${GITLAB_USER_LOGIN} tdm_database_dtbs=${TDM_DATABASE_DTBS} tdm_database_user=${TDM_DATABASE_USER} tdm_database_pswd=${TDM_DATABASE_PSWD}"
+  tags:
+    - dev-shell
+
