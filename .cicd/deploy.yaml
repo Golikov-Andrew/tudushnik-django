@@ -1,6 +1,4 @@
 - hosts: localhost
-  # become: yes
-  # become_user: ansible
   tasks:
     - name: Print vars
       ansible.builtin.debug:
@@ -8,20 +6,13 @@
     - name: Log into docker registry
       community.docker.docker_login:
         registry: "{{ ci_registry }}"
-        # registry_url: https://gl.someproject.ru
-        username: "{{ ci_registry_user }}" #gitlab_user_login #ci_registry_user #rag #"{{ gitlab_ci_token }}"
-        password: "{{ ci_registry_password }}" #KDzHhtwAvyJawd78as69 #"{{ ci_job_token }}"
+        username: "{{ ci_registry_user }}"
+        password: "{{ ci_registry_password }}"
 
-    # - name: Pull docker image
-    #   community.docker.docker_image:
-    #     name: "{{ ci_registry_image }}:{{ ci_commit_ref_slug }}"
-    #     repository: $CI_REGISTRY
     - name: Create tdm network
       community.docker.docker_network:
         name: tdm_network
 
-
-    
     - name: Run a postgresql container
       community.docker.docker_container:
         image: postgres:14
