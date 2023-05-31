@@ -40,7 +40,8 @@
                    href="{% url 'projects_page' %}">Проекты</a>
                 <a class="{{ title|create_class_of_navbar_link_by_title:'Задачи' }}"
                    href="{% url 'tasks_page' %}">Задачи</a>
-                <a class="{{ title|create_class_of_navbar_link_by_title:'Тэги' }}" href="{% url 'tags_page' %}">Тэги</a>
+                <a class="{{ title|create_class_of_navbar_link_by_title:'Тэги' }}"
+                   href="{% url 'tags_page' %}">Тэги</a>
             {% endif %}
             {% if user.is_superuser %}
                 <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>

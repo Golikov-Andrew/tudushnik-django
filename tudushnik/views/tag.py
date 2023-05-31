@@ -62,7 +62,7 @@ class TagUpdateView(UpdateView):
     form_class = TagUpdateForm
 
 
-def add_tag(request):
+def add_tag(request, *args, **kwargs):
     if request.method == 'POST':
         form = AddTagForm(request.POST, request.FILES)
         if form.is_valid():
@@ -74,7 +74,7 @@ def add_tag(request):
     return render(request, 'tudushnik/add_tag.html', {'form': form, 'title': 'Создание тэга'})
 
 
-def tag_delete(request, pk: int):
+def tag_delete(request, pk: int, *args, **kwargs):
     if request.method == 'POST':
         target_object = Tag.objects.filter(owner_id=request.user.id, pk=pk).first()
         target_object.delete()

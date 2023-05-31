@@ -93,14 +93,16 @@ if 'localdev' in sys.argv:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-
         'NAME': os.environ.get('TDM_DATABASE_DTBS'),
         'USER': os.environ.get('TDM_DATABASE_USER'),
         'PASSWORD': os.environ.get('TDM_DATABASE_PSWD'),
         'HOST': 'tdm_db',
         # 'HOST': 'postgres',
-
         'PORT': 5432,
+    },
+    'test_db': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'test_database'
     }
 }
 

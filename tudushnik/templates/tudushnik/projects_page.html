@@ -51,7 +51,7 @@
                 </td>
                 <td>
                     <a href="{% url 'project_detail' pk=item.pk %}">&#128065;</a>
-                    <button class="btn_item_delete" data-item-title="{{ item.title }}"
+                    <button class="btn_item_delete" data-item-title="{{ item.title }}" data-entity-name="проект" data-redirect-url="{% url 'projects_page' %}"
                             data-post-url="{% url 'project_delete' pk=item.pk %}">&#x2613;
                     </button>
                     <a href="{% url 'project_edit' pk=item.pk %}">&#9998;</a>

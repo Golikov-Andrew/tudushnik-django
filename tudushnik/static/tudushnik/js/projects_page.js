@@ -1,3 +1,3 @@
-init_btns_item_delete('проект','/projects/')
+init_btns_item_delete()
 
 

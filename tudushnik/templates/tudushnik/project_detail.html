@@ -5,7 +5,7 @@
 {% block content %}
 
     <div>
-        <button class="btn_item_delete" data-item-title="{{ object.title }}"
+        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="проект" data-redirect-url="{% url 'projects_page' %}"
                 data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2613;
         </button>
         <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>

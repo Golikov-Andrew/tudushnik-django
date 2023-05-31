@@ -1,11 +1,10 @@
 version: '3'
+
 services:
   tdm_db:
     container_name: tdm_postgres
     image: postgres:14
-    
     restart: always
-    
     environment:
       POSTGRES_DB: "${TDM_DATABASE_DTBS}"
       POSTGRES_USER: "${TDM_DATABASE_USER}"
@@ -13,19 +12,17 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
      - "5432:5432"
-    
     volumes:
       # - ./data:/docker-entrypoint-initdb.d
       - ./data:/var/lib/postgresql/data
-
     networks:
       - tdm
     
   python_server:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile.python
-    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+#    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     environment:
       POSTGRES_DB: "${TDM_DATABASE_DTBS}"
       POSTGRES_USER: "${TDM_DATABASE_USER}"
@@ -33,7 +30,7 @@ services:
     depends_on:
       - tdm_db
     ports:
-      - 8000:8000
+      - "8000:8000"
     command: python3 /usr/src/app_tdm/manage.py runserver 0.0.0.0:8000
     #command: python3 /usr/src/app_tdm/manage.py migrate && python3 /usr/src/app_tdm/manage.py collectstatic && python3 /usr/src/app_tdm/manage.py createsuperuser && python3 manage.py runserver 0.0.0.0:8000
     #command: bash init.sh && python3 manage.py runserver 0.0.0.0:8000

@@ -65,6 +65,7 @@ class ProjectDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = context["project"]
+        project_id = context["project"].id
         all_tasks = Task.objects.filter(project=context['project']).select_related().prefetch_related('tags')
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
@@ -91,6 +92,7 @@ class ProjectDetailView(DetailView):
         context['limit'] = per_page
         context['len_records'] = paginator.count
         context['all_tags'] = all_tags
+        context['project_id'] = project_id
         set_client_timezone(self.request, context)
         return context
 

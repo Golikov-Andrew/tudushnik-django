@@ -93,7 +93,7 @@ DATABASES = {
         'USER': str(os.getenv('TDM_DATABASE_USER')),
         'PASSWORD': str(os.getenv('TDM_DATABASE_PSWD')),
         'HOST': 'localhost',
-        'PORT': 5435,
+        'PORT': 5432,
     }
 }
 

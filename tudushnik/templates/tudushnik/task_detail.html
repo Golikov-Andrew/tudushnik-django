@@ -1,7 +1,16 @@
 {% extends 'tudushnik/base.html' %}
-
+{% load static %}
 
 {% block content %}
+
+    <div>
+        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="задачу"
+                data-redirect-url="{% url 'tasks_page' %}"
+                data-post-url="{% url 'task_delete' pk=object.pk %}">&#x2613;
+        </button>
+        <a href="{% url 'task_edit' pk=object.pk %}">&#9998;</a>
+    </div>
+    <br>
 
     <div>
         Создана: {{ object.created_at|date:'Y-m-d H:i' }}
@@ -36,3 +45,10 @@
 
 {% endblock content %}
 
+{% block local_scripts %}
+    {#    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/task_detail.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+{% endblock local_scripts %}

@@ -33,12 +33,7 @@ class TaskListView(ListView):
         per_page = manage_user_settings(self.request.user.id, per_page)
 
         all_projects = Project.objects.filter(owner_id=self.request.user.id).all()
-        # all_tasks = Task.objects.filter(project__in=all_projects).select_related().prefetch_related('tags')
         all_tasks = Task.objects.filter(project__in=all_projects).all()
-
-        # all_projects = Project.objects.filter(owner_id=self.request.user.id).prefetch_related('tasks').prefetch_related('tags')
-        # all_tasks = Task.objects.filter(project__in=all_projects).select_related().prefetch_related('tags')
-
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
 
         if search_section is not None:
@@ -64,10 +59,7 @@ class TaskListView(ListView):
                     kw[k] = list()
                 for v in value:
                     kw[k].append(v)
-                # q_list.append(kw)
 
-            # all_tasks = all_tasks.filter([ i for i in reduce(lambda q, f: q | Q(f), q_list, Q() )])
-            # all_tasks = all_tasks.filter(tags__in=[1, 2]).annotate(dcount=Count('tags'))
             all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
 
         paginator = Paginator(all_tasks, int(per_page))
@@ -118,11 +110,14 @@ def add_task(request, *args, **kwargs):
         form = AddTaskForm(request.POST, request.FILES)
         form.instance.owner = request.user
 
-        offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
-        if str(offset) != '0:00:00':
-            form.instance.begin_at = form.instance.begin_at - offset
-
         if form.is_valid():
+            offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
+            if str(offset) != '0:00:00':
+                print(form.instance.begin_at, flush=True)
+                print(offset, flush=True)
+                temp = form.instance.begin_at - offset
+                form.instance.begin_at = temp
+
             form.save()
             return redirect('tasks_page')
     else:
@@ -146,15 +141,14 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
         form = AddTaskForm(request.POST, request.FILES)
         form.instance.owner = request.user
 
-        offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
-        if str(offset) != '0:00:00':
-            time.sleep(3)
-            begin = form.instance.begin_at
-            print('debug', begin)
-
-            form.instance.begin_at = begin - offset
-
         if form.is_valid():
+            offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
+            if str(offset) != '0:00:00':
+                # time.sleep(3)
+                begin = form.instance.begin_at
+                print('debug', begin)
+
+                form.instance.begin_at = begin - offset
             form.save()
             return redirect('project_detail', pk=project_pk)
     else:

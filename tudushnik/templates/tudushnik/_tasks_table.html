@@ -1,7 +1,6 @@
 {% load custom_filters %}
 
 
-
 <table>
     <tbody>
     <tr>
@@ -64,6 +63,12 @@
             <td>
                 <a href="{% url 'task_detail' pk=item.pk %}">&#128065;</a>
                 <button class="btn_item_delete" data-item-title="{{ item.title }}"
+                        data-entity-name="задачу"
+                        {% if project_id %}
+                        data-redirect-url="{% url 'project_detail' pk=project_id %}"
+                        {% else %}
+                        data-redirect-url="{% url 'tasks_page' %}"
+                        {% endif %}
                         data-post-url="{% url 'task_delete' pk=item.pk %}">&#x2613;
                 </button>
                 <a href="{% url 'task_edit' pk=item.pk %}">&#9998;</a>
@@ -89,7 +94,7 @@
             </td>
             <td>
                 {{ item.begin_at|date:'Y-m-d H:i' }}
-{#                {{ item.begin_at|localtime }}#}
+                {#                {{ item.begin_at|localtime }}#}
             </td>
             <td>
                 {{ item.duration|duration_humanize }}

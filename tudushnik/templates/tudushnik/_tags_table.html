@@ -33,7 +33,7 @@
             </td>
             <td>
                 <a href="{% url 'tag_detail' pk=item.pk %}">&#128065;</a>
-                <button class="btn_item_delete" data-item-title="{{ item.title }}"
+                <button class="btn_item_delete" data-item-title="{{ item.title }}" data-entity-name="тэг" data-redirect-url="{% url 'tags_page' %}"
                         data-post-url="{% url 'tag_delete' pk=item.pk %}">&#x2613;
                 </button>
                 <a href="{% url 'tag_edit' pk=item.pk %}">&#9998;</a>
