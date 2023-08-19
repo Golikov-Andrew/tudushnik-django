@@ -87,6 +87,7 @@ class TaskDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = context["task"]
+        set_client_timezone(self.request, context)
         return context
 
 
@@ -101,6 +102,7 @@ class TaskUpdateView(UpdateView):
         context['form'].fields['project'].queryset = test
         begin_at_formated_value = context['object'].begin_at.strftime('%Y-%m-%dT%H:%M:%S')
         context['form'].initial['begin_at'] = begin_at_formated_value
+        set_client_timezone(self.request, context)
         return context
 
 
