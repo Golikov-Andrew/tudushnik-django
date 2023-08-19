@@ -1,0 +1,77 @@
+@import 'components/utils/_mixins';
+@import 'components/utils/_variables';
+
+div.pagination{
+    display:flex;
+}
+div.pagination_per_page,
+div.pagination_pages,
+div.pagination_len
+{
+    flex: 4;
+}
+
+.header-container, #content-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+td, th{
+    padding: 10px;
+}
+
+.navbar-link {
+    display: inline-block;
+    text-decoration: none;
+    padding: 4px 12px 4px 12px;
+    color: black;
+}
+
+.navbar-link:hover {
+    cursor: pointer;
+    background-color: gray;
+    color: white;
+}
+
+.navbar-link.navbar-link-active{
+    font-weight: bold;
+}
+
+.header-container {
+    padding: 10px;
+}
+
+.logo-container, .page-sidebar-left {
+    padding-left: 50px;
+    flex: 1;
+}
+
+.navbar-container {
+    text-align: center;
+}
+
+.navbar-container, .page-content {
+    flex: 12;
+    padding: 30px;
+}
+
+.profile-container {
+    flex: 3;
+    padding: 30px;
+}
+.page-sidebar-right{
+    flex: 1;
+}
+.hidden{
+    display: none;
+}
+
+.table_column_sorting.active{
+    background-color: #55bb55;
+}
+.hidden_form_elem{
+    position: fixed;
+    left: -1000px;
+    //.color-red();
+}
+
+
