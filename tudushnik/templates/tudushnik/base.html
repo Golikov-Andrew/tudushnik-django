@@ -21,8 +21,19 @@
     {% get_current_timezone as TIME_ZONE %}
     {% define TIME_ZONE as client_timezone %}
 {% endif %}
+<div class="debug_panel" style="display: block;">
+    <table>
+        <tbody>
+        <tr>
+            <th>client_timezone</th>
+        </tr>
+        <tr>
+            <td>{{ client_timezone }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-{{ client_timezone }}
 {% timezone client_timezone %}
 
 
