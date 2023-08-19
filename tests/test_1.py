@@ -1,18 +1,21 @@
 import pytest
 from django.contrib.auth.models import User
+from django.db.models.base import ObjectDoesNotExist
 from tudushnik.models.project import Project
 from tudushnik.models.task import Task
 
 
 @pytest.mark.django_db
 def test_create_n_delete_user():
-    test_user = User.objects.create(username='test_user_name', email='test_user@email.ru', password='sdifusifum')
+    test_user = User.objects.create(username='test_user_name',
+                                    email='test_user@email.ru',
+                                    password='sdifusifum')
     test_user_2 = User.objects.get(username='test_user_name')
     assert test_user == test_user_2
     test_user_2.delete()
     try:
         test_user_2 = User.objects.get(username='test_user_name')
-    except:
+    except ObjectDoesNotExist:
         test_user_2 = None
     assert test_user_2 is None
 
@@ -32,7 +35,8 @@ def test_with_authenticated_client(client, django_user_model):
     # Создание Клиента
     username = "foo_user"
     password = "bar_password"
-    user = django_user_model.objects.create_user(username=username, password=password)
+    user = django_user_model.objects.create_user(username=username,
+                                                 password=password)
     client.force_login(user)
     response = client.get('/')
     page_text = response.content.decode('utf-8')

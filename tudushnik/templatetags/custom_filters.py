@@ -1,5 +1,4 @@
 from django import template
-from django.utils.html import escape, html_safe
 from django.utils.safestring import mark_safe
 
 register = template.Library()
@@ -33,23 +32,27 @@ def duration_humanize(dur_val):
     return ', '.join(result)
 
 
-def create_table_column_search_and_sorting_widget(data_field_name: str, search_input_size: int):
+def create_table_column_search_and_sorting_widget(data_field_name: str,
+                                                  search_input_size: int):
     return mark_safe(f"""
     <div class="search_and_sorting_widget" data-field-name="{data_field_name}">
-                    <input type="text" placeholder="Search" class="inp_table_column_search" size="{search_input_size}">
-                    <button class="table_column_sorting" value="">&uarr;</button>
-                    <button class="table_column_sorting" value="-">&darr;</button>
-                </div>
+<input type="text" placeholder="Search" class="inp_table_column_search" 
+size="{search_input_size}">
+<button class="table_column_sorting" value="">&uarr;</button>
+<button class="table_column_sorting" value="-">&darr;</button>
+</div>
     """)
 
 
-def create_table_column_multi_filter_widget(data_field_name: str, val_list: list):
+def create_table_column_multi_filter_widget(data_field_name: str,
+                                            val_list: list):
     options = list()
     for val in val_list:
         options.append(f'<option value="{val.id}">{val.title}</option>')
     return mark_safe(f"""
     <div class="multi_filter_widget" data-field-name="{data_field_name}">
-    <select class="slct_table_column_multi_filter" size="3" multiple="multiple">
+    <select class="slct_table_column_multi_filter" size="3" 
+    multiple="multiple">
     {''.join(options)}
     </select></div>
     """)
@@ -60,8 +63,11 @@ def define(val=None):
     return val
 
 
-register.filter('create_class_of_navbar_link_by_title', create_class_of_navbar_link_by_title)
+register.filter('create_class_of_navbar_link_by_title',
+                create_class_of_navbar_link_by_title)
 register.filter('is_selected', is_selected)
-register.filter('create_table_column_search_and_sorting_widget', create_table_column_search_and_sorting_widget)
+register.filter('create_table_column_search_and_sorting_widget',
+                create_table_column_search_and_sorting_widget)
 register.filter('duration_humanize', duration_humanize)
-register.filter('create_table_column_multi_filter_widget', create_table_column_multi_filter_widget)
+register.filter('create_table_column_multi_filter_widget',
+                create_table_column_multi_filter_widget)

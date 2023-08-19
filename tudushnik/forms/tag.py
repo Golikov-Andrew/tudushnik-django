@@ -5,7 +5,7 @@ from tudushnik.models.tag import Tag
 class AddTagForm(forms.ModelForm):
     class Meta:
         model = Tag
-        fields = ['title','color']
+        fields = ['title', 'color']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-input'
@@ -23,7 +23,7 @@ class AddTagForm(forms.ModelForm):
 class TagUpdateForm(forms.ModelForm):
     class Meta:
         model = Tag
-        fields = ['title','color']
+        fields = ['title', 'color']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-input'

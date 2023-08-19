@@ -66,7 +66,9 @@ class ProjectDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = context["project"]
         project_id = context["project"].id
-        all_tasks = Task.objects.filter(project=context['project']).select_related().prefetch_related('tags')
+        all_tasks = Task.objects.filter(
+            project=context['project']).select_related().prefetch_related(
+            'tags')
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
         sorting_section = self.request.GET.get('sorting')
@@ -135,11 +137,13 @@ def add_project(request, *args, **kwargs):
             return redirect('projects_page')
     else:
         form = AddProjectForm()
-    return render(request, 'tudushnik/add_project.html', {'form': form, 'title': 'Добавление проекта'})
+    return render(request, 'tudushnik/add_project.html',
+                  {'form': form, 'title': 'Добавление проекта'})
 
 
 def project_delete(request, pk: int, *args, **kwargs):
     if request.method == 'POST':
-        target_object = Project.objects.filter(owner_id=request.user.id, pk=pk).first()
+        target_object = Project.objects.filter(owner_id=request.user.id,
+                                               pk=pk).first()
         target_object.delete()
         return JsonResponse({"success": True})

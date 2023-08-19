@@ -1,11 +1,10 @@
 import json
-import time
 from datetime import datetime
 
 import pytz
 
 from django.core.paginator import Paginator
-from django.db.models import Q, Count
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -16,8 +15,7 @@ from tudushnik.middleware import set_client_timezone
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
-from tudushnik.models.user_profile_settings import UserProfileSettings, \
-    manage_user_settings
+from tudushnik.models.user_profile_settings import manage_user_settings
 
 
 class TaskListView(ListView):

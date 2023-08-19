@@ -31,7 +31,8 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.10.10.250', '10.10.12.250', '10.10.10.151', '10.10.12.151', '.tdm-test.someproject.ru']
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.10.10.250', '10.10.12.250',
+# '10.10.10.151', '10.10.12.151', '.tdm-test.someproject.ru']
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.tdm-test.someproject.ru']
 # Application definition
 
@@ -111,16 +112,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'NumericPasswordValidator',
     },
 ]
 

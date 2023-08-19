@@ -24,8 +24,8 @@ class AddTaskForm(forms.ModelForm):
             'duration': forms.TextInput(attrs={
                 'type': 'number',
                 'step': '60',
-                'min':'0',
-                 'class':'hidden_form_elem'
+                'min': '0',
+                'class': 'hidden_form_elem'
             })
         }
         labels = {
@@ -67,8 +67,8 @@ class TaskUpdateForm(forms.ModelForm):
             'duration': forms.TextInput(attrs={
                 'type': 'number',
                 'step': '60',
-                'min':'0',
-                'class':'hidden_form_elem'
+                'min': '0',
+                'class': 'hidden_form_elem'
             })
         }
         labels = {
@@ -79,5 +79,4 @@ class TaskUpdateForm(forms.ModelForm):
             'tags': 'Тэги',
             'begin_at': 'Начало',
             'duration': 'Продолжительность',
-
         }
