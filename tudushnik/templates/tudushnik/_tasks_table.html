@@ -53,11 +53,11 @@
         </th>
     </tr>
     {% for item in page_obj %}
-        <tr>
+        <tr class="task-item-row">
             <td>
                 <input type="checkbox">
             </td>
-            <td>
+            <td class="task-item-id" data-task-id="{{ item.pk }}">
                 {{ item.pk }}
             </td>
             <td>
@@ -74,7 +74,11 @@
                 <a href="{% url 'task_edit' pk=item.pk %}">&#9998;</a>
             </td>
             <td>
-                {{ item.is_done }}
+                <input type="checkbox" class="task-item-done" disabled
+                        {% if item.is_done %}
+                            checked="checked"
+                        {% endif %}
+                >
             </td>
             <td>
                 <a href="{% url 'project_detail' item.project_id %}">

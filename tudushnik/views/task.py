@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 import pytz
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.paginator import Paginator
 from django.db.models import Count
@@ -179,3 +180,24 @@ def task_delete(request, pk: int, *args, **kwargs):
                                             pk=pk).first()
         target_object.delete()
         return JsonResponse({"success": True})
+
+
+def task_update_attrs(request, *args, **kwargs):
+    if request.method == 'POST':
+        task_id = int(request.POST['task_id'])
+        is_done = True if request.POST['is_done'] == 'true' else False
+        try:
+            target_object = Task.objects.filter(owner_id=request.user.id,
+                                                pk=task_id).first()
+
+            target_object.is_done = is_done
+            target_object.save()
+            print(request)
+            return JsonResponse(
+                {'success': True, 'task_id': task_id, 'is_done': is_done})
+        except ObjectDoesNotExist:
+            return JsonResponse(
+                {'success': False,
+                 'error_message': f'Ошибка! '
+                                  f'Задачи с id {task_id} не существует!',
+                 'is_done': is_done})

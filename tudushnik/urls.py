@@ -8,8 +8,7 @@ from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
     add_tag
 
 from .views.task import add_task, TaskListView, TaskDetailView, task_delete, \
-    TaskUpdateView, \
-    add_task_to_project
+    TaskUpdateView, add_task_to_project, task_update_attrs
 
 urlpatterns = [
     path('', index, name='homepage'),
@@ -27,6 +26,7 @@ urlpatterns = [
          name='task_detail'),
     path('tasks/delete/<int:pk>/', task_delete, name='task_delete'),
     path('tasks/edit/<int:pk>/', TaskUpdateView.as_view(), name='task_edit'),
+    path('tasks/update_attrs', task_update_attrs, name='task_update_attrs'),
     path('tasks/create', add_task, name='add_task'),
     path('tasks/add_to_project/<int:project_pk>/', add_task_to_project,
          name='add_task_to_project'),
