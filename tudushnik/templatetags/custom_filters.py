@@ -36,8 +36,8 @@ def create_table_column_search_and_sorting_widget(data_field_name: str,
                                                   search_input_size: int):
     return mark_safe(f"""
     <div class="search_and_sorting_widget" data-field-name="{data_field_name}">
-<input type="text" placeholder="Search" class="inp_table_column_search" 
-size="{search_input_size}">
+<input type="text" placeholder="Search" class="inp_table_column_search"
+ size="{search_input_size}">
 <button class="table_column_sorting" value="">&uarr;</button>
 <button class="table_column_sorting" value="-">&darr;</button>
 </div>
@@ -51,8 +51,8 @@ def create_table_column_multi_filter_widget(data_field_name: str,
         options.append(f'<option value="{val.id}">{val.title}</option>')
     return mark_safe(f"""
     <div class="multi_filter_widget" data-field-name="{data_field_name}">
-    <select class="slct_table_column_multi_filter" size="3" 
-    multiple="multiple">
+    <select class="slct_table_column_multi_filter" size="3"
+        multiple="multiple">
     {''.join(options)}
     </select></div>
     """)

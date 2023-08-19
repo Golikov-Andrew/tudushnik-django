@@ -20,4 +20,3 @@ class Project(models.Model):
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
         ordering = ['-updated_at']
-

@@ -44,7 +44,8 @@ class TagDetailView(DetailView):
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['title'] = context["project"]
-    #     all_tasks = Task.objects.filter(project=context['project']).select_related()
+    #     all_tasks = Task.objects.filter(project=context['project']
+    #     ).select_related()
     #     per_page = self.request.GET.get('limit')
     #     if per_page is None:
     #         per_page = 5
