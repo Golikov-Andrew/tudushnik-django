@@ -2,7 +2,14 @@
 
 @white: #fff;
 @red: red;
+@btn-bg: #e3e3e3;
 
 .color-red {
-  .sm({color: @red;});
+  .min768({color: @red;});
+}
+.ellipsis{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
 }

@@ -95,6 +95,7 @@ class ProjectDetailView(DetailView):
         context['len_records'] = paginator.count
         context['all_tags'] = all_tags
         context['project_id'] = project_id
+        context['entity_type'] = 'Проект'
         set_client_timezone(self.request, context)
         return context
 

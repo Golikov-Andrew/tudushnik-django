@@ -5,7 +5,7 @@
 {% block content %}
     {% include 'tudushnik/_pagination.html' %}
 
-    <a href="{% url 'add_task' %}">Добавить задачу</a>
+    <a class="add_item" href="{% url 'add_task' %}">+ Добавить</a>
     <br>
     {% include 'tudushnik/_tasks_table.html' %}
 {% endblock content %}

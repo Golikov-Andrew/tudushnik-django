@@ -38,8 +38,10 @@ def create_table_column_search_and_sorting_widget(data_field_name: str,
     <div class="search_and_sorting_widget" data-field-name="{data_field_name}">
 <input type="text" placeholder="Search" class="inp_table_column_search"
  size="{search_input_size}">
+ <div>
 <button class="table_column_sorting" value="">&uarr;</button>
 <button class="table_column_sorting" value="-">&darr;</button>
+</div>
 </div>
     """)
 

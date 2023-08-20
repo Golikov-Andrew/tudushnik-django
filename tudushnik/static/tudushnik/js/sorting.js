@@ -52,7 +52,7 @@ function init_btns_sort_order() {
         for (let i = 0, item, b; i < sorting_list.length; i++) {
             item = sorting_list[i]
             b = document.querySelector(
-                `div.search_and_sorting_widget[data-field-name="${item.n}"] > button[value="${item.v}"]`
+                `div.search_and_sorting_widget[data-field-name="${item.n}"] > div > button[value="${item.v}"]`
             )
             b.classList.add('active')
             b.innerHTML = b.innerHTML + i

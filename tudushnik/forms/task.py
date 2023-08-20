@@ -30,11 +30,11 @@ class AddTaskForm(forms.ModelForm):
         }
         labels = {
             'title': 'Название',
-            'content': 'Содержимое',
+            'content': 'Описание',
             'project': 'Проект',
             'tags': 'Тэги',
             'begin_at': 'Начало',
-            'duration': 'Продолжительность',
+            'duration': 'Продолж.',
         }
 
 
@@ -74,9 +74,9 @@ class TaskUpdateForm(forms.ModelForm):
         labels = {
             'title': 'Название',
             'content': 'Содержание',
-            'is_done': 'Выполнена?',
+            'is_done': 'Done?',
             'project': 'Проект',
             'tags': 'Тэги',
             'begin_at': 'Начало',
-            'duration': 'Продолжительность',
+            'duration': 'Продолж.',
         }

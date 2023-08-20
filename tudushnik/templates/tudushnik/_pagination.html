@@ -1,7 +1,7 @@
 {% load custom_filters %}
 <div class="pagination">
     <div class="pagination_per_page">
-        <label for="pagination_limit">Кол-во на странице: </label>
+        <label for="pagination_limit">Кол-во/стр.: </label>
         <select id="pagination_limit">
             <option value="5" {{ limit|is_selected:'5' }}>5</option>
             <option value="10" {{ limit|is_selected:'10' }}>10</option>
@@ -30,4 +30,3 @@
         <span>Всего записей:{{ len_records }}</span>
     </div>
 </div>
-<br>

@@ -4,30 +4,38 @@
 
 {% block content %}
 
-    <div>
-        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="проект" data-redirect-url="{% url 'projects_page' %}"
-                data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2613;
-        </button>
-        <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
-    </div>
-    <br>
-    <div>
-        Создан: {{ object.created_at|date:'Y-m-d H:i' }}
-    </div>
-    <div>
-        Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
-    </div>
-    <br>
-    <div>
-        <h4>Описание</h4>
-        <span>
+    <div class="entity_header">
+        <div class="entity_tools">
+            <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="проект"
+                    data-redirect-url="{% url 'projects_page' %}"
+                    data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2613;
+            </button>
+            <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
+        </div>
+        <br>
+        <div class="entity_datetimes">
+            <div>
+                Создан: {{ object.created_at|date:'Y-m-d H:i' }}
+            </div>
+            <div>
+                Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
+            </div>
+        </div>
+        <div class="entity_description">
+            <h4>Описание</h4>
+            <span>
             {{ object.description }}
         </span>
+        </div>
     </div>
-    <div>
+
+    <div class="items_table_wrapper">
         <h4>Задачи</h4>
         {% include 'tudushnik/_pagination.html' %}
-        <a href="{% url 'add_task_to_project' project_pk=object.pk %}">Добавить задачу</a>
+        <div class="toolbar">
+            <a class="btn_rounded add_item" href="{% url 'add_task_to_project' project_pk=object.pk %}">+ Добавить</a>
+            <a class="btn_rounded del_item" href="#">- Удалить</a>
+        </div>
         <br>
         {% include 'tudushnik/_tasks_table.html' %}
     </div>
