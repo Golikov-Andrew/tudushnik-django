@@ -1,0 +1,157 @@
+@import 'utils/_mixins';
+@import 'utils/_variables';
+
+#content-container {
+  //display: flex;
+  //flex-wrap: wrap;
+  margin: 68px 6px 0 6px;
+  padding: 4px;
+}
+
+.page-sidebar-left {
+  //flex: 1;
+}
+
+.page-content {
+  //flex: 12;
+  h1 {
+    font-size: 16px;
+    margin: 0 0 8px 0;
+  }
+}
+
+.entity_header {
+  display: grid;
+  grid-template-areas:
+        "entity_tools entity_datetimes"
+        "entity_description entity_description";
+  grid-template-columns: 100px auto;
+}
+
+.entity_tools {
+  font-size: 20px;
+  grid-area: entity_tools;
+  display: flex;
+  align-items: flex-start;
+  width: 96px;
+  padding-top: 4px;
+
+  a {
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn_item_delete {
+    margin-right: 6px;
+  }
+}
+
+.entity_datetimes {
+  grid-area: entity_datetimes;
+  font-size: 12px;
+  text-align: right;
+}
+
+.entity_description {
+  grid-area: entity_description;
+
+  h4 {
+    margin: 6px 0;
+  }
+
+  span {
+    font-size: 12px;
+  }
+}
+
+.items_table_wrapper {
+  h4 {
+    margin: 6px 0;
+  }
+
+  .btn_rounded {
+    font-size: 12px;
+    padding: 2px;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 10px;
+  }
+
+  .add_item {
+    background-color: forestgreen;
+
+    &:hover {
+      background-color: darkgreen;
+    }
+  }
+
+  .del_item {
+    background-color: indianred;
+
+    &:hover {
+      background-color: darkred;
+    }
+  }
+
+  .toolbar {
+    margin-top: 16px;
+  }
+
+  table {
+    width: 100%;
+    border-spacing: unset;
+    font-size: 12px;
+
+    td, th {
+      padding: 0 6px;
+      outline: 1px solid lightgray;
+    }
+
+    td {
+      .ellipsed_text {
+        .ellipsis();
+        -webkit-line-clamp: 4;
+      }
+    }
+
+    tr {
+      outline: 1px solid lightgray;
+
+      .table_item_tools {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .min768({
+          flex-direction: unset;
+          flex-wrap: wrap;
+          justify-content: center;
+        });
+      }
+
+      .task_item_done {
+        text-align: center;
+      }
+    }
+
+    .task-item-row {
+      a {
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+
+    .task-item-id {
+      text-align: center;
+    }
+
+    .slct_table_column_multi_filter {
+      font-size: 12px;
+
+      option {
+        font-size: 10px;
+      }
+    }
+
+  }
+}
