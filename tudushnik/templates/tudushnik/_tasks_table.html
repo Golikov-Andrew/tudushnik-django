@@ -62,9 +62,9 @@
                         {% else %}
                         data-redirect-url="{% url 'tasks_page' %}"
                         {% endif %}
-                        data-post-url="{% url 'task_delete' pk=item.pk %}">&#x2613;
+                        data-post-url="{% url 'task_delete' pk=item.pk %}">&#x2715;
                 </button>
-                <a href="{% url 'task_edit' pk=item.pk %}">&#9998;</a>
+                <a class="table_item_edit" href="{% url 'task_edit' pk=item.pk %}">&#9998;</a>
             </td>
             <td class="task-item-id" data-task-id="{{ item.pk }}">
                 {{ item.pk }}
@@ -81,30 +81,30 @@
             {#                <a href="{% url 'project_detail' item.project_id %}">#}
             {#                    {{ item.project }}</a>#}
             {#            </td>#}
-            <td>
+            <td class="task_item_title">
                 {{ item.title }}
             </td>
-            <td>
+            <td class="task_item_description">
                 <div class="ellipsed_text">
                     {{ item.content|truncatechars:100 }}
                 </div>
             </td>
-            <td>
+            <td class="task_item_created_at">
                 {{ item.created_at|date:'Y-m-d H:i' }}
             </td>
-            <td>
+            <td class="task_item_updated_at">
                 {{ item.updated_at|date:'Y-m-d H:i' }}
             </td>
-            <td>
+            <td class="task_item_begin_at">
                 {{ item.begin_at|date:'Y-m-d H:i' }}
                 {#                {{ item.begin_at|localtime }}#}
             </td>
-            <td>
+            <td class="task_item_duration">
                 {{ item.duration|duration_humanize }}
             </td>
-            <td>
+            <td class="task_item_tags">
                 {% for item in item.tags.all %}
-                    <span style="background-color: {{ item.color }}">{{ item.title }}</span>
+                    <span class="task_item_tag" style="background-color: {{ item.color }}">{{ item.title }}</span>
                 {% endfor %}
             </td>
 

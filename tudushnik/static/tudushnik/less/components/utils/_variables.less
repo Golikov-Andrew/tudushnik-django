@@ -2,14 +2,24 @@
 
 @white: #fff;
 @red: red;
-@btn-bg: #e3e3e3;
+@btn-bg: #c2c2c2;
+@labelGray: #626262;
 
 .color-red {
-  .min768({color: @red;});
+  .min768({
+    color: @red;
+  });
 }
-.ellipsis{
+
+.ellipsis {
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+}
+
+.small_label {
+  font-size: 10px;
+  margin: 0;
+  color: @labelGray;
 }

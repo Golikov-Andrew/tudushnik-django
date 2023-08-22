@@ -13,19 +13,23 @@
 }
 
 .page-content {
-  //flex: 12;
-  h1 {
-    font-size: 16px;
-    margin: 0 0 8px 0;
+  .page-title-label {
+    .small_label();
   }
 }
 
 .entity_header {
   display: grid;
   grid-template-areas:
-        "entity_tools entity_datetimes"
-        "entity_description entity_description";
-  grid-template-columns: 100px auto;
+        "page-title-container entity_tools entity_datetimes"
+        "entity_description entity_description entity_description";
+  grid-template-columns: 100px 50px auto;
+  row-gap: 8px;
+  margin-bottom: -16px;
+}
+
+.page-title-container {
+  grid-area: page-title-container;
 }
 
 .entity_tools {
@@ -43,6 +47,7 @@
 
   .btn_item_delete {
     margin-right: 6px;
+    padding: 1px 4px;
   }
 }
 
@@ -55,18 +60,22 @@
 .entity_description {
   grid-area: entity_description;
 
-  h4 {
+  .entity_description_label {
     margin: 6px 0;
+    .small_label();
   }
 
-  span {
+  .entity_description_value {
     font-size: 12px;
+    .ellipsis();
+    -webkit-line-clamp: 2;
   }
 }
 
 .items_table_wrapper {
-  h4 {
+  .items_table_label {
     margin: 6px 0;
+    .small_label();
   }
 
   .btn_rounded {
@@ -94,8 +103,18 @@
     }
   }
 
+  .btn_table_filter,
+  .btn_table_order,
+  .btn_table_search {
+    background-color: cadetblue;
+
+    &:hover {
+      background-color: #3f7779;
+    }
+  }
+
   .toolbar {
-    margin-top: 16px;
+    margin-top: 8px;
   }
 
   table {
@@ -115,6 +134,13 @@
       }
     }
 
+    th {
+      display: none;
+      .min768({
+        display: table-cell;
+      });
+    }
+
     tr {
       outline: 1px solid lightgray;
 
@@ -122,19 +148,41 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 24px;
         .min768({
           flex-direction: unset;
           flex-wrap: wrap;
           justify-content: center;
+          width: unset;
         });
+
+        .btn_item_delete {
+          padding: 1px 4px;
+        }
+      }
+
+      .table_item_edit {
+        display: none;
+        .min768({
+          display: block;
+        });
+
       }
 
       .task_item_done {
+        top: 0;
+        left: -4px;
+        position: absolute;
+        .min768({
+          position: static;
+        });
         text-align: center;
       }
     }
 
     .task-item-row {
+      position: relative;
+
       a {
         text-decoration: none;
         cursor: pointer;
@@ -142,7 +190,84 @@
     }
 
     .task-item-id {
+      display: none;
+      .min768({
+        display: table-cell;
+      });
       text-align: center;
+    }
+
+    .task_item_title {
+      top: 4px;
+      left: 36px;
+      position: absolute;
+      .min768({
+        position: static;
+      });
+    }
+
+    .task_item_description {
+      top: 22px;
+      left: 36px;
+      width: 170px;
+      position: absolute;
+      .min768({
+        position: static;
+        width: unset;
+      });
+    }
+
+    .task_item_created_at, .task_item_updated_at {
+      display: none;
+      .min768({
+        display: table-cell;
+      });
+    }
+
+    .task_item_begin_at {
+      top: 0;
+      left: unset;
+      right: 0;
+      width: 100px;
+      position: absolute;
+      .min768({
+        position: static;
+        width: unset;
+      });
+    }
+
+    .task_item_duration {
+      top: 22px;
+      left: unset;
+      right: 0;
+      width: 100px;
+      position: absolute;
+      .min768({
+        position: static;
+        width: unset;
+      });
+    }
+
+    .task_item_tags {
+      top: 37px;
+      left: unset;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      width: 100px;
+      position: absolute;
+      .min768({
+        position: static;
+        width: unset;
+        display: table-cell;
+      });
+    }
+
+    .task_item_tag {
+      display: flex;
+      min-width: 20px;
+      overflow: hidden;
+      height: 16px;
     }
 
     .slct_table_column_multi_filter {

@@ -5,10 +5,16 @@
 {% block content %}
 
     <div class="entity_header">
+        <div class="page-title-container">
+            <div class="page-title-label">{{ entity_type }}</div>
+            <div class="page-title">
+                {{ title }}
+            </div>
+        </div>
         <div class="entity_tools">
             <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="проект"
                     data-redirect-url="{% url 'projects_page' %}"
-                    data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2613;
+                    data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2715;
             </button>
             <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
         </div>
@@ -22,19 +28,22 @@
             </div>
         </div>
         <div class="entity_description">
-            <h4>Описание</h4>
-            <span>
-            {{ object.description }}
-        </span>
+            <div class="entity_description_label">Описание</div>
+            <div class="entity_description_value">
+                {{ object.description }}
+            </div>
         </div>
     </div>
 
     <div class="items_table_wrapper">
-        <h4>Задачи</h4>
+        <div class="items_table_label">Задачи</div>
         {% include 'tudushnik/_pagination.html' %}
         <div class="toolbar">
             <a class="btn_rounded add_item" href="{% url 'add_task_to_project' project_pk=object.pk %}">+ Добавить</a>
             <a class="btn_rounded del_item" href="#">- Удалить</a>
+            <a class="btn_rounded btn_table_filter" href="#">Фильтр</a>
+            <a class="btn_rounded btn_table_order" href="#">Упорядочить</a>
+            <a class="btn_rounded btn_table_search" href="#">Поиск</a>
         </div>
         <br>
         {% include 'tudushnik/_tasks_table.html' %}
