@@ -135,12 +135,19 @@ body > .wrapper {
   padding: 0 6px;
   outline: 1px solid lightgray;
 }
-.items_table_wrapper table td .ellipsed_text {
+.items_table_wrapper table td .ellipsed_text_1 {
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 1;
+}
+.items_table_wrapper table td .ellipsed_text_2 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 .items_table_wrapper table th {
   display: none;
@@ -208,17 +215,19 @@ body > .wrapper {
 .items_table_wrapper table .task_item_title {
   top: 4px;
   left: 36px;
+  width: calc(100vw - 170px);
   position: absolute;
 }
 @media (min-width: 768px) {
   .items_table_wrapper table .task_item_title {
     position: static;
+    width: unset;
   }
 }
 .items_table_wrapper table .task_item_description {
   top: 22px;
   left: 36px;
-  width: 170px;
+  width: calc(100vw - 170px);
   position: absolute;
 }
 @media (min-width: 768px) {

@@ -129,9 +129,13 @@
     }
 
     td {
-      .ellipsed_text {
+      .ellipsed_text_1 {
         .ellipsis();
-        -webkit-line-clamp: 4;
+        -webkit-line-clamp: 1;
+      }
+      .ellipsed_text_2 {
+        .ellipsis();
+        -webkit-line-clamp: 2;
       }
     }
 
@@ -201,16 +205,18 @@
     .task_item_title {
       top: 4px;
       left: 36px;
+      width: calc(100vw - 170px);
       position: absolute;
       .min768({
         position: static;
+        width: unset;
       });
     }
 
     .task_item_description {
       top: 22px;
       left: 36px;
-      width: 170px;
+      width: calc(100vw - 170px);
       position: absolute;
       .min768({
         position: static;
