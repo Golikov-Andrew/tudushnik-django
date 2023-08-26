@@ -123,6 +123,7 @@ body > .wrapper {
 }
 .items_table_wrapper .toolbar {
   margin-top: 8px;
+  margin-bottom: 8px;
 }
 .items_table_wrapper table {
   width: 100%;
