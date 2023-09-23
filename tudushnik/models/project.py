@@ -16,6 +16,15 @@ class Project(models.Model):
     def get_absolute_url(self):
         return reverse('project_detail', kwargs={'pk': self.pk})
 
+    def to_json(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+            'owner': self.owner,
+        }
+
     class Meta:
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'

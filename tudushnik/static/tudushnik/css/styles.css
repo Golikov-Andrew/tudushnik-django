@@ -28,6 +28,9 @@ body > .wrapper {
   margin: 0;
   color: #626262;
 }
+.hidden {
+  display: none;
+}
 #content-container {
   margin: 68px 6px 0 6px;
   padding: 4px;
@@ -318,6 +321,40 @@ body > .wrapper {
 }
 #pagination_limit {
   font-size: 12px;
+}
+.viewport_toolbar {
+  font-size: 12px;
+}
+#viewport_type_select {
+  font-size: 12px;
+}
+.viewport_datetimeline {
+  overflow: scroll;
+  width: 100%;
+  height: 500px;
+  position: relative;
+}
+.current_timeline {
+  width: 100%;
+  background-color: red;
+  height: 1px;
+  position: absolute;
+  top: 200px;
+}
+.ruler {
+  width: 20px;
+  background-color: #626262;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1000px;
+}
+.viewport_datetimeline_canvas {
+  position: absolute;
+  top: 100px;
+  width: 100%;
+  background-color: #d0d0d0;
+  height: 1000px;
 }
 td,
 th {

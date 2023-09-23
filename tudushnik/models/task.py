@@ -34,6 +34,20 @@ class Task(models.Model):
     def get_absolute_url(self):
         return reverse('task_detail', kwargs={'pk': self.pk})
 
+    def to_json(self):
+        return {
+            'title': self.title,
+            'content': self.content,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+            'begin_at': self.begin_at,
+            'is_done': self.is_done,
+            'project': str(self.project),
+            'owner': str(self.owner),
+            'duration': self.duration,
+            # 'tags': self.tags
+        }
+
     class Meta:
         verbose_name = 'Task'
         verbose_name_plural = 'Tasks'

@@ -201,3 +201,31 @@ def task_update_attrs(request, *args, **kwargs):
                  'error_message': f'Ошибка! '
                                   f'Задачи с id {task_id} не существует!',
                  'is_done': is_done})
+
+
+def tasks_fetch(request, *args, **kwargs):
+    if request.method == 'POST':
+        date_from = request.POST['date_from']
+        date_to = request.POST['date_to']
+        cur_tz = set_client_timezone(request, kwargs)
+        offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
+        # if str(offset) != '0:00:00':
+        #     print(offset)
+        date_from_parsed = datetime.fromisoformat(date_from)
+        date_to_parsed = datetime.fromisoformat(date_to)
+        date_from = (date_from_parsed - offset).strftime('%Y-%m-%dT%H:%M')
+        date_to = (date_to_parsed - offset).strftime('%Y-%m-%dT%H:%M')
+
+        query = Task.objects.filter(
+            owner_id=request.user.id,
+            begin_at__gt=date_from,
+            begin_at__lt=date_to
+        )
+
+        result = query.all()
+
+        if result is None:
+            result = list()
+
+        return JsonResponse(
+            {'success': True, 'tasks': [t.to_json() for t in result]})

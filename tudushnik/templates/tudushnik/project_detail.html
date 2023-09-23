@@ -1,6 +1,10 @@
 {% extends 'tudushnik/base.html' %}
 {% load static %}
 
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/viewport_toolbar.css' %}">
+{% endblock local_styles %}
+
 
 {% block content %}
 
@@ -37,6 +41,13 @@
 
     <div class="items_table_wrapper">
         <div class="items_table_label">Задачи</div>
+        <div class="viewport_toolbar">
+            <label for="viewport_type_select">Вид: </label>
+            <select name="viewport_type" id="viewport_type_select">
+                <option value="table">Таблица</option>
+                <option value="datetimeline">Таймлайн</option>
+            </select>
+        </div>
         {% include 'tudushnik/_pagination.html' %}
         <div class="toolbar">
             <a class="btn_rounded add_item" href="{% url 'add_task_to_project' project_pk=object.pk %}">+ Добавить</a>
@@ -46,6 +57,7 @@
             <a class="btn_rounded btn_table_search" href="#">Поиск</a>
         </div>
         {% include 'tudushnik/_tasks_table.html' %}
+        {% include 'tudushnik/_viewport_datetimeline.html' %}
     </div>
 
 {% endblock content %}
@@ -53,6 +65,7 @@
 
 {% block local_scripts %}
     <script type="text/javascript" src="{% static 'tudushnik/js/dist/task.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/dist/viewport.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/projects_detail.js' %}"></script>

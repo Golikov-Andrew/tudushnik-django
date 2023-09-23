@@ -4,7 +4,8 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        task: ['./src/task/index.js']
+        task: ['./src/task/index.js'],
+        viewport: ['./src/viewport/index.js']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
