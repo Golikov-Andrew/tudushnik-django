@@ -25,7 +25,7 @@
 }
 
 .ruler {
-  width: 20px;
+  width: 100px;
   background-color: #626262;
   position: absolute;
   top: 0;
@@ -33,10 +33,45 @@
   height: 1000px;
 }
 
+.ruler_row {
+  outline: 1px solid gray;
+}
+
 .viewport_datetimeline_canvas {
   position: absolute;
-  top: 100px;
   width: 100%;
   background-color: #d0d0d0;
-  height: 1000px;
+}
+
+.tasks_container {
+  position: absolute;
+}
+
+.task_elem {
+  position: absolute;
+  overflow: hidden;
+  line-height: 0.8;
+  font-size: 12px;
+  background-color: #55bb55;
+
+  .task_content {
+    background-color: yellow;
+  }
+
+  .task_begin_at {
+    background-color: deepskyblue;
+  }
+
+  .task_tool {
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    display: inline-block;
+    width: 14px;
+    background-color: #626262;
+
+    &.to_move_x {
+      cursor: grab;
+    }
+  }
 }

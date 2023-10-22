@@ -20,9 +20,10 @@ class Task(models.Model):
                                 related_name='tasks')
     owner = models.ForeignKey(User, on_delete=models.CASCADE,
                               related_name='tasks')
-    # duration = models.DurationField(default=timedelta(minutes=5))
     duration = models.IntegerField(default=300)
     tags = models.ManyToManyField(Tag, related_name='tasks', blank=True)
+    width = models.IntegerField(default=400)
+    diagram_offset_x = models.IntegerField(default=100)
 
     # views = models.IntegerField(default=0)
     # slug = models.SlugField(max_length=255, unique=True,
@@ -36,6 +37,7 @@ class Task(models.Model):
 
     def to_json(self):
         return {
+            'pk': self.pk,
             'title': self.title,
             'content': self.content,
             'created_at': self.created_at,
@@ -45,6 +47,8 @@ class Task(models.Model):
             'project': str(self.project),
             'owner': str(self.owner),
             'duration': self.duration,
+            'width': self.width,
+            'diagram_offset_x': self.diagram_offset_x,
             # 'tags': self.tags
         }
 

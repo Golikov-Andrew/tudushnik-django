@@ -228,4 +228,9 @@ def tasks_fetch(request, *args, **kwargs):
             result = list()
 
         return JsonResponse(
-            {'success': True, 'tasks': [t.to_json() for t in result]})
+            {
+                'success': True,
+                'offset': str(offset),
+                'tasks': [t.to_json() for t in result]
+            }
+        )
