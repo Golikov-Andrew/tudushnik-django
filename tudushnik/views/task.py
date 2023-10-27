@@ -101,11 +101,14 @@ class TaskUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         test = Project.objects.filter(owner_id=self.request.user.id).all()
         context['form'].fields['project'].queryset = test
-        begin_at_formated_value = context['object'].begin_at.strftime(
-            '%Y-%m-%dT%H:%M:%S')
-        context['form'].initial['begin_at'] = begin_at_formated_value
         set_client_timezone(self.request, context)
         return context
+
+    def form_valid(self, form):
+        naived = timezone.make_naive(form.instance.begin_at)
+        form.instance.begin_at = timezone.make_aware(naived, pytz.timezone(
+            self.kwargs['client_timezone']))
+        return super().form_valid(form)
 
 
 def add_task(request, *args, **kwargs):
