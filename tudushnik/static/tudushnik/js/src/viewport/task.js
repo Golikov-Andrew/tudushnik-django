@@ -1,3 +1,4 @@
+import "jquery";
 import moment from "moment";
 
 class Task {
@@ -90,12 +91,12 @@ class Task {
 
     calc_new_begin_at(current_moment_line_top_val, new_top, height_of_task_elem) {
         let pixel_offset = current_moment_line_top_val - (new_top + height_of_task_elem)
-        let min_difference = 3 * pixel_offset
+        let min_difference = this.viewport_dt_line.scale.get_y_min_per_px() * pixel_offset
         return moment(this.viewport_dt_line.now_moment + moment.duration(min_difference, 'minutes')).format('Y-MM-DDTHH:mm:ss')
     }
 
     calc_new_duration(new_height_of_task_elem) {
-        return new_height_of_task_elem * 3 * 60
+        return new_height_of_task_elem * this.viewport_dt_line.scale.get_y_min_per_px() * 60
     }
 
     create_tooltip(evt, initial_tooltip_text) {
