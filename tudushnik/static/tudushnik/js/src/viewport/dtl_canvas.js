@@ -1,3 +1,5 @@
+import "jquery";
+
 class DatetimelineCanvas {
     constructor(viewport_dt_line) {
         this.viewport = viewport_dt_line;

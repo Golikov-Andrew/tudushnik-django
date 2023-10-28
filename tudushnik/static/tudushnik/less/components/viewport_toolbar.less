@@ -64,6 +64,10 @@
   .task_begin_at {
     background-color: deepskyblue;
   }
+  .task_duration{
+    background-color: darkblue;
+    color: white;
+  }
 
   .task_tool {
     text-align: center;
@@ -76,5 +80,25 @@
     &.to_move_x {
       cursor: grab;
     }
+    &.to_edit_width {
+      position: absolute;
+      top: 0;
+      right: 0;
+      cursor: ew-resize;
+    }
+    &.to_edit_duration{
+      position: absolute;
+      top: 0;
+      right: 30px;
+      cursor: ns-resize;
+    }
   }
+}
+
+.task_tooltip{
+  position: fixed;
+  z-index: 100;
+  background-color: white;
+  font-size: 12px;
+  width: 200px;
 }

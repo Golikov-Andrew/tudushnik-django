@@ -71,6 +71,10 @@
 .task_elem .task_begin_at {
   background-color: deepskyblue;
 }
+.task_elem .task_duration {
+  background-color: darkblue;
+  color: white;
+}
 .task_elem .task_tool {
   text-align: center;
   font-size: 14px;
@@ -81,4 +85,23 @@
 }
 .task_elem .task_tool.to_move_x {
   cursor: grab;
+}
+.task_elem .task_tool.to_edit_width {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: ew-resize;
+}
+.task_elem .task_tool.to_edit_duration {
+  position: absolute;
+  top: 0;
+  right: 30px;
+  cursor: ns-resize;
+}
+.task_tooltip {
+  position: fixed;
+  z-index: 100;
+  background-color: white;
+  font-size: 12px;
+  width: 200px;
 }

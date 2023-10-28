@@ -211,6 +211,21 @@ def task_update_attrs(request, *args, **kwargs):
         if diagram_offset_x is not None:
             target_object.diagram_offset_x = diagram_offset_x
 
+        width = json_data.get('width')
+        if width is not None:
+            target_object.width = width
+
+        duration = json_data.get('duration')
+        if duration is not None:
+            target_object.duration = duration
+
+        begin_at = json_data.get('begin_at')
+        if begin_at is not None:
+            begin_at = timezone.make_aware(datetime.fromisoformat(begin_at), pytz.timezone(
+                kwargs['client_timezone']))
+            print(begin_at)
+            target_object.begin_at = begin_at
+
         target_object.save()
         print(request)
         json_resp = {'success': True, 'task_id': task_id}
