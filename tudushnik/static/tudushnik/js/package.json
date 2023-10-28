@@ -12,7 +12,9 @@
     "app": "webpack --mode production"
   },
   "dependencies": {
-    "jquery": "^3.7.0"
+    "jquery": "^3.7.0",
+    "moment": "^2.29.4",
+    "moment-duration-format": "^2.3.2"
   },
   "devDependencies": {
     "webpack": "^5.88.2",
