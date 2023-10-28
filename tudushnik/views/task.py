@@ -187,23 +187,35 @@ def task_delete(request, pk: int, *args, **kwargs):
 
 def task_update_attrs(request, *args, **kwargs):
     if request.method == 'POST':
-        task_id = int(request.POST['task_id'])
-        is_done = True if request.POST['is_done'] == 'true' else False
+        json_data = json.loads(request.body)
+        task_id = int(json_data['task_id'])
+        json_data['task_id'] = task_id
+        target_object = None
         try:
             target_object = Task.objects.filter(owner_id=request.user.id,
                                                 pk=task_id).first()
-
-            target_object.is_done = is_done
-            target_object.save()
-            print(request)
-            return JsonResponse(
-                {'success': True, 'task_id': task_id, 'is_done': is_done})
         except ObjectDoesNotExist:
-            return JsonResponse(
-                {'success': False,
-                 'error_message': f'Ошибка! '
-                                  f'Задачи с id {task_id} не существует!',
-                 'is_done': is_done})
+            json_resp = {
+                'success': False,
+                'error_message': f'Ошибка! '
+                                 f'Задачи с id {task_id} не существует!'
+            }
+            json_resp.update(json_data)
+            return JsonResponse(json_resp)
+
+        is_done = json_data.get('is_done')
+        if is_done is not None:
+            target_object.is_done = is_done
+
+        diagram_offset_x = json_data.get('diagram_offset_x')
+        if diagram_offset_x is not None:
+            target_object.diagram_offset_x = diagram_offset_x
+
+        target_object.save()
+        print(request)
+        json_resp = {'success': True, 'task_id': task_id}
+        json_resp.update(json_data)
+        return JsonResponse(json_resp)
 
 
 def tasks_fetch(request, *args, **kwargs):

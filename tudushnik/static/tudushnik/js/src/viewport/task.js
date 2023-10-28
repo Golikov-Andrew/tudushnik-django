@@ -5,14 +5,17 @@ class Task {
         this.elem = document.createElement('div')
         this.elem.classList.add('task_elem')
         let anchor_elem = document.createElement('div')
+        this.dropTaskHandler;
+        this.moveTaskHandler;
         anchor_elem.innerHTML = '&#8226;'
         anchor_elem.classList.add('task_tool')
         anchor_elem.classList.add('to_move_x')
         anchor_elem.addEventListener('mousedown', (evt) => {
-            console.log('down')
             this.create_task_avatar()
-            window.addEventListener('mouseup', this.dropTask.bind(this))
-            window.addEventListener('mousemove', this.moveTask.bind(this))
+            this.dropTaskHandler = this.dropTask.bind(this)
+            this.moveTaskHandler = this.moveTask.bind(this)
+            window.addEventListener('mouseup', this.dropTaskHandler)
+            window.addEventListener('mousemove', this.moveTaskHandler)
         })
 
 
@@ -43,18 +46,43 @@ class Task {
     }
 
     dropTask(evt) {
-        console.log('up')
-        this.tasks_container_elem.removeChild(this.current_task_avatar)
-        this.current_task_avatar = undefined
-        window.removeEventListener('mouseup', this.dropTask)
-        window.removeEventListener('mousemove', this.moveTask)
+        evt.preventDefault();
+        evt.stopPropagation();
+        let diagram_offset_x = parseInt(this.current_task_avatar.style.left)
+        $.ajax({
+            type: "POST",
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            url: '/tasks/update_attrs',
+            data: JSON.stringify({
+                'task_id': this.task_obj.pk,
+                'diagram_offset_x': diagram_offset_x,
+            }),
+            success: (data) => {
+                if (data.success === true) {
+                    this.elem.style.left = diagram_offset_x + 'px'
+                    this.tasks_container_elem.removeChild(this.current_task_avatar)
+                    this.current_task_avatar = undefined
+                    window.removeEventListener('mouseup', this.dropTaskHandler)
+                    window.removeEventListener('mousemove', this.moveTaskHandler)
+                } else {
+                    alert(data.error_message);
+                    this.tasks_container_elem.removeChild(this.current_task_avatar)
+                    this.current_task_avatar = undefined
+                    window.removeEventListener('mouseup', this.dropTaskHandler)
+                    window.removeEventListener('mousemove', this.moveTaskHandler)
+                }
+            },
+            dataType: 'json'
+        });
     }
 
     moveTask(evt) {
-        console.log(evt)
-        console.log(this)
-        this.current_task_avatar.style.top = `${evt.layerY}px`
-        this.current_task_avatar.style.left = `${evt.layerX}px`
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.current_task_avatar.style.top = parseInt(this.current_task_avatar.style.top) + evt.movementY + 'px'
+        this.current_task_avatar.style.left = parseInt(this.current_task_avatar.style.left) + evt.movementX + 'px'
     }
 }
 

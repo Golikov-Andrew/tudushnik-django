@@ -17,15 +17,15 @@ class Task {
                         'X-CSRFToken': csrfToken
                     },
                     url: '/tasks/update_attrs',
-                    data: {
+                    data: JSON.stringify({
                         'task_id': cur_id,
                         'is_done': cur_done.checked,
-                    },
-                    success: (data)=>{
+                    }),
+                    success: (data) => {
                         console.log(data)
-                        if(data.success === true){
+                        if (data.success === true) {
                             cur_done.checked = data.is_done;
-                        }else{
+                        } else {
                             alert(data.error_message);
                             cur_done.checked = !data.is_done;
                         }
