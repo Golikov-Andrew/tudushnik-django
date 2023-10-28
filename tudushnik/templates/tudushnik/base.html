@@ -7,88 +7,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="shortcut icon" href="{% static 'tudushnik/favicon.ico' %}">
     <title>tudushnik | {{ title }}</title>
 
     <link rel="stylesheet" href="{% static 'tudushnik/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'tudushnik/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'tudushnik/css/debug_panel.css' %}">
     <input type="text" hidden value="{{ csrf_token }}" name="csrfmiddlewaretoken">
     {% block local_styles %}
     {% endblock local_styles %}
 </head>
 <body>
-
-{% if client_timezone is none %}
-    {% get_current_timezone as TIME_ZONE %}
-    {% define TIME_ZONE as client_timezone %}
-{% endif %}
-
-{{ client_timezone }}
-{% timezone client_timezone %}
-
-
-    <header class="header-container">
-
-        <div class="logo-container">
-            <h1>TUDUSHNIK</h1>
-        </div>
-
-        <nav class="navbar-container">
-            <a class="{{ title|create_class_of_navbar_link_by_title:'Главная' }}"
-               href="{% url 'homepage' %}">Главная</a>
-            {% if request.user.is_authenticated %}
-                <a class="{{ title|create_class_of_navbar_link_by_title:'Проекты' }}"
-                   href="{% url 'projects_page' %}">Проекты</a>
-                <a class="{{ title|create_class_of_navbar_link_by_title:'Задачи' }}"
-                   href="{% url 'tasks_page' %}">Задачи</a>
-                <a class="{{ title|create_class_of_navbar_link_by_title:'Тэги' }}"
-                   href="{% url 'tags_page' %}">Тэги</a>
-            {% endif %}
-            {% if user.is_superuser %}
-                <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>
-            {% endif %}
-        </nav>
-
-        <div class="profile-container">
-            {% if request.user.is_authenticated %}
-                <a class="navbar-link" href="{% url 'profile' %}">Профиль</a>
-                <a class="navbar-link" href="{% url 'logout' %}">Выйти</a>
-            {% else %}
-                <a class="navbar-link" href="{% url 'login' %}">Войти</a>
-                <a class="navbar-link" href="{% url 'register' %}">Регистрация</a>
-            {% endif %}
-        </div>
-
-    </header>
-
-    <div id="content-container">
-        <div class="page-sidebar-left">
-            {% block sidebar_left %}
-            {% endblock sidebar_left %}
-        </div>
-
-        <div class="page-content">
-            <h1>{{ title }}</h1>
-
-
-            {% block content %}
-            {% endblock content %}
-        </div>
-
-        <div class="page-sidebar-right">
-            {% block sidebar_right %}
-            {% endblock sidebar_right %}
-        </div>
-
+<div class="wrapper">
+    {% if client_timezone is none %}
+        {% get_current_timezone as TIME_ZONE %}
+        {% define TIME_ZONE as client_timezone %}
+    {% endif %}
+    <div class="debug_panel">
+        <table>
+            <tbody>
+            <tr>
+                <th>client_timezone</th>
+            </tr>
+            <tr>
+                <td>{{ client_timezone }}</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
+    {% timezone client_timezone %}
 
 
-    <script type="text/javascript" src="{% static 'tudushnik/js/moment-with-locales.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/cookie.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/moment-timezone-with-data.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/utils.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/detect_timezone.js' %}"></script>
-{% endtimezone %}
+        <header class="header-container">
+
+            <div class="logo-container">
+                <h1>TUDUSHNIK</h1>
+            </div>
+
+            <nav class="navbar-container">
+                <a class="{{ title|create_class_of_navbar_link_by_title:'Главная' }}"
+                   href="{% url 'homepage' %}">Главная</a>
+                {% if request.user.is_authenticated %}
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Проекты' }}"
+                       href="{% url 'projects_page' %}">Проекты</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Задачи' }}"
+                       href="{% url 'tasks_page' %}">Задачи</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Тэги' }}"
+                       href="{% url 'tags_page' %}">Тэги</a>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>
+                {% endif %}
+            </nav>
+
+            <div class="profile-container">
+                {% if request.user.is_authenticated %}
+                    <a class="navbar-link" href="{% url 'profile' %}">Профиль</a>
+                    <a class="navbar-link" href="{% url 'logout' %}">Выйти</a>
+                {% else %}
+                    <a class="navbar-link" href="{% url 'login' %}">Войти</a>
+                    <a class="navbar-link" href="{% url 'register' %}">Регистрация</a>
+                {% endif %}
+            </div>
+
+        </header>
+
+        <div id="content-container">
+            <div class="page-sidebar-left">
+                {% block sidebar_left %}
+                {% endblock sidebar_left %}
+            </div>
+
+            <div class="page-content">
+
+                {% block content %}
+                {% endblock content %}
+            </div>
+
+            <div class="page-sidebar-right">
+                {% block sidebar_right %}
+                {% endblock sidebar_right %}
+            </div>
+
+        </div>
+
+
+
+        <script type="text/javascript" src="{% static 'tudushnik/js/moment-with-locales.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'tudushnik/js/cookie.js' %}"></script>
+        <script type="text/javascript" src="{% static 'tudushnik/js/moment-timezone-with-data.js' %}"></script>
+        <script type="text/javascript" src="{% static 'tudushnik/js/utils.js' %}"></script>
+        <script type="text/javascript" src="{% static 'tudushnik/js/detect_timezone.js' %}"></script>
+    {% endtimezone %}
+</div>
+
+
 {% block local_scripts %}
 {% endblock local_scripts %}
 </body>

@@ -1,0 +1,84 @@
+@media (min-width: 768px) {
+  .color-red {
+    color: red;
+  }
+}
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+.small_label {
+  font-size: 10px;
+  margin: 0;
+  color: #626262;
+}
+.hidden {
+  display: none;
+}
+.viewport_toolbar {
+  font-size: 12px;
+}
+#viewport_type_select {
+  font-size: 12px;
+}
+.viewport_datetimeline {
+  overflow: scroll;
+  width: 100%;
+  height: 500px;
+  position: relative;
+}
+.current_timeline {
+  width: 100%;
+  background-color: red;
+  height: 1px;
+  position: absolute;
+  top: 200px;
+}
+.ruler {
+  width: 100px;
+  background-color: #626262;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1000px;
+}
+.ruler_row {
+  outline: 1px solid gray;
+}
+.viewport_datetimeline_canvas {
+  position: absolute;
+  width: 100%;
+  background-color: #d0d0d0;
+}
+.tasks_container {
+  position: absolute;
+  user-select: none;
+}
+.task_elem {
+  position: absolute;
+  overflow: hidden;
+  line-height: 0.8;
+  font-size: 12px;
+  background-color: #55bb55;
+  user-select: none;
+}
+.task_elem .task_content {
+  background-color: yellow;
+  user-select: none;
+}
+.task_elem .task_begin_at {
+  background-color: deepskyblue;
+}
+.task_elem .task_tool {
+  text-align: center;
+  font-size: 14px;
+  color: white;
+  display: inline-block;
+  width: 14px;
+  background-color: #626262;
+}
+.task_elem .task_tool.to_move_x {
+  cursor: grab;
+}

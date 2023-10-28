@@ -1,0 +1,88 @@
+@media (min-width: 768px) {
+  .color-red {
+    color: red;
+  }
+}
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+.small_label {
+  font-size: 10px;
+  margin: 0;
+  color: #626262;
+}
+.hidden {
+  display: none;
+}
+.header-container {
+  display: grid;
+  grid-template-areas: "logo-container profile-container" "navbar-container navbar-container";
+  position: fixed;
+  gap: 4px;
+  background-color: white;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin: 0 6px 6px 6px;
+  padding: 10px 4px 4px 4px;
+}
+@media (min-width: 580px) {
+  .header-container {
+    grid-template-areas: "logo-container navbar-container profile-container";
+  }
+}
+@media (min-width: 768px) {
+  .header-container {
+    margin: 0 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+  }
+}
+.header-container .logo-container {
+  grid-area: logo-container;
+  padding-top: 2px;
+}
+.header-container .logo-container h1 {
+  font-size: 16px;
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .header-container .logo-container h1 {
+    font-size: 18px;
+  }
+}
+.header-container .navbar-container {
+  text-align: center;
+  grid-area: navbar-container;
+  display: flex;
+  justify-content: space-between;
+}
+@media (min-width: 768px) {
+  .header-container .navbar-container {
+    justify-content: center;
+    gap: 8px;
+  }
+}
+.header-container .profile-container {
+  text-align: right;
+  grid-area: profile-container;
+}
+.navbar-link {
+  font-size: 12px;
+  display: inline-block;
+  text-decoration: none;
+  padding: 4px 11px;
+  color: black;
+  background-color: #c2c2c2;
+}
+.navbar-link:hover {
+  cursor: pointer;
+  background-color: gray;
+  color: white;
+}
+.navbar-link.navbar-link-active {
+  font-weight: bold;
+}

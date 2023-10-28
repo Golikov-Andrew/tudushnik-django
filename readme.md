@@ -3,7 +3,15 @@
 python -m venv venv  
 source venv/bin/activate  
 pip install -r requirements.txt  
-pip freeze > requirements.txt  
+pip freeze > requirements.txt
+
+Для включения JS вотчера:
+sudo docker exec -it personal-django-site-gav_python_server_1 bash
+npm run dev
+
+### Вёрстка
+Работаем в less файлах, компилим в css папку.
+Коммитим изменения и там, и там.
 
 
 ### Разворачивание приложения

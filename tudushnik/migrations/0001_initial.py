@@ -8,7 +8,6 @@ from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -19,12 +18,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Project',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True,
+                                           serialize=False,
+                                           verbose_name='ID')),
                 ('title', models.CharField(db_index=True, max_length=150)),
                 ('description', models.TextField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('owner',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'Project',
@@ -35,12 +38,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True,
+                                           serialize=False,
+                                           verbose_name='ID')),
                 ('title', models.CharField(max_length=150)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('color', models.TextField(default='#aaaaaa')),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tags', to=settings.AUTH_USER_MODEL)),
+                ('owner',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   related_name='tags',
+                                   to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'Tag',
@@ -51,9 +59,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserProfileSettings',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True,
+                                           serialize=False,
+                                           verbose_name='ID')),
                 ('limit_items_per_page', models.IntegerField(default=5)),
-                ('owner', models.OneToOneField(on_delete=django.db.models.deletion.DO_NOTHING, related_name='profile_settings', to=settings.AUTH_USER_MODEL)),
+                ('owner', models.OneToOneField(
+                    on_delete=django.db.models.deletion.DO_NOTHING,
+                    related_name='profile_settings',
+                    to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'UserProfileSettings',
@@ -63,17 +76,29 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Task',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True,
+                                           serialize=False,
+                                           verbose_name='ID')),
                 ('title', models.CharField(max_length=150)),
                 ('content', models.TextField(blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('begin_at', models.DateTimeField(default=datetime.datetime(2022, 8, 30, 15, 59, 45, 879792, tzinfo=utc))),
+                ('begin_at', models.DateTimeField(
+                    default=datetime.datetime(2022, 8, 30, 15, 59, 45, 879792,
+                                              tzinfo=utc))),
                 ('is_done', models.BooleanField(default=False)),
                 ('duration', models.IntegerField(default=300)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tasks', to=settings.AUTH_USER_MODEL)),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tasks', to='tudushnik.project')),
-                ('tags', models.ManyToManyField(blank=True, related_name='tasks', to='tudushnik.tag')),
+                ('owner',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   related_name='tasks',
+                                   to=settings.AUTH_USER_MODEL)),
+                ('project',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   related_name='tasks',
+                                   to='tudushnik.project')),
+                ('tags',
+                 models.ManyToManyField(blank=True, related_name='tasks',
+                                        to='tudushnik.tag')),
             ],
             options={
                 'verbose_name': 'Task',

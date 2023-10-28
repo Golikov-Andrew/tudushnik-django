@@ -44,7 +44,8 @@ class TagDetailView(DetailView):
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['title'] = context["project"]
-    #     all_tasks = Task.objects.filter(project=context['project']).select_related()
+    #     all_tasks = Task.objects.filter(project=context['project']
+    #     ).select_related()
     #     per_page = self.request.GET.get('limit')
     #     if per_page is None:
     #         per_page = 5
@@ -71,11 +72,13 @@ def add_tag(request, *args, **kwargs):
             return redirect('tags_page')
     else:
         form = AddTagForm()
-    return render(request, 'tudushnik/add_tag.html', {'form': form, 'title': 'Создание тэга'})
+    return render(request, 'tudushnik/add_tag.html',
+                  {'form': form, 'title': 'Создание тэга'})
 
 
 def tag_delete(request, pk: int, *args, **kwargs):
     if request.method == 'POST':
-        target_object = Tag.objects.filter(owner_id=request.user.id, pk=pk).first()
+        target_object = Tag.objects.filter(owner_id=request.user.id,
+                                           pk=pk).first()
         target_object.delete()
         return JsonResponse({"success": True})

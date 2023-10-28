@@ -1,41 +1,71 @@
 {% extends 'tudushnik/base.html' %}
 {% load static %}
 
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/viewport_toolbar.css' %}">
+{% endblock local_styles %}
+
 
 {% block content %}
 
-    <div>
-        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="проект" data-redirect-url="{% url 'projects_page' %}"
-                data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2613;
-        </button>
-        <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
-    </div>
-    <br>
-    <div>
-        Создан: {{ object.created_at|date:'Y-m-d H:i' }}
-    </div>
-    <div>
-        Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
-    </div>
-    <br>
-    <div>
-        <h4>Описание</h4>
-        <span>
-            {{ object.description }}
-        </span>
-    </div>
-    <div>
-        <h4>Задачи</h4>
-        {% include 'tudushnik/_pagination.html' %}
-        <a href="{% url 'add_task_to_project' project_pk=object.pk %}">Добавить задачу</a>
+    <div class="entity_header">
+        <div class="page-title-container">
+            <div class="page-title-label">{{ entity_type }}</div>
+            <div class="page-title">
+                {{ title }}
+            </div>
+        </div>
+        <div class="entity_tools">
+            <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="проект"
+                    data-redirect-url="{% url 'projects_page' %}"
+                    data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2715;
+            </button>
+            <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
+        </div>
         <br>
+        <div class="entity_datetimes">
+            <div>
+                Создан: {{ object.created_at|date:'Y-m-d H:i' }}
+            </div>
+            <div>
+                Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
+            </div>
+        </div>
+        <div class="entity_description">
+            <div class="entity_description_label">Описание</div>
+            <div class="entity_description_value">
+                {{ object.description }}
+            </div>
+        </div>
+    </div>
+
+    <div class="items_table_wrapper">
+        <div class="items_table_label">Задачи</div>
+        <div class="viewport_toolbar">
+            <label for="viewport_type_select">Вид: </label>
+            <select name="viewport_type" id="viewport_type_select">
+                <option value="table">Таблица</option>
+                <option value="datetimeline">Таймлайн</option>
+            </select>
+        </div>
+        {% include 'tudushnik/_pagination.html' %}
+        <div class="toolbar">
+            <a class="btn_rounded add_item" href="{% url 'add_task_to_project' project_pk=object.pk %}">+ Добавить</a>
+            <a class="btn_rounded del_item" href="#">- Удалить</a>
+            <a class="btn_rounded btn_table_filter" href="#">Фильтр</a>
+            <a class="btn_rounded btn_table_order" href="#">Упорядочить</a>
+            <a class="btn_rounded btn_table_search" href="#">Поиск</a>
+        </div>
         {% include 'tudushnik/_tasks_table.html' %}
+        {% include 'tudushnik/_viewport_datetimeline.html' %}
     </div>
 
 {% endblock content %}
 
 
 {% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/dist/task.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/dist/viewport.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
     <script type="text/javascript" src="{% static 'tudushnik/js/projects_detail.js' %}"></script>

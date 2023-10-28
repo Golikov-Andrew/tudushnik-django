@@ -1,7 +1,6 @@
 from django import forms
 
 from tudushnik.models.project import Project
-from tudushnik.models.task import Task
 
 
 class AddProjectForm(forms.ModelForm):
@@ -40,7 +39,3 @@ class ProjectUpdateForm(forms.ModelForm):
             'title': 'Название',
             'description': 'Описание',
         }
-
-
-
-

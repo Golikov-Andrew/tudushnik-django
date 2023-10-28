@@ -22,6 +22,7 @@ class DetectTimeZoneMiddleware:
 
     def process_view(self, request, view_func, *view_args, **view_kwargs):
         if not request.path.startswith('/admin/'):
-            view_args[1].update({'client_timezone': request.content_params['client_timezone']})
+            view_args[1].update(
+                {'client_timezone': request.content_params['client_timezone']})
             # return view_func(request, *view_args, view_kwargs)
             return view_func(request, *view_args[0], **view_args[1])

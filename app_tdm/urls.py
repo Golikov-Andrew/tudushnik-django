@@ -28,7 +28,7 @@ urlpatterns = [
 handler404 = pageNotFound
 
 if DEBUG:
-    import os  # only if you haven't already imported this
+    # import os  # only if you haven't already imported this
     import socket  # only if you haven't already imported this
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [

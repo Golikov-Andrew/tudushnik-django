@@ -1,9 +1,6 @@
-from datetime import timedelta, datetime
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
@@ -16,22 +13,44 @@ class Task(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     begin_at = models.DateTimeField(null=True)
     # begin_at = models.DateTimeField(auto_now_add=True)
-    # photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Изображение', blank=True)
+    # photo = models.ImageField(upload_to='photos/%Y/%m/%d/',
+    # verbose_name='Изображение', blank=True)
     is_done = models.BooleanField(default=False)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
-    # duration = models.DurationField(default=timedelta(minutes=5))
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,
+                                related_name='tasks')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE,
+                              related_name='tasks')
     duration = models.IntegerField(default=300)
     tags = models.ManyToManyField(Tag, related_name='tasks', blank=True)
+    width = models.IntegerField(default=400)
+    diagram_offset_x = models.IntegerField(default=100)
 
     # views = models.IntegerField(default=0)
-    # slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
+    # slug = models.SlugField(max_length=255, unique=True,
+    # db_index=True, verbose_name='URL')
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
         return reverse('task_detail', kwargs={'pk': self.pk})
+
+    def to_json(self):
+        return {
+            'pk': self.pk,
+            'title': self.title,
+            'content': self.content,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+            'begin_at': self.begin_at,
+            'is_done': self.is_done,
+            'project': str(self.project),
+            'owner': str(self.owner),
+            'duration': self.duration,
+            'width': self.width,
+            'diagram_offset_x': self.diagram_offset_x,
+            # 'tags': self.tags
+        }
 
     class Meta:
         verbose_name = 'Task'
