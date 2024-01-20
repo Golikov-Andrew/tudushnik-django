@@ -59,8 +59,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'tudushnik.middleware.DetectTimeZoneMiddleware'
-
+    'tudushnik.middleware.DetectTimeZoneMiddleware',
+    'tudushnik.www_basic_auth_middleware.WWWBasicAuthMiddleware'
 ]
 
 ROOT_URLCONF = 'app_tdm.urls'
