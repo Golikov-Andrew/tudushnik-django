@@ -10,4 +10,5 @@ __pycache__/
 .idea/
 
 .pytest_cache
+node_modules
 

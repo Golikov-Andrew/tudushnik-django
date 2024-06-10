@@ -5,6 +5,7 @@ COPY requirements.txt .
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
+#RUN python -m pip install -U 'channels[daphne]'
 
 # ENV TZ=Europe/Moscow
 # RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -13,9 +14,7 @@ COPY . .
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
-WORKDIR /usr/src/app_tdm/tudushnik/static/tudushnik/js
 RUN npm install -y
-WORKDIR /usr/src/app_tdm
 
 EXPOSE 8000
 CMD sh init.sh && python3 manage.py runserver 0.0.0.0:8000

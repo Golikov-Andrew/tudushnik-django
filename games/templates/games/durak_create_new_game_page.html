@@ -1,0 +1,46 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'games/css/games_main.css' %}">
+    <link rel="stylesheet" href="{% static 'games/css/durak.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+    <script>
+        const client_username = '{{ user.username }}';
+    </script>
+    <form action="{% url 'create_new_durak_game' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        <table>
+            <tbody>
+            {% for f in form %}
+                <tr>
+                    <td>
+                        <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}:</label>
+                    </td>
+                    <td>
+                        {{ f }}
+                    </td>
+                    <td>
+                        <div class="form-error">{{ f.errors }}</div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <button type="submit">Создать</button>
+    </form>
+
+
+
+{% endblock content %}
+
+{% block local_scripts %}
+    {#    <script type="text/javascript" src="{% static 'tudushnik/js/dist/chat.js' %}"></script>#}
+
+{% endblock local_scripts %}

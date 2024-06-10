@@ -1,0 +1,57 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'games/css/games_main.css' %}">
+    <link rel="stylesheet" href="{% static 'games/css/durak.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+    <script>
+        const client_username = '{{ user.username }}';
+    </script>
+    <div>
+        <a href="{% url 'create_new_durak_game' %}">Создать новую</a>
+        <div>
+            Присоединиться к существующей
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                <th>Название</th>
+                <th>Статус</th>
+                <th>Игроки</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for game in games %}
+                <tr>
+                    <td><a href="{% url 'durak_game_play' game.pk %}">Присоединиться</a></td>
+                    <td>{{ game.title }}</td>
+                    <td>{{ game.status }}</td>
+                    <td>
+                        {% for player in game.state.players %}
+                            <span>{{ player.username }}</span>
+                        {% endfor %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+
+
+{% endblock content %}
+
+{% block local_scripts %}
+    {#    <script type="text/javascript" src="{% static 'tudushnik/js/dist/chat.js' %}"></script>#}
+
+{% endblock local_scripts %}

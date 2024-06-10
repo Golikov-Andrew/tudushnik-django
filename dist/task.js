@@ -19,25 +19,25 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!\n * jQ
 
 /***/ }),
 
-/***/ "./src/task/index.js":
-/*!***************************!*\
-  !*** ./src/task/index.js ***!
-  \***************************/
+/***/ "./tudushnik/static/tudushnik/js/src/task/index.js":
+/*!*********************************************************!*\
+  !*** ./tudushnik/static/tudushnik/js/src/task/index.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./task */ \"./src/task/task.js\");\n\n\nwindow.addEventListener('load',()=>{\n    _task__WEBPACK_IMPORTED_MODULE_0__.Task.init();\n})\n\n\n//# sourceURL=webpack://tudushnik-pack/./src/task/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./task */ \"./tudushnik/static/tudushnik/js/src/task/task.js\");\n\n\nwindow.addEventListener('load',()=>{\n    _task__WEBPACK_IMPORTED_MODULE_0__.Task.init();\n})\n\n\n//# sourceURL=webpack://tudushnik-pack/./tudushnik/static/tudushnik/js/src/task/index.js?");
 
 /***/ }),
 
-/***/ "./src/task/task.js":
-/*!**************************!*\
-  !*** ./src/task/task.js ***!
-  \**************************/
+/***/ "./tudushnik/static/tudushnik/js/src/task/task.js":
+/*!********************************************************!*\
+  !*** ./tudushnik/static/tudushnik/js/src/task/task.js ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   Task: () => (/* binding */ Task)\n/* harmony export */ });\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);\n/* provided dependency */ var $ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n\n\nclass Task {\n\n    static tasks = {}\n\n    static init() {\n        let task_item_rows = document.getElementsByClassName('task-item-row');\n        for (let i = 0, cur_row, cur_id, cur_done; i < task_item_rows.length; i++) {\n            cur_row = task_item_rows[i];\n            cur_id = cur_row.querySelector('.task-item-id').getAttribute('data-task-id');\n            cur_done = cur_row.querySelector('.task-item-done');\n            cur_done.addEventListener('change', () => {\n                $.ajax({\n                    type: \"POST\",\n                    headers: {\n                        'X-CSRFToken': csrfToken\n                    },\n                    url: '/tasks/update_attrs',\n                    data: JSON.stringify({\n                        'task_id': cur_id,\n                        'is_done': cur_done.checked,\n                    }),\n                    success: (data) => {\n                        console.log(data)\n                        if (data.success === true) {\n                            cur_done.checked = data.is_done;\n                        } else {\n                            alert(data.error_message);\n                            cur_done.checked = !data.is_done;\n                        }\n                    },\n                    dataType: 'json'\n                });\n            })\n            cur_done.removeAttribute('disabled');\n        }\n    }\n\n    constructor(obj) {\n        this.obj = obj\n    }\n}\n\n\n\n//# sourceURL=webpack://tudushnik-pack/./src/task/task.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   Task: () => (/* binding */ Task)\n/* harmony export */ });\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);\n/* provided dependency */ var $ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n\n\nclass Task {\n\n    static tasks = {}\n\n    static init() {\n        let task_item_rows = document.getElementsByClassName('task-item-row');\n        for (let i = 0, cur_row, cur_id, cur_done; i < task_item_rows.length; i++) {\n            cur_row = task_item_rows[i];\n            cur_id = cur_row.querySelector('.task-item-id').getAttribute('data-task-id');\n            cur_done = cur_row.querySelector('.task-item-done');\n            cur_done.addEventListener('change', () => {\n                $.ajax({\n                    type: \"POST\",\n                    headers: {\n                        'X-CSRFToken': csrfToken\n                    },\n                    url: '/tasks/update_attrs',\n                    data: JSON.stringify({\n                        'task_id': cur_id,\n                        'is_done': cur_done.checked,\n                    }),\n                    success: (data) => {\n                        console.log(data)\n                        if (data.success === true) {\n                            cur_done.checked = data.is_done;\n                        } else {\n                            alert(data.error_message);\n                            cur_done.checked = !data.is_done;\n                        }\n                    },\n                    dataType: 'json'\n                });\n            })\n            cur_done.removeAttribute('disabled');\n        }\n    }\n\n    constructor(obj) {\n        this.obj = obj\n    }\n}\n\n\n\n//# sourceURL=webpack://tudushnik-pack/./tudushnik/static/tudushnik/js/src/task/task.js?");
 
 /***/ })
 
@@ -113,7 +113,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/task/index.js");
+/******/ 	var __webpack_exports__ = __webpack_require__("./tudushnik/static/tudushnik/js/src/task/index.js");
 /******/ 	
 /******/ })()
 ;

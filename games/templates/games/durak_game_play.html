@@ -1,0 +1,66 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'games/css/games.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+    <script>
+        const client_username = '{{ user.username }}';
+        const client_id = '{{ user.pk }}';
+        const game_state = JSON.parse('{{ object.state|safe }}');
+    </script>
+    <div>
+        Добро пожаловать в игру, {{ user.username }}!
+    </div>
+    <div>
+        Статус игры: {{ object.status }}
+    </div>
+    <div id="opponents">
+
+    </div>
+    <div id="playground">
+        <div class="info_panel">
+            <div class="row_desccription">Нападение -&gt;</div>
+            <div id="deck"></div>
+            <div class="row_desccription">Защита -&gt;</div>
+            <div id="cards_removed_from_the_game"></div>
+        </div>
+        <div class="cards_area">
+            <div id="attack_cards_area" class="cards_area_row"></div>
+            <div id="defend_cards_area" class="cards_area_row"></div>
+
+        </div>
+    </div>
+    <div id="own_panel">
+{#        <div class="info_panel">#}
+{##}
+{#        </div>#}
+        <div id="control_panel">
+            <div id="control_panel_tools">
+                <button id="btn_start_game">Начать игру/Раздать карты</button>
+                <button id="btn_attack">Напасть</button>
+                <button id="btn_defend">Защититься</button>
+{#                <button>Подкинуть</button>#}
+{#                <button>Перевести</button>#}
+            </div>
+            <div id="window_owner_container">
+
+            </div>
+            <div class="cards_area">
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock content %}
+
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'durak.js' %}"></script>
+
+{% endblock local_scripts %}

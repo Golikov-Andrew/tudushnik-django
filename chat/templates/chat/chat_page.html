@@ -1,0 +1,34 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/chat.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+    <script>
+        const client_username = '{{ user.username }}';
+    </script>
+    <div id="chat_messages_container">
+
+    </div>
+    <div id="user_panel">
+        <form id="form_send_message" action="">
+            <span>{{ user.username }} ->&nbsp;</span><input id="input_new_message" type="text"><input type="submit">
+        </form>
+    </div>
+    <hr>
+    What chat room would you like to enter?<br>
+    <input id="room-name-input" type="text" size="100"><br>
+    <input id="room-name-submit" type="button" value="Enter">
+
+
+
+
+{% endblock content %}
+
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/dist/chat.js' %}"></script>
+
+{% endblock local_scripts %}

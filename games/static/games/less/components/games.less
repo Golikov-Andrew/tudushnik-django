@@ -1,0 +1,125 @@
+@import 'utils/_mixins';
+@import 'utils/_variables';
+
+div {
+  outline: 1px solid black;
+}
+
+#opponents {
+  display: flex;
+  height: 100px;
+  background-color: #626262;
+  justify-content: space-evenly;
+}
+
+#playground {
+  display: flex;
+  height: 260px;
+
+  .info_panel {
+    position: relative;
+
+    .playing_card {
+      position: absolute;
+    }
+  }
+
+
+  .cards_area {
+    display: inline-block;
+    width: 600px;
+    height: 180px;
+  }
+}
+
+#own_panel {
+  height: 200px;
+  background-color: #626262;
+
+  #control_panel {
+    display: inline-block;
+    width: 600px;
+    height: 180px;
+    background-color: #a3c9d2;
+
+    #control_panel_tools {
+      height: 50px;
+    }
+
+    .cards_area {
+      //display: inline-block;
+      width: 600px;
+      height: 130px;
+    }
+  }
+}
+
+.info_panel {
+  display: inline-block;
+  width: 200px;
+  height: 260px;
+  background-color: #aca3d2;
+}
+
+.player_widget {
+  display: flex;
+  width: 200px;
+  height: 100px;
+  flex-direction: column;
+}
+
+.opponent_title {
+  display: flex;
+  width: auto;
+}
+
+.playing_card {
+  display: inline-block;
+  width: 60px;
+  height: 80px;
+  background-color: white;
+  cursor: pointer;
+
+  &:hover {
+    outline: 2px solid black;
+  }
+
+  &.selected {
+    background-color: #7bd4f1;
+  }
+}
+
+.opponents_cards {
+  position: relative;
+
+  .playing_card {
+    position: absolute;
+  }
+}
+
+#deck {
+  height: 80px;
+}
+
+#cards_removed_from_the_game {
+  height: 80px;
+}
+
+.row_desccription {
+  height: 50px;
+  text-align: right;
+}
+
+#attack_cards_area,
+#defend_cards_area {
+  height: 80px;
+
+}
+
+#defend_cards_area {
+  position: relative;
+
+  .playing_card {
+    position: absolute;
+  }
+}

@@ -1,0 +1,30 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'games/css/games_main.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+    <script>
+        const client_username = '{{ user.username }}';
+    </script>
+    <div>
+        <h2>Выберите игру</h2>
+        <ul>
+            <li>
+                <a class="btn_game_type_item" href="{% url 'durak_main_page' %}">Карты - Дурак</a>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+{% endblock content %}
+
+{% block local_scripts %}
+{#    <script type="text/javascript" src="{% static 'tudushnik/js/dist/chat.js' %}"></script>#}
+
+{% endblock local_scripts %}

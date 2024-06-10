@@ -59,6 +59,9 @@
                 {% endif %}
                 {% if user.is_superuser %}
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Игры' }}"
+                       href="{% url 'games_main_page' %}">Игры</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Чат' }}" href="/chat">Чат</a>
                 {% endif %}
             </nav>
 

@@ -22,7 +22,9 @@ from .settings import DEBUG
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('auth/', include('custom_auth.urls')),
-    path('', include('tudushnik.urls'))
+    path('', include('tudushnik.urls')),
+    path('chat/', include('chat.urls')),
+    path('games/', include('games.urls'))
 ]
 
 handler404 = pageNotFound

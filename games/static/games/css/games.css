@@ -1,0 +1,115 @@
+@media (min-width: 768px) {
+  .color-red {
+    color: red;
+  }
+}
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+.small_label {
+  font-size: 10px;
+  margin: 0;
+  color: #626262;
+}
+.hidden {
+  display: none;
+}
+div {
+  outline: 1px solid black;
+}
+#opponents {
+  display: flex;
+  height: 100px;
+  background-color: #626262;
+  justify-content: space-evenly;
+}
+#playground {
+  display: flex;
+  height: 260px;
+}
+#playground .info_panel {
+  position: relative;
+}
+#playground .info_panel .playing_card {
+  position: absolute;
+}
+#playground .cards_area {
+  display: inline-block;
+  width: 600px;
+  height: 180px;
+}
+#own_panel {
+  height: 200px;
+  background-color: #626262;
+}
+#own_panel #control_panel {
+  display: inline-block;
+  width: 600px;
+  height: 180px;
+  background-color: #a3c9d2;
+}
+#own_panel #control_panel #control_panel_tools {
+  height: 50px;
+}
+#own_panel #control_panel .cards_area {
+  width: 600px;
+  height: 130px;
+}
+.info_panel {
+  display: inline-block;
+  width: 200px;
+  height: 260px;
+  background-color: #aca3d2;
+}
+.player_widget {
+  display: flex;
+  width: 200px;
+  height: 100px;
+  flex-direction: column;
+}
+.opponent_title {
+  display: flex;
+  width: auto;
+}
+.playing_card {
+  display: inline-block;
+  width: 60px;
+  height: 80px;
+  background-color: white;
+  cursor: pointer;
+}
+.playing_card:hover {
+  outline: 2px solid black;
+}
+.playing_card.selected {
+  background-color: #7bd4f1;
+}
+.opponents_cards {
+  position: relative;
+}
+.opponents_cards .playing_card {
+  position: absolute;
+}
+#deck {
+  height: 80px;
+}
+#cards_removed_from_the_game {
+  height: 80px;
+}
+.row_desccription {
+  height: 50px;
+  text-align: right;
+}
+#attack_cards_area,
+#defend_cards_area {
+  height: 80px;
+}
+#defend_cards_area {
+  position: relative;
+}
+#defend_cards_area .playing_card {
+  position: absolute;
+}
