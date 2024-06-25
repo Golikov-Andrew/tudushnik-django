@@ -3,6 +3,8 @@
 
 {% block content %}
 
+    <div>{{ object.title }}</div>
+    <br>
     <div>
         <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="задачу"
                 data-redirect-url="{% url 'tasks_page' %}"
