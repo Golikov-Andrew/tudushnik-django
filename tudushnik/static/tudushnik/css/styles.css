@@ -1,4 +1,5 @@
 body {
+  font-family: Tahoma, "Trebuchet MS", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -220,14 +221,15 @@ body > .wrapper {
     display: table-cell;
   }
 }
-.items_table_wrapper table .task_item_title {
+.items_table_wrapper table .task_item_title input {
+  font-size: 12px;
   top: 4px;
   left: 36px;
   width: calc(100vw - 170px);
   position: absolute;
 }
 @media (min-width: 768px) {
-  .items_table_wrapper table .task_item_title {
+  .items_table_wrapper table .task_item_title input {
     position: static;
     width: unset;
   }
