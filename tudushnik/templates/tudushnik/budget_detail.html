@@ -1,0 +1,82 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/viewport_toolbar.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+
+    <div class="entity_header">
+        <div class="page-title-container">
+            <div class="page-title-label">{{ entity_type }}</div>
+            <div class="page-title">
+                {{ title }}
+            </div>
+        </div>
+        <div class="entity_tools">
+            <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="бюджет"
+                    data-redirect-url="{% url 'budgets_page' %}"
+                    data-post-url="{% url 'budget_delete' pk=object.pk %}">&#x2715;
+            </button>
+            <a href="{% url 'budget_edit' pk=object.pk %}">&#9998;</a>
+        </div>
+        <br>
+        <div class="entity_datetimes">
+            <div>
+                Создан: {{ object.created_at|date:'Y-m-d H:i' }}
+            </div>
+            <div>
+                Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
+            </div>
+        </div>
+        <div class="entity_value">
+            <div class="entity_value_label">Текущее значение</div>
+            <div class="entity_value_value">
+                {{ object.current_value }}
+            </div>
+        </div>
+        <div class="entity_description">
+            <div class="entity_description_label">Описание</div>
+            <div class="entity_description_value">
+                {{ object.description }}
+            </div>
+        </div>
+    </div>
+
+    <div class="items_table_wrapper">
+        <div class="items_table_label">Чеки</div>
+        <div class="viewport_toolbar">
+            <label for="viewport_type_select">Вид: </label>
+            <select name="viewport_type" id="viewport_type_select">
+                <option value="table">Таблица</option>
+                <option value="datetimeline">Таймлайн</option>
+            </select>
+        </div>
+        {% include 'tudushnik/_pagination.html' %}
+        <div class="toolbar">
+            <a class="btn_rounded add_item" href="{% url 'add_check_to_budget' budget_pk=object.pk %}">+ Добавить</a>
+            <a class="btn_rounded del_item" href="#">- Удалить</a>
+            <a class="btn_rounded btn_table_filter" href="#">Фильтр</a>
+            <a class="btn_rounded btn_table_order" href="#">Упорядочить</a>
+            <a class="btn_rounded btn_table_search" href="#">Поиск</a>
+            <label class="select_dt_scale_label hidden" for="viewport_dt_line_scale">Scale Y: <select name="viewport_dt_line_scale" id="viewport_dt_line_scale"></select></label>
+            <a class="btn_rounded btn_diagram_refresh hidden" href="#">Обновить</a>
+        </div>
+        {% include 'tudushnik/_checks_table.html' %}
+        {% include 'tudushnik/_viewport_datetimeline.html' %}
+    </div>
+
+{% endblock content %}
+
+
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/dist/task.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/dist/viewport.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/projects_detail.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+{% endblock local_scripts %}

@@ -59,6 +59,7 @@
                 {% endif %}
                 {% if user.is_superuser %}
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Финансы' }}" href="{% url 'budgets_page' %}">Финансы</a>
                 {% endif %}
             </nav>
 

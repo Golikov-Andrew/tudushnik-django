@@ -43,7 +43,7 @@ body > .wrapper {
 }
 .entity_header {
   display: grid;
-  grid-template-areas: "page-title-container entity_tools entity_datetimes" "entity_description entity_description entity_description";
+  grid-template-areas: "page-title-container entity_tools entity_datetimes" "entity_value entity_value entity_value" "entity_description entity_description entity_description";
   grid-template-columns: 100px 50px auto;
   row-gap: 8px;
   margin-bottom: -16px;
@@ -82,6 +82,23 @@ body > .wrapper {
   color: #626262;
 }
 .entity_description .entity_description_value {
+  font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.entity_value {
+  grid-area: entity_value;
+}
+.entity_value .entity_value_label {
+  margin: 6px 0;
+  font-size: 10px;
+  margin: 0;
+  color: #626262;
+}
+.entity_value .entity_value_value {
   font-size: 12px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -207,6 +224,12 @@ body > .wrapper {
 }
 .items_table_wrapper table .task-item-row {
   position: relative;
+}
+.items_table_wrapper table .task-item-row.profit {
+  background-color: green;
+}
+.items_table_wrapper table .task-item-row.no-profit {
+  background-color: red;
 }
 .items_table_wrapper table .task-item-row a {
   text-decoration: none;
