@@ -22,6 +22,7 @@
   display: grid;
   grid-template-areas:
         "page-title-container entity_tools entity_datetimes"
+        "entity_value entity_value entity_value"
         "entity_description entity_description entity_description";
   grid-template-columns: 100px 50px auto;
   row-gap: 8px;
@@ -66,6 +67,21 @@
   }
 
   .entity_description_value {
+    font-size: 12px;
+    .ellipsis();
+    -webkit-line-clamp: 2;
+  }
+}
+
+.entity_value {
+  grid-area: entity_value;
+
+  .entity_value_label {
+    margin: 6px 0;
+    .small_label();
+  }
+
+  .entity_value_value {
     font-size: 12px;
     .ellipsis();
     -webkit-line-clamp: 2;
@@ -191,6 +207,14 @@
 
     .task-item-row {
       position: relative;
+
+      &.profit {
+        background-color: green;
+      }
+
+      &.no-profit {
+        background-color: red;
+      }
 
       a {
         text-decoration: none;

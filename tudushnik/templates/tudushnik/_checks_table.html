@@ -1,0 +1,110 @@
+{% load custom_filters %}
+
+
+<table class="tasks_table">
+    <tbody>
+    <tr>
+        <th>
+
+        </th>
+        <th>
+            <div>id</div>
+            {{ 'id'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+
+        <th>
+            <div>Done?</div>
+            {{ 'is_done'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Profit?</div>
+            {{ 'is_profit'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        {#        <th>#}
+        {#            <div>Проект</div>#}
+        {#            {{ 'project__title'|create_table_column_search_and_sorting_widget:3 }}#}
+        {#        </th>#}
+        <th>
+            <div>Название</div>
+            {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Описание</div>
+            {{ 'content'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Дата-время</div>
+            {{ 'datetime_at'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div title="Номинал">Номинал</div>
+            {{ 'value'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Тэги</div>
+            {{ 'tags'|create_table_column_multi_filter_widget:all_tags }}
+
+        </th>
+    </tr>
+    {% for item in page_obj %}
+        <tr class="task-item-row {% if item.is_profit %}profit{% else %}no-profit{% endif %}">
+            <td class="table_item_tools">
+                <input type="checkbox">
+                <a href="{% url 'check_detail' pk=item.pk %}">&#128065;</a>
+                <button class="btn_item_delete" data-item-title="{{ item.title }}"
+                        data-entity-name="чек"
+                        {% if budget_id %}
+                        data-redirect-url="{% url 'budget_detail' pk=budget_id %}"
+                        {% else %}
+                        data-redirect-url="{% url 'checks_page' %}"
+                        {% endif %}
+                        data-post-url="{% url 'check_delete' pk=item.pk %}">&#x2715;
+                </button>
+                <a class="table_item_edit" href="{% url 'check_edit' pk=item.pk %}">&#9998;</a>
+            </td>
+            <td class="task-item-id" data-task-id="{{ item.pk }}">
+                {{ item.pk }}
+            </td>
+
+            <td class="task_item_done">
+                <input type="checkbox" class="task-item-done" disabled
+                        {% if item.is_done %}
+                       checked="checked"
+                        {% endif %}
+                >
+            </td>
+
+        <td class="task_item_profit">
+                <input type="checkbox" class="task-item-profit" disabled
+                        {% if item.is_profit %}
+                       checked="checked"
+                        {% endif %}
+                >
+            </td>
+
+            <td class="task_item_title">
+                <div class="ellipsed_text_1">
+                    <input type="text" value="{{ item.title }}">
+                </div>
+            </td>
+            <td class="task_item_description">
+                <div class="ellipsed_text_2">
+                    {{ item.content }}
+                </div>
+            </td>
+            <td class="task_item_begin_at">
+                {{ item.datetime_at|date:'Y-m-d H:i' }}
+            </td>
+            <td class="task_item_duration">
+                {{ item.value }}
+            </td>
+            <td class="task_item_tags">
+                {% for item in item.tags.all %}
+                    <span class="task_item_tag" style="background-color: {{ item.color }}">{{ item.title }}</span>
+                {% endfor %}
+            </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

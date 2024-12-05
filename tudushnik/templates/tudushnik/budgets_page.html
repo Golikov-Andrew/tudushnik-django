@@ -1,0 +1,97 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+
+{% block content %}
+    {% include 'tudushnik/_pagination.html' %}
+
+    <a href="{% url 'add_budget' %}">Добавить бюджет</a>
+    <br>
+    <table>
+        <tbody>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                <div>id</div>
+                {{ 'id'|create_table_column_search_and_sorting_widget:3 }}
+            </th>
+            <th>
+
+            </th>
+            <th>
+                <div>Название</div>
+                {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
+            </th>
+            <th>
+                <div>Описание</div>
+
+                {{ 'description'|create_table_column_search_and_sorting_widget:3 }}
+            </th>
+            <th>
+                <div>Создан</div>
+
+                {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
+            </th>
+            <th>
+                <div>Обновлён</div>
+
+                {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
+            </th>
+            <th>
+                <div>Текущее значение</div>
+
+                {{ 'current_value'|create_table_column_search_and_sorting_widget:3 }}
+            </th>
+        </tr>
+        {% for item in page_obj %}
+            <tr>
+                <td>
+                    <input type="checkbox">
+                </td>
+                <td>
+                    {{ item.pk }}
+                </td>
+                <td>
+                    <a href="{% url 'budget_detail' pk=item.pk %}">&#128065;</a>
+                    <button class="btn_item_delete" data-item-title="{{ item.title }}" data-entity-name="бюджет" data-redirect-url="{% url 'budgets_page' %}"
+                            data-post-url="{% url 'budget_delete' pk=item.pk %}">&#x2613;
+                    </button>
+                    <a href="{% url 'budget_edit' pk=item.pk %}">&#9998;</a>
+                </td>
+                <td>
+                    {{ item.title }}
+                </td>
+                <td>
+                    {{ item.description|truncatechars:100 }}
+                </td>
+                <td>
+                    {{ item.created_at|date:'Y-m-d H:i' }}
+                </td>
+                <td>
+                    {{ item.updated_at|date:'Y-m-d H:i' }}
+                </td>
+                <td>
+                    {{ item.current_value }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock content %}
+
+{% block sidebar_right %}
+{% endblock sidebar_right %}
+
+
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/projects_page.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+{% endblock local_scripts %}

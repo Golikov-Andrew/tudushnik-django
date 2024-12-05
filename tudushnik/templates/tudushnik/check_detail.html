@@ -1,0 +1,56 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div>{{ object.title }}</div>
+    <br>
+    <div>
+        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="чек"
+                data-redirect-url="{% url 'checks_page' %}"
+                data-post-url="{% url 'check_delete' pk=object.pk %}">&#x2613;
+        </button>
+        <a href="{% url 'check_edit' pk=object.pk %}">&#9998;</a>
+    </div>
+    <br>
+
+    <div>
+        Создан: {{ object.created_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Обновлен: {{ object.updated_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Дата-время: {{ object.datetime_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Произведён?: {{ object.is_done }}
+    </div>
+    <div>
+        Бюджет: <a href="{% url 'budget_detail' object.budget_id %}">
+        {{ object.budget.title }}
+    </a>
+    </div>
+    <br>
+    <div>
+        Тэги:
+        {% for item in object.tags.all %}
+            <span style="background-color: {{ item.color }}">{{ item.title }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        <h4>Содержание</h4>
+        <span>
+            {{ object.content }}
+        </span>
+    </div>
+
+{% endblock content %}
+
+{% block local_scripts %}
+    {#    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/task_detail.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+{% endblock local_scripts %}

@@ -1,0 +1,20 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    {% include 'tudushnik/_pagination.html' %}
+
+    <a class="add_item" href="{% url 'add_check' %}">+ Добавить</a>
+    <br>
+    {% include 'tudushnik/_checks_table.html' %}
+{% endblock content %}
+
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/tasks_page.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/filtering.js' %}"></script>
+{% endblock local_scripts %}
