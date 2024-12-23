@@ -52,9 +52,14 @@
   width: 100%;
   background-color: #d0d0d0;
 }
+.svg_container,
 .tasks_container {
   position: absolute;
   user-select: none;
+}
+.task_relation_svg_elem {
+  position: absolute;
+  overflow: hidden;
 }
 .task_elem {
   position: absolute;
@@ -115,3 +120,4 @@
   font-size: 12px;
   width: 200px;
 }
+/*# sourceMappingURL=viewport_toolbar.css.map */

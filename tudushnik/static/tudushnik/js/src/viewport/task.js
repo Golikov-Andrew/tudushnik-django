@@ -1,11 +1,13 @@
 import "jquery";
 import moment from "moment";
+import {createSVGElem} from "../svg";
 
 class Task {
-    constructor(task_obj, viewport_dt_line, tasks_container_elem) {
+    constructor(task_obj, viewport_dt_line, tasks_container_elem, svg_container) {
         Object.assign(this, task_obj)
         this.viewport_dt_line = viewport_dt_line
         this.tasks_container_elem = tasks_container_elem
+        this.svg_container = svg_container
         this.elem = document.createElement('div')
         this.elem.classList.add('task_elem')
         this.dropTaskHandler;
@@ -65,6 +67,10 @@ class Task {
         edit_ctrl_elem.classList.add('to_edit_task')
         edit_ctrl_elem.appendChild(task_link_elem)
 
+        let relations_elem_container = document.createElement('div')
+        let relations_elem = document.createElement('svg')
+        relations_elem_container.classList.add('relations_elem_container')
+        relations_elem_container.appendChild(relations_elem)
 
         let title_elem = document.createElement('div')
         title_elem.innerText = this.title
@@ -89,6 +95,13 @@ class Task {
         this.elem.height = 20
         this.current_task_avatar = undefined
         this.tooltip = undefined
+        this.children_relations_svg_elems = {}
+        for (let i = 0, current_child, new_svg; i < this.children.length; i++) {
+            current_child = this.children[i]
+            new_svg = createSVGElem('svg');
+            new_svg.classList.add('task_relation_svg_elem')
+            this.children_relations_svg_elems[current_child.pk] = new_svg
+        }
     }
 
     hide_task_elem() {
@@ -166,6 +179,7 @@ class Task {
                     window.removeEventListener('mouseup', this.dropTaskHandler)
                     window.removeEventListener('mousemove', this.moveTaskHandler)
                     this.viewport_dt_line.draw_task(cur_task_obj)
+                    this.viewport_dt_line.draw_task_relations(cur_task_obj)
                 } else {
                     alert(data.error_message);
                     this.remove_task_avatar()

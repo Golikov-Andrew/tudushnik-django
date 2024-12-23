@@ -4,12 +4,14 @@ import {DatetimelineCanvas} from "./dtl_canvas";
 import {MomentLine} from "./moment_line";
 import {Task} from "./task";
 import {ViewportScale} from "./viewport_scale";
+import {createSVGElem, modifySVGElemArrowMiddle} from "../svg";
 
 
 class Viewport {
 
     static init(viewport_dtl) {
         let viewport_type_select = document.getElementById('viewport_type_select')
+        let btn_diagram_refresh = document.querySelector('.btn_diagram_refresh')
         viewport_type_select.addEventListener('change', () => {
             let new_val = viewport_type_select.value
             if (new_val === 'datetimeline') {
@@ -27,6 +29,11 @@ class Viewport {
                 document.querySelector('.btn_diagram_refresh').classList.add('hidden')
             }
         })
+        btn_diagram_refresh.addEventListener('click', () => {
+            for (const pk_task_key in viewport_dtl.tasks) {
+                viewport_dtl.draw_task_relations(viewport_dtl.tasks[pk_task_key])
+            }
+        })
     }
 
     constructor() {
@@ -38,12 +45,17 @@ class ViewportDateTimeLine {
         this.viewport_datetimeline = document.getElementById('viewport_type_select')
         this.elem = document.querySelector('.viewport_datetimeline');
         this.tasks_container_elem = document.querySelector('.tasks_container');
+        this.svg_container = document.querySelector('.svg_container');
         this.scale = new ViewportScale(this)
         this.tasks = {}
         this.viewport_canvas = new DatetimelineCanvas(this)
         this.ruler = new Ruler(this)
         this.current_moment_line = new MomentLine(this)
         this.now_moment = null
+        // this.viewport_canvas.elem.addEventListener('contextmenu',(evt)=>{
+        //     evt.preventDefault();
+        //     console.log('context')
+        // })
 
     }
 
@@ -69,7 +81,7 @@ class ViewportDateTimeLine {
                 this.tasks_container_elem.innerHTML = ''
                 for (let i = 0, t; i < tasks.length; i++) {
                     t = tasks[i];
-                    this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem)
+                    this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem, this.svg_container)
                     this.tasks_container_elem.append(this.tasks[t.pk].elem)
                 }
                 console.log(data)
@@ -110,6 +122,35 @@ class ViewportDateTimeLine {
         for (const pk_task_key in this.tasks) {
             this.draw_task(this.tasks[pk_task_key])
         }
+        for (const pk_task_key in this.tasks) {
+            this.draw_task_relations(this.tasks[pk_task_key])
+        }
+    }
+
+    draw_task_relations(task) {
+        for (let i = 0, current_child_task, rel_elem, current_child_pk, task_cx, task_cy, child_cx, child_cy; i < task.children.length; i++) {
+            current_child_pk = task.children[i].pk
+            current_child_task = this.tasks[current_child_pk];
+            if(current_child_task === undefined) continue;
+
+            task_cx = parseInt(task.elem.style.width) / 2 + parseInt(task.elem.style.left);
+            task_cy = parseInt(task.elem.style.height) / 2 + parseInt(task.elem.style.top);
+            child_cx = parseInt(current_child_task.elem.style.width) / 2 + parseInt(current_child_task.elem.style.left);
+            child_cy = parseInt(current_child_task.elem.style.height) / 2 + parseInt(current_child_task.elem.style.top);
+
+            rel_elem = task.children_relations_svg_elems[current_child_pk]
+            let delta_width = child_cx - task_cx
+            let height = Math.abs(child_cy - task_cy)
+            if (!this.svg_container.contains(rel_elem)) {
+                this.svg_container.appendChild(rel_elem)
+            }
+            modifySVGElemArrowMiddle(rel_elem, delta_width, height)
+            rel_elem.style.width = `${Math.abs(delta_width)}px`
+            rel_elem.style.height = `${height}px`
+            rel_elem.style.left = delta_width >= 0 ? `${task_cx}px` : `${child_cx}px`;
+            rel_elem.style.top = `${child_cy}px`
+        }
+
     }
 }
 

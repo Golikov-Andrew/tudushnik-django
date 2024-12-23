@@ -41,6 +41,7 @@ class Task(models.Model):
         return reverse('task_detail', kwargs={'pk': self.pk})
 
     def to_json(self):
+        children = self.children.all()
         return {
             'pk': self.pk,
             'title': self.title,
@@ -54,6 +55,7 @@ class Task(models.Model):
             'duration': self.duration,
             'width': self.width,
             'diagram_offset_x': self.diagram_offset_x,
+            'children': [c.to_json() for c in children]
             # 'tags': self.tags
         }
 
