@@ -99,8 +99,12 @@ class TaskUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        test = Project.objects.filter(owner_id=self.request.user.id).all()
-        context['form'].fields['project'].queryset = test
+        context['form'].fields['project'].queryset = Project.objects.filter(
+            owner_id=self.request.user.id).all()
+        context['form'].fields['tags'].queryset = Tag.objects.filter(
+            owner_id=self.request.user.id).all()
+        context['form'].fields['children'].queryset = Task.objects.filter(
+            owner_id=self.request.user.id).exclude(pk=context['task'].pk).all()
         set_client_timezone(self.request, context)
         return context
 
@@ -172,6 +176,8 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
             )
         )
         form.fields['project'].queryset = proj.all()
+        form.fields['tags'].queryset = Tag.objects.filter(
+            owner_id=request.user.id).all()
 
     kwargs.update({'form': form, 'title': 'Добавление задачи в проект'})
     return render(request, 'tudushnik/add_task_to_project.html', kwargs)
@@ -237,6 +243,7 @@ def tasks_fetch(request, *args, **kwargs):
     if request.method == 'POST':
         date_from = request.POST['date_from']
         date_to = request.POST['date_to']
+        project_id = request.POST['project_id']
         cur_tz = set_client_timezone(request, kwargs)
         offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
         # if str(offset) != '0:00:00':
@@ -249,7 +256,8 @@ def tasks_fetch(request, *args, **kwargs):
         query = Task.objects.filter(
             owner_id=request.user.id,
             begin_at__gt=date_from,
-            begin_at__lt=date_to
+            begin_at__lt=date_to,
+            project_id=project_id
         )
 
         result = query.all()

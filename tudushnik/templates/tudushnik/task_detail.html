@@ -44,6 +44,24 @@
             {{ object.content }}
         </span>
     </div>
+    <div>
+        <h4>Родительские задачи</h4>
+        <ul>
+            {% for task in object.parent.all %}
+                <li><a href="{% url 'task_detail' pk=task.parent.pk %}">
+                    {{ task.parent }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+        <h4>Дочерние задачи</h4>
+        <ul>
+            {% for child in object.children.all %}
+                <li><a href="{% url 'task_detail' pk=child.pk %}">
+                    {{ child }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
 
 {% endblock content %}
 

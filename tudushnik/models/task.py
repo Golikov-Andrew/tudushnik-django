@@ -24,6 +24,11 @@ class Task(models.Model):
     tags = models.ManyToManyField(Tag, related_name='tasks', blank=True)
     width = models.IntegerField(default=400)
     diagram_offset_x = models.IntegerField(default=100)
+    children = models.ManyToManyField(
+        'self', blank=True,
+        symmetrical=False,
+        through='TaskParentChild'
+    )
 
     # views = models.IntegerField(default=0)
     # slug = models.SlugField(max_length=255, unique=True,
@@ -56,3 +61,18 @@ class Task(models.Model):
         verbose_name = 'Task'
         verbose_name_plural = 'Tasks'
         ordering = ['-updated_at', 'title']
+
+
+class TaskParentChild(models.Model):
+    parent = models.ForeignKey(Task, on_delete=models.DO_NOTHING,
+                               related_name='child')
+    child = models.ForeignKey(Task, on_delete=models.DO_NOTHING,
+                              related_name='parent')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['parent', 'child'],
+                name='parent_child'
+            )
+        ]

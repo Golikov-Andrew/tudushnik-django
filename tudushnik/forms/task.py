@@ -42,7 +42,7 @@ class TaskUpdateForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'content', 'is_done', 'project', 'tags', 'begin_at',
-                  'duration'
+                  'duration', 'children'
                   ]
         widgets = {
             'title': forms.TextInput(attrs={
@@ -69,7 +69,8 @@ class TaskUpdateForm(forms.ModelForm):
                 'step': '60',
                 'min': '0',
                 'class': 'hidden_form_elem'
-            })
+            }),
+            'children': forms.SelectMultiple(),
         }
         labels = {
             'title': 'Название',
@@ -79,4 +80,5 @@ class TaskUpdateForm(forms.ModelForm):
             'tags': 'Тэги',
             'begin_at': 'Начало',
             'duration': 'Продолж.',
+            'children': 'Дочерние задачи',
         }
