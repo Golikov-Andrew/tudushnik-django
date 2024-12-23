@@ -396,7 +396,7 @@ body > .wrapper {
   overflow: hidden;
   line-height: 0.8;
   font-size: 12px;
-  background-color: #55bb55;
+  background-color: white;
   user-select: none;
 }
 .task_elem .task_content {
@@ -430,8 +430,18 @@ body > .wrapper {
 .task_elem .task_tool.to_edit_duration {
   position: absolute;
   top: 0;
-  right: 30px;
+  right: 20px;
   cursor: ns-resize;
+}
+.task_elem .task_tool.to_edit_task {
+  position: absolute;
+  top: 0;
+  right: 40px;
+  cursor: pointer;
+}
+.task_elem .task_tool.to_edit_task a {
+  display: contents;
+  color: white;
 }
 .task_tooltip {
   position: fixed;

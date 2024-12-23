@@ -62,6 +62,7 @@ class ViewportDateTimeLine {
             data: {
                 'date_from': this.day_backward.format(),
                 'date_to': this.day_forward.format(),
+                'project_id': +document.querySelector('.object_pk').innerHTML.trim(),
             },
             success: (data) => {
                 let tasks = data.tasks

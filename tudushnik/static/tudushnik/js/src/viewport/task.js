@@ -57,6 +57,15 @@ class Task {
             }
         })
 
+        let edit_ctrl_elem = document.createElement('div')
+        let task_link_elem = document.createElement('a')
+        task_link_elem.href = `/tasks/edit/${this.pk}/`
+        task_link_elem.innerHTML = '&#9998;'
+        edit_ctrl_elem.classList.add('task_tool')
+        edit_ctrl_elem.classList.add('to_edit_task')
+        edit_ctrl_elem.appendChild(task_link_elem)
+
+
         let title_elem = document.createElement('div')
         title_elem.innerText = this.title
         title_elem.style.display = 'inline-block'
@@ -76,6 +85,7 @@ class Task {
         this.elem.append(width_ctrl_elem)
         this.elem.append(this.duration_elem)
         this.elem.append(duration_ctrl_elem)
+        this.elem.append(edit_ctrl_elem)
         this.elem.height = 20
         this.current_task_avatar = undefined
         this.tooltip = undefined
