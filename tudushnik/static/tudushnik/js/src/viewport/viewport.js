@@ -12,21 +12,24 @@ class Viewport {
     static init(viewport_dtl) {
         let viewport_type_select = document.getElementById('viewport_type_select')
         let btn_diagram_refresh = document.querySelector('.btn_diagram_refresh')
+        let viewport_datetimeline = document.querySelector('.viewport_datetimeline')
+        let viewport_type = user_settings.get('viewport_type');
+        if(viewport_type === 'table'){
+            viewport_type_select.value='table'
+            this.show_table()
+        }else if(viewport_type === 'datetimeline'){
+            viewport_type_select.value='datetimeline'
+            this.show_datetimeline(viewport_dtl)
+        }
         viewport_type_select.addEventListener('change', () => {
             let new_val = viewport_type_select.value
             if (new_val === 'datetimeline') {
-                document.querySelector('.pagination').classList.add('hidden')
-                document.querySelector('.tasks_table').classList.add('hidden')
-                document.querySelector('.viewport_datetimeline').classList.remove('hidden')
-                document.querySelector('#viewport_dt_line_scale').parentElement.classList.remove('hidden')
-                document.querySelector('.btn_diagram_refresh').classList.remove('hidden')
-                viewport_dtl.fetch_tasks();
+                this.show_datetimeline(viewport_dtl)
+                user_settings.set('viewport_type', 'datetimeline');
+
             } else {
-                document.querySelector('.pagination').classList.remove('hidden')
-                document.querySelector('.tasks_table').classList.remove('hidden')
-                document.querySelector('.viewport_datetimeline').classList.add('hidden')
-                document.querySelector('#viewport_dt_line_scale').parentElement.classList.add('hidden')
-                document.querySelector('.btn_diagram_refresh').classList.add('hidden')
+                this.show_table()
+                 user_settings.set('viewport_type', 'table');
             }
         })
         btn_diagram_refresh.addEventListener('click', () => {
@@ -34,9 +37,31 @@ class Viewport {
                 viewport_dtl.draw_task_relations(viewport_dtl.tasks[pk_task_key])
             }
         })
+        viewport_datetimeline.addEventListener('scroll', (evt)=>{
+            if(user_settings.datetimeline_scroll_top_timeout !== null )clearTimeout(user_settings.datetimeline_scroll_top_timeout);
+                user_settings.datetimeline_scroll_top_timeout = setTimeout(()=>{
+                    user_settings.set('datetimeline_scroll_top', viewport_datetimeline.scrollTop)
+                }, 1000)
+        })
     }
 
     constructor() {
+    }
+    static show_datetimeline(viewport_dtl) {
+        document.querySelector('.pagination').classList.add('hidden')
+        document.querySelector('.tasks_table').classList.add('hidden')
+        document.querySelector('.viewport_datetimeline').classList.remove('hidden')
+        document.querySelector('#viewport_dt_line_scale').parentElement.classList.remove('hidden')
+        document.querySelector('.btn_diagram_refresh').classList.remove('hidden')
+        viewport_dtl.fetch_tasks();
+    }
+
+    static show_table() {
+        document.querySelector('.pagination').classList.remove('hidden')
+        document.querySelector('.tasks_table').classList.remove('hidden')
+        document.querySelector('.viewport_datetimeline').classList.add('hidden')
+        document.querySelector('#viewport_dt_line_scale').parentElement.classList.add('hidden')
+        document.querySelector('.btn_diagram_refresh').classList.add('hidden')
     }
 }
 
@@ -131,7 +156,7 @@ class ViewportDateTimeLine {
         for (let i = 0, current_child_task, rel_elem, current_child_pk, task_cx, task_cy, child_cx, child_cy; i < task.children.length; i++) {
             current_child_pk = task.children[i].pk
             current_child_task = this.tasks[current_child_pk];
-            if(current_child_task === undefined) continue;
+            if (current_child_task === undefined) continue;
 
             task_cx = parseInt(task.elem.style.width) / 2 + parseInt(task.elem.style.left);
             task_cy = parseInt(task.elem.style.height) / 2 + parseInt(task.elem.style.top);

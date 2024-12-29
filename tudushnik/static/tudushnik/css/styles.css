@@ -455,6 +455,9 @@ body > .wrapper {
   font-size: 12px;
   width: 200px;
 }
+.form-input#id_title {
+  width: 300px;
+}
 td,
 th {
   padding: 10px;
@@ -469,4 +472,3 @@ th {
   position: fixed;
   left: -1000px;
 }
-/*# sourceMappingURL=styles.css.map */
