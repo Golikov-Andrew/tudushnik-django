@@ -42,6 +42,7 @@ class Task(models.Model):
 
     def to_json(self):
         children = self.children.all()
+        parents = Task.objects.filter(children=self).all()
         return {
             'pk': self.pk,
             'title': self.title,
@@ -55,8 +56,8 @@ class Task(models.Model):
             'duration': self.duration,
             'width': self.width,
             'diagram_offset_x': self.diagram_offset_x,
-            'children': [c.to_json() for c in children]
-            # 'tags': self.tags
+            'children': [c.to_json() for c in children],
+            'parents': [i.pk for i in parents]
         }
 
     class Meta:

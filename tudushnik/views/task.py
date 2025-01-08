@@ -5,7 +5,7 @@ import pytz
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.paginator import Paginator
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -99,12 +99,31 @@ class TaskUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        current_task = context['task']
+        task_pk = current_task.pk
+        owner_id = self.request.user.id
         context['form'].fields['project'].queryset = Project.objects.filter(
-            owner_id=self.request.user.id).all()
+            owner_id=owner_id).all()
         context['form'].fields['tags'].queryset = Tag.objects.filter(
-            owner_id=self.request.user.id).all()
-        context['form'].fields['children'].queryset = Task.objects.filter(
-            owner_id=self.request.user.id).exclude(pk=context['task'].pk).all()
+            owner_id=owner_id).all()
+
+        all_other_tasks = Task.objects.filter(owner_id=owner_id).exclude(
+            pk=task_pk)
+
+        all_parents_task = all_other_tasks.filter(
+            children=current_task).all()
+
+        all_children_tasks = current_task.children.all()
+
+        other_tasks_without_children = all_other_tasks.difference(
+            all_children_tasks)
+        other_tasks_without_parents = all_other_tasks.difference(
+            all_parents_task)
+
+        context['form'].fields['children'].queryset = other_tasks_without_parents
+        context[
+            'all_other_tasks_and_not_children'] = other_tasks_without_children
+        context['parents'] = all_parents_task
         set_client_timezone(self.request, context)
         return context
 
@@ -112,6 +131,20 @@ class TaskUpdateView(UpdateView):
         naived = timezone.make_naive(form.instance.begin_at)
         form.instance.begin_at = timezone.make_aware(naived, pytz.timezone(
             self.kwargs['client_timezone']))
+        parents_id = [int(i) for i in self.request.POST.getlist('parents[]')]
+        prev_parents_ids_set = [i['id'] for i in list(Task.objects.filter(
+                owner_id=self.request.user.id).filter(
+            children=form.instance.pk).values('id'))]
+        parents_for_unlink = set(prev_parents_ids_set).difference(set(parents_id))
+        parents_for_link = set(parents_id).difference(set(prev_parents_ids_set))
+        for pid in parents_for_link:
+            parent = Task.objects.filter(
+                owner_id=self.request.user.id).filter(pk=pid).first()
+            parent.children.add(form.instance)
+        for pid in parents_for_unlink:
+            parent = Task.objects.filter(
+                owner_id=self.request.user.id).filter(pk=pid).first()
+            parent.children.remove(form.instance)
         return super().form_valid(form)
 
 
@@ -227,8 +260,9 @@ def task_update_attrs(request, *args, **kwargs):
 
         begin_at = json_data.get('begin_at')
         if begin_at is not None:
-            begin_at = timezone.make_aware(datetime.fromisoformat(begin_at), pytz.timezone(
-                kwargs['client_timezone']))
+            begin_at = timezone.make_aware(datetime.fromisoformat(begin_at),
+                                           pytz.timezone(
+                                               kwargs['client_timezone']))
             print(begin_at)
             target_object.begin_at = begin_at
 

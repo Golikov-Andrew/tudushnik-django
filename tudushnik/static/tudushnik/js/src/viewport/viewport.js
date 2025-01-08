@@ -14,11 +14,11 @@ class Viewport {
         let btn_diagram_refresh = document.querySelector('.btn_diagram_refresh')
         let viewport_datetimeline = document.querySelector('.viewport_datetimeline')
         let viewport_type = user_settings.get('viewport_type');
-        if(viewport_type === 'table'){
-            viewport_type_select.value='table'
+        if (viewport_type === 'table') {
+            viewport_type_select.value = 'table'
             this.show_table()
-        }else if(viewport_type === 'datetimeline'){
-            viewport_type_select.value='datetimeline'
+        } else if (viewport_type === 'datetimeline') {
+            viewport_type_select.value = 'datetimeline'
             this.show_datetimeline(viewport_dtl)
         }
         viewport_type_select.addEventListener('change', () => {
@@ -29,7 +29,7 @@ class Viewport {
 
             } else {
                 this.show_table()
-                 user_settings.set('viewport_type', 'table');
+                user_settings.set('viewport_type', 'table');
             }
         })
         btn_diagram_refresh.addEventListener('click', () => {
@@ -37,16 +37,17 @@ class Viewport {
                 viewport_dtl.draw_task_relations(viewport_dtl.tasks[pk_task_key])
             }
         })
-        viewport_datetimeline.addEventListener('scroll', (evt)=>{
-            if(user_settings.datetimeline_scroll_top_timeout !== null )clearTimeout(user_settings.datetimeline_scroll_top_timeout);
-                user_settings.datetimeline_scroll_top_timeout = setTimeout(()=>{
-                    user_settings.set('datetimeline_scroll_top', viewport_datetimeline.scrollTop)
-                }, 1000)
+        viewport_datetimeline.addEventListener('scroll', (evt) => {
+            if (user_settings.datetimeline_scroll_top_timeout !== null) clearTimeout(user_settings.datetimeline_scroll_top_timeout);
+            user_settings.datetimeline_scroll_top_timeout = setTimeout(() => {
+                user_settings.set('datetimeline_scroll_top', viewport_datetimeline.scrollTop)
+            }, 1000)
         })
     }
 
     constructor() {
     }
+
     static show_datetimeline(viewport_dtl) {
         document.querySelector('.pagination').classList.add('hidden')
         document.querySelector('.tasks_table').classList.add('hidden')
@@ -152,28 +153,37 @@ class ViewportDateTimeLine {
         }
     }
 
+    draw_parent_child_relation(parent, child, current_child_pk) {
+        let task_cx = parseInt(parent.elem.style.width) / 2 + parseInt(parent.elem.style.left);
+        let task_cy = parseInt(parent.elem.style.height) / 2 + parseInt(parent.elem.style.top);
+        let child_cx = parseInt(child.elem.style.width) / 2 + parseInt(child.elem.style.left);
+        let child_cy = parseInt(child.elem.style.height) / 2 + parseInt(child.elem.style.top);
+
+        let rel_elem = parent.children_relations_svg_elems[current_child_pk]
+        let delta_width = child_cx - task_cx
+        let height = Math.abs(child_cy - task_cy)
+        if (!this.svg_container.contains(rel_elem)) {
+            this.svg_container.appendChild(rel_elem)
+        }
+        modifySVGElemArrowMiddle(rel_elem, delta_width, height)
+        rel_elem.style.width = `${Math.abs(delta_width)}px`
+        rel_elem.style.height = `${height}px`
+        rel_elem.style.left = delta_width >= 0 ? `${task_cx}px` : `${child_cx}px`;
+        rel_elem.style.top = `${child_cy}px`
+    }
+
     draw_task_relations(task) {
+        console.log('draw_task_relations', this, task)
+        // перерисовка отношений к children
         for (let i = 0, current_child_task, rel_elem, current_child_pk, task_cx, task_cy, child_cx, child_cy; i < task.children.length; i++) {
             current_child_pk = task.children[i].pk
             current_child_task = this.tasks[current_child_pk];
             if (current_child_task === undefined) continue;
-
-            task_cx = parseInt(task.elem.style.width) / 2 + parseInt(task.elem.style.left);
-            task_cy = parseInt(task.elem.style.height) / 2 + parseInt(task.elem.style.top);
-            child_cx = parseInt(current_child_task.elem.style.width) / 2 + parseInt(current_child_task.elem.style.left);
-            child_cy = parseInt(current_child_task.elem.style.height) / 2 + parseInt(current_child_task.elem.style.top);
-
-            rel_elem = task.children_relations_svg_elems[current_child_pk]
-            let delta_width = child_cx - task_cx
-            let height = Math.abs(child_cy - task_cy)
-            if (!this.svg_container.contains(rel_elem)) {
-                this.svg_container.appendChild(rel_elem)
-            }
-            modifySVGElemArrowMiddle(rel_elem, delta_width, height)
-            rel_elem.style.width = `${Math.abs(delta_width)}px`
-            rel_elem.style.height = `${height}px`
-            rel_elem.style.left = delta_width >= 0 ? `${task_cx}px` : `${child_cx}px`;
-            rel_elem.style.top = `${child_cy}px`
+            this.draw_parent_child_relation(task, current_child_task, current_child_pk)
+        }
+        for (let i = 0, current_parent; i < task.parents.length; i++) {
+            current_parent = this.tasks[task.parents[i]];
+            this.draw_parent_child_relation(current_parent, task, task.pk)
         }
 
     }

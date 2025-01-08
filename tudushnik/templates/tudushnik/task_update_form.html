@@ -6,6 +6,17 @@
     <h2>Редактирование задачи</h2>
     <form method="post">{% csrf_token %}
         {{ form.as_p }}
+        <label for="id_parents">Родительские задачи:</label>
+        <select name="parents[]" id="id_parents" multiple>
+            {% for item in all_other_tasks_and_not_children %}
+                <option
+                        {% if item in parents %}
+                            selected
+                        {% endif %}
+                        value="{{ item.pk }}">
+                    {{ item.title }}</option>
+            {% endfor %}
+        </select>
         <input type="submit" value="OK">
     </form>
 
