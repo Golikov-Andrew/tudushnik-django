@@ -49,7 +49,7 @@
   user-select: none;
 }
 
-.task_relation_svg_elem{
+.task_relation_svg_elem {
   position: absolute;
   overflow: hidden;
 }
@@ -70,7 +70,8 @@
   .task_begin_at {
     background-color: deepskyblue;
   }
-  .task_duration{
+
+  .task_duration {
     background-color: darkblue;
     color: white;
   }
@@ -86,24 +87,94 @@
     &.to_move_x {
       cursor: grab;
     }
+
     &.to_edit_width {
       position: absolute;
       top: 0;
       right: 0;
       cursor: ew-resize;
     }
-    &.to_edit_duration{
+
+    &.to_edit_duration {
       position: absolute;
       top: 0;
       right: 20px;
       cursor: ns-resize;
     }
-    &.to_edit_task{
+
+    &.is_done {
+      position: absolute;
+      top: 0;
+      right: 62px;
+      cursor: pointer;
+      background: transparent;
+
+      .checkbox_container {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        &:hover input ~ .checkmark {
+          background-color: #80c7ad;
+        }
+
+        input[type="checkbox"] {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0;
+
+          &:checked ~ .checkmark {
+            background-color: #04993e;
+
+            &:after {
+              display: block;
+            }
+          }
+        }
+
+        .checkmark {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 11px;
+          width: 16px;
+          background-color: #f88888;
+
+          &:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 5px;
+            top: -1px;
+            width: 4px;
+            height: 7px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+          }
+        }
+
+
+      }
+
+
+    }
+
+    &.to_edit_task {
       position: absolute;
       top: 0;
       right: 40px;
       cursor: pointer;
-      a{
+
+      a {
         display: contents;
         color: white;
       }
@@ -111,7 +182,7 @@
   }
 }
 
-.task_tooltip{
+.task_tooltip {
   position: fixed;
   z-index: 100;
   background-color: white;
@@ -119,7 +190,7 @@
   width: 200px;
 }
 
-#move_settings{
+#move_settings {
   display: inline-block;
   font-size: 12px;
 }

@@ -67,6 +67,43 @@ class Task {
         edit_ctrl_elem.classList.add('to_edit_task')
         edit_ctrl_elem.appendChild(task_link_elem)
 
+        let input_done_ctrl_elem_container = document.createElement('div')
+        let input_done_ctrl_elem_label_container = document.createElement('label')
+        let input_done_ctrl_checkmark = document.createElement('span')
+        input_done_ctrl_checkmark.classList.add('checkmark')
+        input_done_ctrl_elem_label_container.classList.add('checkbox_container')
+        let input_done_ctrl_elem = document.createElement('input')
+        input_done_ctrl_elem.setAttribute('type','checkbox')
+        input_done_ctrl_elem.checked = this.is_done;
+        input_done_ctrl_elem_container.classList.add('task_tool')
+        input_done_ctrl_elem_container.classList.add('is_done')
+        input_done_ctrl_elem_label_container.appendChild(input_done_ctrl_elem)
+        input_done_ctrl_elem_label_container.appendChild(input_done_ctrl_checkmark)
+        input_done_ctrl_elem_container.appendChild(input_done_ctrl_elem_label_container)
+        input_done_ctrl_elem.addEventListener('change', () => {
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    url: '/tasks/update_attrs',
+                    data: JSON.stringify({
+                        'task_id': this.pk,
+                        'is_done': input_done_ctrl_elem.checked,
+                    }),
+                    success: (data) => {
+                        console.log(data)
+                        if (data.success === true) {
+                            input_done_ctrl_elem.checked = data.is_done;
+                        } else {
+                            alert(data.error_message);
+                            input_done_ctrl_elem.checked = !data.is_done;
+                        }
+                    },
+                    dataType: 'json'
+                });
+            })
+
         let relations_elem_container = document.createElement('div')
         let relations_elem = document.createElement('svg')
         relations_elem_container.classList.add('relations_elem_container')
@@ -92,6 +129,7 @@ class Task {
         this.elem.append(this.duration_elem)
         this.elem.append(duration_ctrl_elem)
         this.elem.append(edit_ctrl_elem)
+        this.elem.append(input_done_ctrl_elem_container)
         this.elem.height = 20
         this.current_task_avatar = undefined
         this.tooltip = undefined

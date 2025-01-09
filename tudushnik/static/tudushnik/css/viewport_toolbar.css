@@ -128,6 +128,60 @@
   right: 20px;
   cursor: ns-resize;
 }
+.task_elem .task_tool.is_done {
+  position: absolute;
+  top: 0;
+  right: 62px;
+  cursor: pointer;
+  background: transparent;
+}
+.task_elem .task_tool.is_done .checkbox_container {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.task_elem .task_tool.is_done .checkbox_container:hover input ~ .checkmark {
+  background-color: #80c7ad;
+}
+.task_elem .task_tool.is_done .checkbox_container input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.task_elem .task_tool.is_done .checkbox_container input[type="checkbox"]:checked ~ .checkmark {
+  background-color: #04993e;
+}
+.task_elem .task_tool.is_done .checkbox_container input[type="checkbox"]:checked ~ .checkmark:after {
+  display: block;
+}
+.task_elem .task_tool.is_done .checkbox_container .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 11px;
+  width: 16px;
+  background-color: #f88888;
+}
+.task_elem .task_tool.is_done .checkbox_container .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 5px;
+  top: -1px;
+  width: 4px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
 .task_elem .task_tool.to_edit_task {
   position: absolute;
   top: 0;
