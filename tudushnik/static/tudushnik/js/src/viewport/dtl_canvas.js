@@ -10,6 +10,7 @@ class DatetimelineCanvas {
         this.context_menu_info_elem = this.elem.querySelector('.context_menu_info')
         this.context_menu_overlay_elem = this.elem.querySelector('.overlay')
         this.context_menu_btn_close_elem = this.elem.querySelector('.btn_close')
+        this.context_menu_btn_ok = this.elem.querySelector('.btn_ok')
         this.elem.addEventListener('contextmenu',
             (evt) => {
                 evt.preventDefault();
@@ -40,6 +41,11 @@ class DatetimelineCanvas {
             evt.preventDefault()
             this.hide_context_menu()
         })
+        this.context_menu_btn_ok.addEventListener('click',(evt)=>{
+            let diagram_offset_x = this.context_menu_info_elem.dataset.x
+            let begin_at = this.context_menu_info_elem.dataset.calced_dt
+            window.location.href = `/tasks/add_to_project/${document.querySelector('.object_pk').innerHTML.trim()}/?diagram_offset_x=${diagram_offset_x}&begin_at=${begin_at}`
+        })
     }
 
     calc_datetime_at_point(x, y) {
@@ -54,6 +60,9 @@ class DatetimelineCanvas {
         this.context_menu_modal_window_elem.style.left = `${x}px`
         this.context_menu_modal_window_elem.style.top = `${y}px`
         this.context_menu_info_elem.innerText = `${x} ${y} ${calced_dt}`
+        this.context_menu_info_elem.dataset.x = x
+        this.context_menu_info_elem.dataset.y = y
+        this.context_menu_info_elem.dataset.calced_dt = calced_dt
     }
 
     hide_context_menu() {

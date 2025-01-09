@@ -7,7 +7,7 @@ class AddTaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'content', 'project', 'tags', 'begin_at',
-                  'duration'
+                  'duration', 'diagram_offset_x'
                   ]
         widgets = {
             'title': forms.TextInput(attrs={
@@ -26,7 +26,12 @@ class AddTaskForm(forms.ModelForm):
                 'step': '60',
                 'min': '0',
                 'class': 'hidden_form_elem'
-            })
+            }),
+            'diagram_offset_x': forms.TextInput(attrs={
+                'type': 'number',
+                'min': '0',
+            }),
+
         }
         labels = {
             'title': 'Название',
@@ -35,6 +40,7 @@ class AddTaskForm(forms.ModelForm):
             'tags': 'Тэги',
             'begin_at': 'Начало',
             'duration': 'Продолж.',
+            'diagram_offset_x': 'Оффсет',
         }
 
 

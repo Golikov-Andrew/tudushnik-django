@@ -120,7 +120,8 @@ class TaskUpdateView(UpdateView):
         other_tasks_without_parents = all_other_tasks.difference(
             all_parents_task)
 
-        context['form'].fields['children'].queryset = other_tasks_without_parents
+        context['form'].fields[
+            'children'].queryset = other_tasks_without_parents
         context[
             'all_other_tasks_and_not_children'] = other_tasks_without_children
         context['parents'] = all_parents_task
@@ -133,9 +134,10 @@ class TaskUpdateView(UpdateView):
             self.kwargs['client_timezone']))
         parents_id = [int(i) for i in self.request.POST.getlist('parents[]')]
         prev_parents_ids_set = [i['id'] for i in list(Task.objects.filter(
-                owner_id=self.request.user.id).filter(
+            owner_id=self.request.user.id).filter(
             children=form.instance.pk).values('id'))]
-        parents_for_unlink = set(prev_parents_ids_set).difference(set(parents_id))
+        parents_for_unlink = set(prev_parents_ids_set).difference(
+            set(parents_id))
         parents_for_link = set(parents_id).difference(set(prev_parents_ids_set))
         for pid in parents_for_link:
             parent = Task.objects.filter(
@@ -208,15 +210,27 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
             return redirect('project_detail', pk=project_pk)
     else:
         proj = Project.objects.filter(owner_id=request.user.id, pk=project_pk)
-        form = AddTaskForm(
-            instance=Task(
-                project=proj.first(),
-                owner=request.user,
-                begin_at=timezone.localtime(
-                    timezone.now(), pytz.timezone(cur_tz)
-                ).strftime('%Y-%m-%dT%H:%M')
+        diagram_offset_x = request.GET.get('diagram_offset_x')
+        begin_at = request.GET.get('begin_at')
+        if diagram_offset_x is not None and begin_at is not None:
+            form = AddTaskForm(
+                instance=Task(
+                    project=proj.first(),
+                    owner=request.user,
+                    begin_at=begin_at,
+                    diagram_offset_x=int(diagram_offset_x)
+                )
             )
-        )
+        else:
+            form = AddTaskForm(
+                instance=Task(
+                    project=proj.first(),
+                    owner=request.user,
+                    begin_at=timezone.localtime(
+                        timezone.now(), pytz.timezone(cur_tz)
+                    ).strftime('%Y-%m-%dT%H:%M')
+                )
+            )
         form.fields['project'].queryset = proj.all()
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=request.user.id).all()
