@@ -15,6 +15,15 @@
             <div class="page-title-label">{{ entity_type }}</div>
             <div class="page-title">
                 {{ title }}
+                <select name="select_project" id="select_project">
+                    {% for project in all_projects %}
+                        <option value="{{ project.pk }}"
+                                {% if project.pk == object.pk %}
+                                selected
+                                {% endif %}
+                        >{{ project.title }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
         <div class="entity_tools">

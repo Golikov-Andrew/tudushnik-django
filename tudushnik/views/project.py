@@ -74,6 +74,8 @@ class ProjectDetailView(DetailView):
         sorting_section = self.request.GET.get('sorting')
         per_page = manage_user_settings(self.request.user.id, per_page)
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
+        all_projects = Project.objects.filter(
+            owner_id=self.request.user.id).all()
         if search_section is not None:
             search_section_obj = json.loads(search_section)
             kw = dict()
@@ -94,6 +96,7 @@ class ProjectDetailView(DetailView):
         context['limit'] = per_page
         context['len_records'] = paginator.count
         context['all_tags'] = all_tags
+        context['all_projects'] = all_projects
         context['project_id'] = project_id
         context['entity_type'] = 'Проект'
         set_client_timezone(self.request, context)

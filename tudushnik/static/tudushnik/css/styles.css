@@ -69,12 +69,15 @@ body > .wrapper {
 .entity_header {
   display: grid;
   grid-template-areas: "page-title-container entity_tools entity_datetimes" "entity_value entity_value entity_value" "entity_description entity_description entity_description";
-  grid-template-columns: 100px 50px auto;
+  grid-template-columns: 148px 50px auto;
   row-gap: 8px;
   margin-bottom: -16px;
 }
 .page-title-container {
   grid-area: page-title-container;
+}
+.page-title-container select {
+  width: 100%;
 }
 .entity_tools {
   font-size: 20px;
