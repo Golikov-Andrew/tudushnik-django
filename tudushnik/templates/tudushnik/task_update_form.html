@@ -6,6 +6,32 @@
     <h2>Редактирование задачи</h2>
     <form method="post">{% csrf_token %}
         {{ form.as_p }}
+        <label for="id_parents">Родительские задачи:</label>
+        <select name="parents[]" id="id_parents" multiple>
+            {% for item in all_other_tasks_and_not_children %}
+                <option
+                        {% if item in parents %}
+                            selected
+                        {% endif %}
+                            value="{{ item.pk }}">
+                    {{ item.title }}</option>
+            {% endfor %}
+        </select>
+        <div>
+            <div>Перемещать</div>
+            <div>
+                <input type="checkbox" id="inp_is_move_with_children"
+                       name="is_move_with_children">
+                <label for="inp_is_move_with_children">с children?</label>
+                <input type="input" name="begin_at_delta" value="0"
+                       class="hidden">
+            </div>
+            <div>
+                <input type="checkbox" id="inp_is_move_with_parents"
+                       name="is_move_with_parents">
+                <label for="inp_is_move_with_parents">с parents?</label>
+            </div>
+        </div>
         <input type="submit" value="OK">
     </form>
 
@@ -13,6 +39,7 @@
 
 
 {% block local_scripts %}
-    <script type="text/javascript" src="{% static 'tudushnik/js/duration_annotation.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/duration_annotation.js' %}"></script>
 {% endblock local_scripts %}
 

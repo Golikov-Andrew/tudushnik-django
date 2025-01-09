@@ -24,6 +24,11 @@ class Task(models.Model):
     tags = models.ManyToManyField(Tag, related_name='tasks', blank=True)
     width = models.IntegerField(default=400)
     diagram_offset_x = models.IntegerField(default=100)
+    children = models.ManyToManyField(
+        'self', blank=True,
+        symmetrical=False,
+        through='TaskParentChild'
+    )
 
     # views = models.IntegerField(default=0)
     # slug = models.SlugField(max_length=255, unique=True,
@@ -36,6 +41,8 @@ class Task(models.Model):
         return reverse('task_detail', kwargs={'pk': self.pk})
 
     def to_json(self):
+        children = self.children.all()
+        parents = Task.objects.filter(children=self).all()
         return {
             'pk': self.pk,
             'title': self.title,
@@ -49,10 +56,26 @@ class Task(models.Model):
             'duration': self.duration,
             'width': self.width,
             'diagram_offset_x': self.diagram_offset_x,
-            # 'tags': self.tags
+            'children': [c.to_json() for c in children],
+            'parents': [i.pk for i in parents]
         }
 
     class Meta:
         verbose_name = 'Task'
         verbose_name_plural = 'Tasks'
         ordering = ['-updated_at', 'title']
+
+
+class TaskParentChild(models.Model):
+    parent = models.ForeignKey(Task, on_delete=models.DO_NOTHING,
+                               related_name='child')
+    child = models.ForeignKey(Task, on_delete=models.DO_NOTHING,
+                              related_name='parent')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['parent', 'child'],
+                name='parent_child'
+            )
+        ]

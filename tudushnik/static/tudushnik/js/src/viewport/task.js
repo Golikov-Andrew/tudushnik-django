@@ -1,11 +1,13 @@
 import "jquery";
 import moment from "moment";
+import {createSVGElem} from "../svg";
 
 class Task {
-    constructor(task_obj, viewport_dt_line, tasks_container_elem) {
+    constructor(task_obj, viewport_dt_line, tasks_container_elem, svg_container) {
         Object.assign(this, task_obj)
         this.viewport_dt_line = viewport_dt_line
         this.tasks_container_elem = tasks_container_elem
+        this.svg_container = svg_container
         this.elem = document.createElement('div')
         this.elem.classList.add('task_elem')
         this.dropTaskHandler;
@@ -57,6 +59,56 @@ class Task {
             }
         })
 
+        let edit_ctrl_elem = document.createElement('div')
+        let task_link_elem = document.createElement('a')
+        task_link_elem.href = `/tasks/edit/${this.pk}/`
+        task_link_elem.innerHTML = '&#9998;'
+        edit_ctrl_elem.classList.add('task_tool')
+        edit_ctrl_elem.classList.add('to_edit_task')
+        edit_ctrl_elem.appendChild(task_link_elem)
+
+        let input_done_ctrl_elem_container = document.createElement('div')
+        let input_done_ctrl_elem_label_container = document.createElement('label')
+        let input_done_ctrl_checkmark = document.createElement('span')
+        input_done_ctrl_checkmark.classList.add('checkmark')
+        input_done_ctrl_elem_label_container.classList.add('checkbox_container')
+        let input_done_ctrl_elem = document.createElement('input')
+        input_done_ctrl_elem.setAttribute('type','checkbox')
+        input_done_ctrl_elem.checked = this.is_done;
+        input_done_ctrl_elem_container.classList.add('task_tool')
+        input_done_ctrl_elem_container.classList.add('is_done')
+        input_done_ctrl_elem_label_container.appendChild(input_done_ctrl_elem)
+        input_done_ctrl_elem_label_container.appendChild(input_done_ctrl_checkmark)
+        input_done_ctrl_elem_container.appendChild(input_done_ctrl_elem_label_container)
+        input_done_ctrl_elem.addEventListener('change', () => {
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    url: '/tasks/update_attrs',
+                    data: JSON.stringify({
+                        'task_id': this.pk,
+                        'is_done': input_done_ctrl_elem.checked,
+                    }),
+                    success: (data) => {
+                        console.log(data)
+                        if (data.success === true) {
+                            input_done_ctrl_elem.checked = data.is_done;
+                        } else {
+                            alert(data.error_message);
+                            input_done_ctrl_elem.checked = !data.is_done;
+                        }
+                    },
+                    dataType: 'json'
+                });
+            })
+
+        let relations_elem_container = document.createElement('div')
+        let relations_elem = document.createElement('svg')
+        relations_elem_container.classList.add('relations_elem_container')
+        relations_elem_container.appendChild(relations_elem)
+
         let title_elem = document.createElement('div')
         title_elem.innerText = this.title
         title_elem.style.display = 'inline-block'
@@ -76,9 +128,18 @@ class Task {
         this.elem.append(width_ctrl_elem)
         this.elem.append(this.duration_elem)
         this.elem.append(duration_ctrl_elem)
+        this.elem.append(edit_ctrl_elem)
+        this.elem.append(input_done_ctrl_elem_container)
         this.elem.height = 20
         this.current_task_avatar = undefined
         this.tooltip = undefined
+        this.children_relations_svg_elems = {}
+        for (let i = 0, current_child, new_svg; i < this.children.length; i++) {
+            current_child = this.children[i]
+            new_svg = createSVGElem('svg');
+            new_svg.classList.add('task_relation_svg_elem')
+            this.children_relations_svg_elems[current_child.pk] = new_svg
+        }
     }
 
     hide_task_elem() {
@@ -126,16 +187,7 @@ class Task {
         this.current_task_avatar = undefined
     }
 
-    dropTask(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        let diagram_offset_x = parseInt(this.current_task_avatar.style.left)
-        let new_top = parseInt(this.current_task_avatar.style.top)
-        let new_begin_at = this.calc_new_begin_at(
-            this.viewport_dt_line.current_moment_line.top_val,
-            new_top,
-            parseFloat(this.current_task_avatar.style.height)
-        )
+    update_offset_x_n_begin_at(diagram_offset_x, new_begin_at, evt) {
         $.ajax({
             type: "POST",
             headers: {
@@ -151,13 +203,13 @@ class Task {
                 if (data.success === true) {
                     let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
                     cur_task_obj = Object.assign(cur_task_obj, data)
-                    console.log(data, cur_task_obj)
-                    this.remove_task_avatar()
-                    window.removeEventListener('mouseup', this.dropTaskHandler)
-                    window.removeEventListener('mousemove', this.moveTaskHandler)
+                    // console.log(data, cur_task_obj)
                     this.viewport_dt_line.draw_task(cur_task_obj)
+                    this.viewport_dt_line.draw_task_relations(cur_task_obj)
                 } else {
-                    alert(data.error_message);
+                    console.error(data.error_message);
+                }
+                if (evt !== undefined) {
                     this.remove_task_avatar()
                     window.removeEventListener('mouseup', this.dropTaskHandler)
                     window.removeEventListener('mousemove', this.moveTaskHandler)
@@ -165,6 +217,43 @@ class Task {
             },
             dataType: 'json'
         });
+    }
+
+    calc_new_offset_x(x_delta) {
+        return parseInt(this.elem.style.left) + x_delta
+    }
+    calc_new_top(y_delta) {
+        return parseInt(this.elem.style.top) + y_delta
+    }
+
+    dropTask(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        let diagram_offset_x = parseInt(this.current_task_avatar.style.left)
+        let x_delta = diagram_offset_x - parseInt(this.elem.style.left)
+        let new_top = parseInt(this.current_task_avatar.style.top)
+        let y_delta = new_top - parseInt(this.elem.style.top)
+        let new_begin_at = this.calc_new_begin_at(
+            this.viewport_dt_line.current_moment_line.top_val,
+            new_top,
+            parseFloat(this.current_task_avatar.style.height)
+        )
+        this.update_offset_x_n_begin_at(diagram_offset_x, new_begin_at, evt)
+
+        let is_move_with_children = document.querySelector('#inp_is_move_with_children').checked
+        if (is_move_with_children) {
+            for (let i = 0, cur_child_obj; i < this.children.length; i++) {
+                cur_child_obj = this.viewport_dt_line.tasks[this.children[i].pk]
+                cur_child_obj.update_offset_x_n_begin_at(
+                    cur_child_obj.calc_new_offset_x(x_delta),
+                    this.calc_new_begin_at(
+                        this.viewport_dt_line.current_moment_line.top_val,
+                        cur_child_obj.calc_new_top(y_delta),
+                        parseFloat(cur_child_obj.elem.style.height)
+                    )
+                )
+            }
+        }
     }
 
     stopEditWidthTask(evt) {
@@ -242,7 +331,7 @@ class Task {
         });
     }
 
-    editDurationTask(evt){
+    editDurationTask(evt) {
         evt.preventDefault();
         evt.stopPropagation();
         let cur_top = parseInt(this.current_task_avatar.style.top)

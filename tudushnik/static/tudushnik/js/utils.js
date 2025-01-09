@@ -106,3 +106,21 @@ function div(val, by){
 function addMultiEventListener(el, s, fn){
     s.forEach(e => el.addEventListener(e, fn, false))
 }
+
+function showHelper(parent, color, x, y, w, h){
+    let new_div = document.createElement('div')
+    console.log('showHelper', new_div)
+    new_div.style.backgroundColor = color
+    new_div.style.display = 'inline-block'
+    new_div.style.opacity = '0.5'
+    new_div.style.position = 'absolute'
+    new_div.style.zIndex = '1000000'
+    new_div.style.left = `${x}px`
+    new_div.style.top = `${y}px`
+    new_div.style.width = `${w}px`
+    new_div.style.height = `${h}px`
+    parent.appendChild(new_div)
+    setTimeout(()=>{
+        parent.removeChild(new_div)
+    }, 10000)
+}
