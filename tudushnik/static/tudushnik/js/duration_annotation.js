@@ -52,3 +52,13 @@ function init_duration_controllers(new_val) {
     inp_duration_seconds_ctrl.value = seconds
 }
 
+const id_begin_at = document.querySelector('#id_begin_at')
+const begin_at_delta = document.querySelector('input[name="begin_at_delta"]')
+let old_begin_at_value;
+if (id_begin_at !== null && begin_at_delta !== null) {
+    old_begin_at_value = id_begin_at.value;
+    id_begin_at.addEventListener('change', () => {
+        begin_at_delta.value = moment.duration(moment(id_begin_at.value).diff(old_begin_at_value)).asSeconds()
+    })
+}
+

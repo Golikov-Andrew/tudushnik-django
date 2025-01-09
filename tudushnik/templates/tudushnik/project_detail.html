@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block local_styles %}
-    <link rel="stylesheet" href="{% static 'tudushnik/css/viewport_toolbar.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'tudushnik/css/viewport_toolbar.css' %}">
 {% endblock local_styles %}
 
 
@@ -17,9 +18,11 @@
             </div>
         </div>
         <div class="entity_tools">
-            <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="проект"
+            <button class="btn_item_delete" data-item-title="{{ object.title }}"
+                    data-entity-name="проект"
                     data-redirect-url="{% url 'projects_page' %}"
-                    data-post-url="{% url 'project_delete' pk=object.pk %}">&#x2715;
+                    data-post-url="{% url 'project_delete' pk=object.pk %}">
+                &#x2715;
             </button>
             <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
         </div>
@@ -51,13 +54,30 @@
         </div>
         {% include 'tudushnik/_pagination.html' %}
         <div class="toolbar">
-            <a class="btn_rounded add_item" href="{% url 'add_task_to_project' project_pk=object.pk %}">+ Добавить</a>
+            <a class="btn_rounded add_item"
+               href="{% url 'add_task_to_project' project_pk=object.pk %}">+
+                Добавить</a>
             <a class="btn_rounded del_item" href="#">- Удалить</a>
             <a class="btn_rounded btn_table_filter" href="#">Фильтр</a>
             <a class="btn_rounded btn_table_order" href="#">Упорядочить</a>
             <a class="btn_rounded btn_table_search" href="#">Поиск</a>
-            <label class="select_dt_scale_label hidden" for="viewport_dt_line_scale">Scale Y: <select name="viewport_dt_line_scale" id="viewport_dt_line_scale"></select></label>
-            <a class="btn_rounded btn_diagram_refresh hidden" href="#">Обновить</a>
+            <label class="select_dt_scale_label hidden"
+                   for="viewport_dt_line_scale">Scale Y: <select
+                    name="viewport_dt_line_scale"
+                    id="viewport_dt_line_scale"></select></label>
+            <a class="btn_rounded btn_diagram_refresh hidden"
+               href="#">Обновить</a>
+            <div id="move_settings">
+                <div>Перемещать</div>
+                <div>
+                    <input type="checkbox" id="inp_is_move_with_children">
+                    <label for="inp_is_move_with_children">с children?</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="inp_is_move_with_parents">
+                    <label for="inp_is_move_with_parents">с parents?</label>
+                </div>
+            </div>
         </div>
         {% include 'tudushnik/_tasks_table.html' %}
         {% include 'tudushnik/_viewport_datetimeline.html' %}
@@ -67,11 +87,18 @@
 
 
 {% block local_scripts %}
-    <script type="text/javascript" src="{% static 'tudushnik/js/dist/task.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/dist/viewport.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/projects_detail.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/task.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/viewport.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/projects_detail.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/sorting.js' %}"></script>
 {% endblock local_scripts %}

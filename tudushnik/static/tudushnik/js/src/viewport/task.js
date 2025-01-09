@@ -149,16 +149,7 @@ class Task {
         this.current_task_avatar = undefined
     }
 
-    dropTask(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        let diagram_offset_x = parseInt(this.current_task_avatar.style.left)
-        let new_top = parseInt(this.current_task_avatar.style.top)
-        let new_begin_at = this.calc_new_begin_at(
-            this.viewport_dt_line.current_moment_line.top_val,
-            new_top,
-            parseFloat(this.current_task_avatar.style.height)
-        )
+    update_offset_x_n_begin_at(diagram_offset_x, new_begin_at, evt) {
         $.ajax({
             type: "POST",
             headers: {
@@ -174,14 +165,13 @@ class Task {
                 if (data.success === true) {
                     let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
                     cur_task_obj = Object.assign(cur_task_obj, data)
-                    console.log(data, cur_task_obj)
-                    this.remove_task_avatar()
-                    window.removeEventListener('mouseup', this.dropTaskHandler)
-                    window.removeEventListener('mousemove', this.moveTaskHandler)
+                    // console.log(data, cur_task_obj)
                     this.viewport_dt_line.draw_task(cur_task_obj)
                     this.viewport_dt_line.draw_task_relations(cur_task_obj)
                 } else {
-                    alert(data.error_message);
+                    console.error(data.error_message);
+                }
+                if (evt !== undefined) {
                     this.remove_task_avatar()
                     window.removeEventListener('mouseup', this.dropTaskHandler)
                     window.removeEventListener('mousemove', this.moveTaskHandler)
@@ -189,6 +179,43 @@ class Task {
             },
             dataType: 'json'
         });
+    }
+
+    calc_new_offset_x(x_delta) {
+        return parseInt(this.elem.style.left) + x_delta
+    }
+    calc_new_top(y_delta) {
+        return parseInt(this.elem.style.top) + y_delta
+    }
+
+    dropTask(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        let diagram_offset_x = parseInt(this.current_task_avatar.style.left)
+        let x_delta = diagram_offset_x - parseInt(this.elem.style.left)
+        let new_top = parseInt(this.current_task_avatar.style.top)
+        let y_delta = new_top - parseInt(this.elem.style.top)
+        let new_begin_at = this.calc_new_begin_at(
+            this.viewport_dt_line.current_moment_line.top_val,
+            new_top,
+            parseFloat(this.current_task_avatar.style.height)
+        )
+        this.update_offset_x_n_begin_at(diagram_offset_x, new_begin_at, evt)
+
+        let is_move_with_children = document.querySelector('#inp_is_move_with_children').checked
+        if (is_move_with_children) {
+            for (let i = 0, cur_child_obj; i < this.children.length; i++) {
+                cur_child_obj = this.viewport_dt_line.tasks[this.children[i].pk]
+                cur_child_obj.update_offset_x_n_begin_at(
+                    cur_child_obj.calc_new_offset_x(x_delta),
+                    this.calc_new_begin_at(
+                        this.viewport_dt_line.current_moment_line.top_val,
+                        cur_child_obj.calc_new_top(y_delta),
+                        parseFloat(cur_child_obj.elem.style.height)
+                    )
+                )
+            }
+        }
     }
 
     stopEditWidthTask(evt) {
@@ -266,7 +293,7 @@ class Task {
         });
     }
 
-    editDurationTask(evt){
+    editDurationTask(evt) {
         evt.preventDefault();
         evt.stopPropagation();
         let cur_top = parseInt(this.current_task_avatar.style.top)

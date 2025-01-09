@@ -480,6 +480,10 @@ body > .wrapper {
   font-size: 12px;
   width: 200px;
 }
+#move_settings {
+  display: inline-block;
+  font-size: 12px;
+}
 .form-input#id_title {
   width: 300px;
 }

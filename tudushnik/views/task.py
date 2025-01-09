@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytz
 from django.core.exceptions import ObjectDoesNotExist
@@ -145,6 +145,15 @@ class TaskUpdateView(UpdateView):
             parent = Task.objects.filter(
                 owner_id=self.request.user.id).filter(pk=pid).first()
             parent.children.remove(form.instance)
+
+        is_move_with_children = self.request.POST.get('is_move_with_children')
+        begin_at_delta = self.request.POST.get('begin_at_delta')
+        if is_move_with_children is not None and begin_at_delta is not None:
+            children = self.object.children.all()
+            for child in children:
+                child.begin_at += timedelta(seconds=int(begin_at_delta))
+                child.save()
+
         return super().form_valid(form)
 
 

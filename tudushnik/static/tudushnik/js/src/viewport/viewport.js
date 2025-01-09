@@ -154,22 +154,24 @@ class ViewportDateTimeLine {
     }
 
     draw_parent_child_relation(parent, child, current_child_pk) {
-        let task_cx = parseInt(parent.elem.style.width) / 2 + parseInt(parent.elem.style.left);
-        let task_cy = parseInt(parent.elem.style.height) / 2 + parseInt(parent.elem.style.top);
-        let child_cx = parseInt(child.elem.style.width) / 2 + parseInt(child.elem.style.left);
-        let child_cy = parseInt(child.elem.style.height) / 2 + parseInt(child.elem.style.top);
+        if (parent !== undefined) {
+            let task_cx = parseInt(parent.elem.style.width) / 2 + parseInt(parent.elem.style.left);
+            let task_cy = parseInt(parent.elem.style.height) / 2 + parseInt(parent.elem.style.top);
+            let child_cx = parseInt(child.elem.style.width) / 2 + parseInt(child.elem.style.left);
+            let child_cy = parseInt(child.elem.style.height) / 2 + parseInt(child.elem.style.top);
 
-        let rel_elem = parent.children_relations_svg_elems[current_child_pk]
-        let delta_width = child_cx - task_cx
-        let height = Math.abs(child_cy - task_cy)
-        if (!this.svg_container.contains(rel_elem)) {
-            this.svg_container.appendChild(rel_elem)
+            let rel_elem = parent.children_relations_svg_elems[current_child_pk]
+            let delta_width = child_cx - task_cx
+            let height = Math.abs(child_cy - task_cy)
+            if (!this.svg_container.contains(rel_elem)) {
+                this.svg_container.appendChild(rel_elem)
+            }
+            modifySVGElemArrowMiddle(rel_elem, delta_width, height)
+            rel_elem.style.width = `${Math.abs(delta_width)}px`
+            rel_elem.style.height = `${height}px`
+            rel_elem.style.left = delta_width >= 0 ? `${task_cx}px` : `${child_cx}px`;
+            rel_elem.style.top = `${child_cy}px`
         }
-        modifySVGElemArrowMiddle(rel_elem, delta_width, height)
-        rel_elem.style.width = `${Math.abs(delta_width)}px`
-        rel_elem.style.height = `${height}px`
-        rel_elem.style.left = delta_width >= 0 ? `${task_cx}px` : `${child_cx}px`;
-        rel_elem.style.top = `${child_cy}px`
     }
 
     draw_task_relations(task) {
