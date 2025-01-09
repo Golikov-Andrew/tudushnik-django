@@ -112,6 +112,17 @@ class Task {
         let title_elem = document.createElement('div')
         title_elem.innerText = this.title
         title_elem.style.display = 'inline-block'
+        let tags_container_elem = document.createElement('div')
+        tags_container_elem.style.display = 'inline-block'
+
+        for (let i = 0, current_tag, tag_elem; i <this.tags.length; i++) {
+            current_tag = this.tags[i]
+            tag_elem = document.createElement('div')
+            tag_elem.classList.add('task_tag')
+            tag_elem.innerText = current_tag.title
+            tag_elem.style.backgroundColor = current_tag.color
+            tags_container_elem.appendChild(tag_elem)
+        }
         this.description_elem = document.createElement('div')
         this.begin_at_elem = document.createElement('div')
         this.duration_elem = document.createElement('div')
@@ -123,6 +134,7 @@ class Task {
         this.description_elem.style.display = 'inline-block'
         this.elem.append(anchor_elem)
         this.elem.append(title_elem)
+        this.elem.append(tags_container_elem)
         this.elem.append(this.begin_at_elem)
         this.elem.append(this.description_elem)
         this.elem.append(width_ctrl_elem)

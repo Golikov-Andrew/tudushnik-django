@@ -289,8 +289,6 @@ def tasks_fetch(request, *args, **kwargs):
         project_id = request.POST['project_id']
         cur_tz = set_client_timezone(request, kwargs)
         offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
-        # if str(offset) != '0:00:00':
-        #     print(offset)
         date_from_parsed = datetime.fromisoformat(date_from)
         date_to_parsed = datetime.fromisoformat(date_to)
         date_from = (date_from_parsed - offset).strftime('%Y-%m-%dT%H:%M')

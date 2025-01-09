@@ -538,6 +538,12 @@ body > .wrapper {
   display: inline-block;
   font-size: 12px;
 }
+.task_tag {
+  display: inline-block;
+  padding: 4px;
+  margin: 0 2px;
+  border-radius: 12px;
+}
 .form-input#id_title {
   width: 300px;
 }
