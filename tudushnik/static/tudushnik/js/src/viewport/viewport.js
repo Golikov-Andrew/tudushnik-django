@@ -105,9 +105,10 @@ class ViewportDateTimeLine {
             success: (data) => {
                 let tasks = data.tasks
                 this.tasks_container_elem.innerHTML = ''
+                let project_color = document.querySelector('.object_color').innerText.trim()
                 for (let i = 0, t; i < tasks.length; i++) {
                     t = tasks[i];
-                    this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem, this.svg_container)
+                    this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem, this.svg_container, project_color)
                     this.tasks_container_elem.append(this.tasks[t.pk].elem)
                 }
                 console.log(data)

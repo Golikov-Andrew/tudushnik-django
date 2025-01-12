@@ -65,6 +65,7 @@ class ProjectDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = context["project"]
+        context['project_color'] = context["project"].color
         project_id = context["project"].id
         all_tasks = Task.objects.filter(
             project=context['project']).select_related().prefetch_related(

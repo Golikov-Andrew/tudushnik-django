@@ -3,13 +3,15 @@ import moment from "moment";
 import {createSVGElem} from "../svg";
 
 class Task {
-    constructor(task_obj, viewport_dt_line, tasks_container_elem, svg_container) {
+    constructor(task_obj, viewport_dt_line, tasks_container_elem, svg_container, project_color) {
         Object.assign(this, task_obj)
         this.viewport_dt_line = viewport_dt_line
         this.tasks_container_elem = tasks_container_elem
         this.svg_container = svg_container
+        this.project_color = project_color
         this.elem = document.createElement('div')
         this.elem.classList.add('task_elem')
+        this.elem.style.outline = `5px solid ${this.project_color}`;
         this.dropTaskHandler;
         this.stopEditWidthHandler;
         this.moveTaskHandler;
