@@ -73,7 +73,7 @@ class Task {
         input_done_ctrl_checkmark.classList.add('checkmark')
         input_done_ctrl_elem_label_container.classList.add('checkbox_container')
         let input_done_ctrl_elem = document.createElement('input')
-        input_done_ctrl_elem.setAttribute('type','checkbox')
+        input_done_ctrl_elem.setAttribute('type', 'checkbox')
         input_done_ctrl_elem.checked = this.is_done;
         input_done_ctrl_elem_container.classList.add('task_tool')
         input_done_ctrl_elem_container.classList.add('is_done')
@@ -81,28 +81,47 @@ class Task {
         input_done_ctrl_elem_label_container.appendChild(input_done_ctrl_checkmark)
         input_done_ctrl_elem_container.appendChild(input_done_ctrl_elem_label_container)
         input_done_ctrl_elem.addEventListener('change', () => {
-                $.ajax({
-                    type: "POST",
-                    headers: {
-                        'X-CSRFToken': csrfToken
-                    },
-                    url: '/tasks/update_attrs',
-                    data: JSON.stringify({
-                        'task_id': this.pk,
-                        'is_done': input_done_ctrl_elem.checked,
-                    }),
-                    success: (data) => {
-                        console.log(data)
-                        if (data.success === true) {
-                            input_done_ctrl_elem.checked = data.is_done;
-                        } else {
-                            alert(data.error_message);
-                            input_done_ctrl_elem.checked = !data.is_done;
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                url: '/tasks/update_attrs',
+                data: JSON.stringify({
+                    'task_id': this.pk,
+                    'is_done': input_done_ctrl_elem.checked,
+                }),
+                success: (data) => {
+                    console.log(data)
+                    if (data.success === true) {
+                        input_done_ctrl_elem.checked = data.is_done;
+                    } else {
+                        alert(data.error_message);
+                        input_done_ctrl_elem.checked = !data.is_done;
+                    }
+                },
+                dataType: 'json'
+            });
+        });
+
+        let delete_task_btn = document.createElement('div')
+        delete_task_btn.innerHTML = '✕'
+        delete_task_btn.classList.add('task_tool')
+        delete_task_btn.classList.add('to_delete_task')
+        delete_task_btn.addEventListener('click', (evt) => {
+            let ans = confirm(`Вы действительно хотите удалить задачу '${this.title}'`)
+            if (ans === true) {
+                send_post_json(evt, `/tasks/delete/${this.pk}/`, {}, (resp) => {
+                    let json_obj = JSON.parse(resp)
+                    if ('success' in json_obj) {
+                        if (json_obj['success'] === true) {
+                            this.viewport_dt_line.remove_task(this)
                         }
-                    },
-                    dataType: 'json'
-                });
-            })
+                    }
+                }, csrfToken)
+            }
+
+        })
 
         let relations_elem_container = document.createElement('div')
         let relations_elem = document.createElement('svg')
@@ -115,7 +134,7 @@ class Task {
         let tags_container_elem = document.createElement('div')
         tags_container_elem.style.display = 'inline-block'
 
-        for (let i = 0, current_tag, tag_elem; i <this.tags.length; i++) {
+        for (let i = 0, current_tag, tag_elem; i < this.tags.length; i++) {
             current_tag = this.tags[i]
             tag_elem = document.createElement('div')
             tag_elem.classList.add('task_tag')
@@ -142,6 +161,7 @@ class Task {
         this.elem.append(duration_ctrl_elem)
         this.elem.append(edit_ctrl_elem)
         this.elem.append(input_done_ctrl_elem_container)
+        this.elem.append(delete_task_btn)
         this.elem.height = 20
         this.current_task_avatar = undefined
         this.tooltip = undefined
@@ -234,6 +254,7 @@ class Task {
     calc_new_offset_x(x_delta) {
         return parseInt(this.elem.style.left) + x_delta
     }
+
     calc_new_top(y_delta) {
         return parseInt(this.elem.style.top) + y_delta
     }

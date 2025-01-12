@@ -134,12 +134,18 @@ class ViewportDateTimeLine {
         this.checkfix_duration_height_px(task_obj, duration_height_px);
         let task_el_height = parseFloat(window.getComputedStyle(task_obj.elem).getPropertyValue("height"))
         let top = this.current_moment_line.top_val - task_el_height - px_diff
-        console.log('top', top)
         task_obj.elem.style.top = `${top}px`
         task_obj.elem.style.left = `${task_obj.diagram_offset_x}px`
         task_obj.description_elem.innerText = task_obj.content
         task_obj.begin_at_elem.innerText = moment(task_obj.begin_at).format('Y-MM-DD HH:mm')
         task_obj.duration_elem.innerText = moment.duration(task_obj.duration, 'seconds').format('h [hours] :mm [minutes]')
+    }
+
+    remove_task(task_obj) {
+        this.tasks_container_elem.removeChild(task_obj.elem)
+        console.log('task_obj.pk', task_obj.pk)
+        delete this.tasks[task_obj.pk]
+        console.log('removed', this.tasks)
     }
 
     draw() {

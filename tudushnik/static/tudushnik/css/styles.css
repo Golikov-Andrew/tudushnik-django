@@ -466,6 +466,12 @@ body > .wrapper {
   right: 20px;
   cursor: ns-resize;
 }
+.task_elem .task_tool.to_delete_task {
+  position: absolute;
+  top: 0;
+  right: 80px;
+  cursor: pointer;
+}
 .task_elem .task_tool.is_done {
   position: absolute;
   top: 0;
