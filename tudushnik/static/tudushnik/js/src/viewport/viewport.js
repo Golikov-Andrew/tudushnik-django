@@ -14,29 +14,39 @@ class Viewport {
         let btn_diagram_refresh = document.querySelector('.btn_diagram_refresh')
         let viewport_datetimeline = document.querySelector('.viewport_datetimeline')
         let viewport_type = user_settings.get('viewport_type');
-        if (viewport_type === 'table') {
-            viewport_type_select.value = 'table'
-            this.show_table()
-        } else if (viewport_type === 'datetimeline') {
-            viewport_type_select.value = 'datetimeline'
-            this.show_datetimeline(viewport_dtl)
-        }
-        viewport_type_select.addEventListener('change', () => {
-            let new_val = viewport_type_select.value
-            if (new_val === 'datetimeline') {
-                this.show_datetimeline(viewport_dtl)
-                user_settings.set('viewport_type', 'datetimeline');
-
-            } else {
+        if (viewport_type_select !== null) {
+            if (viewport_type === 'table') {
+                viewport_type_select.value = 'table'
                 this.show_table()
-                user_settings.set('viewport_type', 'table');
+            } else if (viewport_type === 'datetimeline') {
+                viewport_type_select.value = 'datetimeline'
+                this.show_datetimeline(viewport_dtl, +document.querySelector('.object_pk').innerHTML.trim())
             }
-        })
-        btn_diagram_refresh.addEventListener('click', () => {
-            for (const pk_task_key in viewport_dtl.tasks) {
-                viewport_dtl.draw_task_relations(viewport_dtl.tasks[pk_task_key])
-            }
-        })
+            viewport_type_select.addEventListener('change', () => {
+                let new_val = viewport_type_select.value
+                if (new_val === 'datetimeline') {
+                    this.show_datetimeline(viewport_dtl, +document.querySelector('.object_pk').innerHTML.trim())
+                    user_settings.set('viewport_type', 'datetimeline');
+
+                } else {
+                    this.show_table()
+                    user_settings.set('viewport_type', 'table');
+                }
+            })
+
+            btn_diagram_refresh.addEventListener('click', () => {
+                for (const pk_task_key in viewport_dtl.tasks) {
+                    viewport_dtl.draw_task_relations(viewport_dtl.tasks[pk_task_key])
+                }
+            })
+
+        } else {
+            document.querySelector('.viewport_datetimeline').classList.remove('hidden')
+            document.querySelector('#viewport_dt_line_scale').parentElement.classList.remove('hidden')
+            viewport_dtl.fetch_tasks();
+        }
+
+
         viewport_datetimeline.addEventListener('scroll', (evt) => {
             if (user_settings.datetimeline_scroll_top_timeout !== null) clearTimeout(user_settings.datetimeline_scroll_top_timeout);
             user_settings.datetimeline_scroll_top_timeout = setTimeout(() => {
@@ -48,13 +58,13 @@ class Viewport {
     constructor() {
     }
 
-    static show_datetimeline(viewport_dtl) {
+    static show_datetimeline(viewport_dtl, project_id) {
         document.querySelector('.pagination').classList.add('hidden')
         document.querySelector('.tasks_table').classList.add('hidden')
         document.querySelector('.viewport_datetimeline').classList.remove('hidden')
         document.querySelector('#viewport_dt_line_scale').parentElement.classList.remove('hidden')
         document.querySelector('.btn_diagram_refresh').classList.remove('hidden')
-        viewport_dtl.fetch_tasks();
+        viewport_dtl.fetch_tasks(project_id);
     }
 
     static show_table() {
@@ -85,11 +95,18 @@ class ViewportDateTimeLine {
 
     }
 
-    fetch_tasks() {
+    fetch_tasks(project_id) {
         this.now_moment = moment()
         let delta_one_day_in_ms = 1000 * 60 * 60 * 24
         this.day_forward = moment(this.now_moment + delta_one_day_in_ms)
         this.day_backward = moment(this.now_moment - delta_one_day_in_ms)
+        let data = {
+            'date_from': this.day_backward.format(),
+            'date_to': this.day_forward.format(),
+        }
+        if (project_id !== undefined)
+            data.project_id = project_id;
+
 
         $.ajax({
             type: "POST",
@@ -97,18 +114,13 @@ class ViewportDateTimeLine {
                 'X-CSRFToken': csrfToken
             },
             url: '/tasks/fetch',
-            data: {
-                'date_from': this.day_backward.format(),
-                'date_to': this.day_forward.format(),
-                'project_id': +document.querySelector('.object_pk').innerHTML.trim(),
-            },
+            data: data,
             success: (data) => {
                 let tasks = data.tasks
                 this.tasks_container_elem.innerHTML = ''
-                let project_color = document.querySelector('.object_color').innerText.trim()
                 for (let i = 0, t; i < tasks.length; i++) {
                     t = tasks[i];
-                    this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem, this.svg_container, project_color)
+                    this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem, this.svg_container, t.project_color)
                     this.tasks_container_elem.append(this.tasks[t.pk].elem)
                 }
                 console.log(data)
@@ -144,9 +156,7 @@ class ViewportDateTimeLine {
 
     remove_task(task_obj) {
         this.tasks_container_elem.removeChild(task_obj.elem)
-        console.log('task_obj.pk', task_obj.pk)
         delete this.tasks[task_obj.pk]
-        console.log('removed', this.tasks)
     }
 
     draw() {

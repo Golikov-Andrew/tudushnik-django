@@ -53,6 +53,7 @@ class Task(models.Model):
             'begin_at': self.begin_at,
             'is_done': self.is_done,
             'project': str(self.project),
+            'project_color': self.project.color,
             'owner': str(self.owner),
             'duration': self.duration,
             'width': self.width,

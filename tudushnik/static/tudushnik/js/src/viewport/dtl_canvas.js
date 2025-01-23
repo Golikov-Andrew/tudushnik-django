@@ -44,7 +44,15 @@ class DatetimelineCanvas {
         this.context_menu_btn_ok.addEventListener('click',(evt)=>{
             let diagram_offset_x = this.context_menu_info_elem.dataset.x
             let begin_at = this.context_menu_info_elem.dataset.calced_dt
-            window.location.href = `/tasks/add_to_project/${document.querySelector('.object_pk').innerHTML.trim()}/?diagram_offset_x=${diagram_offset_x}&begin_at=${begin_at}`
+            let project_id_elem = document.querySelector('.object_pk')
+            let project_id;
+            if (project_id_elem !== null) {
+                project_id = project_id_elem.innerHTML.trim()
+                window.location.href = `/tasks/add_to_project/${project_id}/?diagram_offset_x=${diagram_offset_x}&begin_at=${begin_at}`
+            }else{
+                window.location.href = `/tasks/create?diagram_offset_x=${diagram_offset_x}&begin_at=${begin_at}`
+            }
+
         })
     }
 

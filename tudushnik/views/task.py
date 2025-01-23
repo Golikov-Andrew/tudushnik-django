@@ -176,14 +176,26 @@ def add_task(request, *args, **kwargs):
             form.save()
             return redirect('tasks_page')
     else:
-        form = AddTaskForm(
-            instance=Task(
-                owner=request.user,
-                begin_at=timezone.localtime(
-                    timezone.now(), pytz.timezone(cur_tz)
-                ).strftime('%Y-%m-%dT%H:%M')
+        diagram_offset_x = request.GET.get('diagram_offset_x')
+        begin_at = request.GET.get('begin_at')
+        if diagram_offset_x is not None and begin_at is not None:
+            form = AddTaskForm(
+                instance=Task(
+                    owner=request.user,
+                    begin_at=begin_at,
+                    diagram_offset_x=int(diagram_offset_x)
+                )
             )
-        )
+        else:
+            form = AddTaskForm(
+                instance=Task(
+                    owner=request.user,
+                    begin_at=timezone.localtime(
+                        timezone.now(), pytz.timezone(cur_tz)
+                    ).strftime('%Y-%m-%dT%H:%M')
+                )
+            )
+
         form.fields['project'].queryset = Project.objects.filter(
             owner_id=request.user.id).all()
         form.fields['tags'].queryset = Tag.objects.filter(
@@ -300,7 +312,7 @@ def tasks_fetch(request, *args, **kwargs):
     if request.method == 'POST':
         date_from = request.POST['date_from']
         date_to = request.POST['date_to']
-        project_id = request.POST['project_id']
+        project_id = request.POST.get('project_id')
         cur_tz = set_client_timezone(request, kwargs)
         offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
         date_from_parsed = datetime.fromisoformat(date_from)
@@ -311,9 +323,10 @@ def tasks_fetch(request, *args, **kwargs):
         query = Task.objects.filter(
             owner_id=request.user.id,
             begin_at__gt=date_from,
-            begin_at__lt=date_to,
-            project_id=project_id
+            begin_at__lt=date_to
         )
+        if project_id is not None:
+            query = query.filter(project_id=project_id)
 
         result = query.all()
 
