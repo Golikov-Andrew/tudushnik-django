@@ -23,11 +23,11 @@ def gantt_chart_page(request, *args, **kwargs):
         gantt_apply_filters = {
             "date_from": gantt_chart_datetime_from,
             "date_to": gantt_chart_datetime_to,
-            "selected_projects": selected_projects
         }
         all_projects = Project.objects.filter(owner_id=request.user.id)
         if len(selected_projects) == 0:
-            selected_projects = [int(i.pk) for i in all_projects]
+            selected_projects = [int(i.pk) for i in all_projects.all()]
+        gantt_apply_filters['selected_projects'] = selected_projects
         kwargs.update(
             {"title": "Диаграмма Ганта", "all_projects": all_projects,
              'selected_projects': selected_projects,

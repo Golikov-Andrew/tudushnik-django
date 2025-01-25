@@ -115,8 +115,8 @@ class ViewportDateTimeLine {
         }
 
         data = {
-            'date_from': this.day_backward.format('YYYY-MM-DD'),
-            'date_to': this.day_forward.format('YYYY-MM-DD'),
+            'date_from': this.day_backward.format('Y-MM-DD HH:mm'),
+            'date_to': this.day_forward.format('Y-MM-DD HH:mm'),
         }
         if (settings_objects.hasOwnProperty('selected_projects'))
             data.selected_projects = settings_objects.selected_projects;

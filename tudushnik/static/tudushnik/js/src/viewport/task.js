@@ -176,6 +176,27 @@ class Task {
         }
     }
 
+    static moveTask(task_obj, move_settings) {
+        task_obj.update_offset_x_n_begin_at(
+            task_obj.calc_new_offset_x(move_settings.x_delta),
+            task_obj.calc_new_begin_at(
+                task_obj.viewport_dt_line.current_moment_line.top_val,
+                task_obj.calc_new_top(move_settings.y_delta),
+                parseFloat(task_obj.elem.style.height)
+            )
+        )
+        if (move_settings.recursive) {
+            for (let j = 0, current_child; j < task_obj.children.length; j++) {
+                current_child = task_obj.viewport_dt_line.tasks[task_obj.children[j].pk]
+                Task.moveTask(current_child, {
+                    recursive: true,
+                    x_delta: move_settings.x_delta,
+                    y_delta: move_settings.y_delta
+                })
+            }
+        }
+    }
+
     hide_task_elem() {
         this.elem.classList.add('hidden')
     }
@@ -264,29 +285,30 @@ class Task {
     dropTask(evt) {
         evt.preventDefault();
         evt.stopPropagation();
+
+        let is_move_with_children = document.querySelector('#inp_is_move_with_children').checked
+        let is_move_with_children_recursive = document.querySelector('#inp_is_move_with_children_recursive').checked
+
         let diagram_offset_x = parseInt(this.current_task_avatar.style.left)
         let x_delta = diagram_offset_x - parseInt(this.elem.style.left)
         let new_top = parseInt(this.current_task_avatar.style.top)
         let y_delta = new_top - parseInt(this.elem.style.top)
         let new_begin_at = this.calc_new_begin_at(
             this.viewport_dt_line.current_moment_line.top_val,
-            new_top,
-            parseFloat(this.current_task_avatar.style.height)
+            new_top, parseFloat(this.current_task_avatar.style.height)
         )
         this.update_offset_x_n_begin_at(diagram_offset_x, new_begin_at, evt)
 
-        let is_move_with_children = document.querySelector('#inp_is_move_with_children').checked
         if (is_move_with_children) {
             for (let i = 0, cur_child_obj; i < this.children.length; i++) {
                 cur_child_obj = this.viewport_dt_line.tasks[this.children[i].pk]
-                cur_child_obj.update_offset_x_n_begin_at(
-                    cur_child_obj.calc_new_offset_x(x_delta),
-                    this.calc_new_begin_at(
-                        this.viewport_dt_line.current_moment_line.top_val,
-                        cur_child_obj.calc_new_top(y_delta),
-                        parseFloat(cur_child_obj.elem.style.height)
-                    )
-                )
+                if (cur_child_obj !== undefined) {
+                    Task.moveTask(cur_child_obj, {
+                        recursive: is_move_with_children_recursive,
+                        x_delta: x_delta,
+                        y_delta: y_delta
+                    })
+                }
             }
         }
     }

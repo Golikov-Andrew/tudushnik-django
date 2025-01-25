@@ -129,6 +129,15 @@ class TaskUpdateView(UpdateView):
         return context
 
     def form_valid(self, form):
+
+        def move_task(task_obj, move_settings):
+            task_obj.begin_at += timedelta(
+                seconds=int(move_settings['begin_at_delta']))
+            task_obj.save()
+            if move_settings['recursive']:
+                for child_obj in task_obj.children.all():
+                    move_task(child_obj, move_settings)
+
         naived = timezone.make_naive(form.instance.begin_at)
         form.instance.begin_at = timezone.make_aware(naived, pytz.timezone(
             self.kwargs['client_timezone']))
@@ -149,12 +158,18 @@ class TaskUpdateView(UpdateView):
             parent.children.remove(form.instance)
 
         is_move_with_children = self.request.POST.get('is_move_with_children')
+        is_move_with_children_recursive = self.request.POST.get(
+            'is_move_with_children_recursive')
+        is_move_with_children_recursive = False if \
+            is_move_with_children_recursive is None else True
         begin_at_delta = self.request.POST.get('begin_at_delta')
         if is_move_with_children is not None and begin_at_delta is not None:
             children = self.object.children.all()
             for child in children:
-                child.begin_at += timedelta(seconds=int(begin_at_delta))
-                child.save()
+                move_task(child, {
+                    'recursive': is_move_with_children_recursive,
+                    'begin_at_delta': begin_at_delta
+                })
 
         return super().form_valid(form)
 
