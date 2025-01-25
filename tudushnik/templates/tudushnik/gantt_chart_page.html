@@ -11,6 +11,8 @@
 {% block content %}
 
     <div class="entity_header">
+        <div id="gantt_apply_filters"
+             class="hidden">{{ gantt_apply_filters }}</div>
         <div class="page-title-container">
             <div class="page-title">
                 {{ title }}
@@ -19,12 +21,12 @@
 
         <form id="form_chart_datetimes">
 
-            <select name="project" id="selected_projects" multiple>
+            <select name="selected_projects[]" id="selected_projects" multiple>
                 {% for project in all_projects %}
                     <option value="{{ project.pk }}"
-{#                            {% if project.pk == object.pk %}#}
-{#                            selected#}
-{#                            {% endif %}#}
+                            {% if project.pk in selected_projects %}
+                            selected
+                            {% endif %}
                     >{{ project.title }}</option>
                 {% endfor %}
             </select>
@@ -36,7 +38,7 @@
                     </label>
                     <input id="gantt_chart_datetime_from"
                            name="gantt_chart_datetime_from"
-                           type="datetime-local">
+                           type="date">
                 </div>
                 <div>
                     <label for="gantt_chart_datetime_to">
@@ -44,7 +46,7 @@
                     </label>
                     <input id="gantt_chart_datetime_to"
                            name="gantt_chart_datetime_to"
-                           type="datetime-local">
+                           type="date">
                 </div>
             </div>
 

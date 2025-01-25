@@ -35,7 +35,7 @@ for (let i = 0, c, selected_options; i < slcts_table_column_multi_filter.length;
 
         let target_href = window.location.origin +
             window.location.pathname + '?' + urlSearchParams.toString()
-        console.log(decodeURI(target_href))
+        // console.log(decodeURI(target_href))
         window.location.href = target_href
     })
 }

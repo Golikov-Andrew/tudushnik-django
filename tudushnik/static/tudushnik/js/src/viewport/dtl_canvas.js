@@ -15,7 +15,6 @@ class DatetimelineCanvas {
             (evt) => {
                 evt.preventDefault();
                 evt.stopPropagation();
-                console.log('contextmenu', evt.target, this.elem);
                 if (evt.target === this.elem) {
                     this.show_context_menu(evt.offsetX, evt.offsetY, this.calc_datetime_at_point(evt.offsetX, evt.offsetY))
                     return;
@@ -57,7 +56,6 @@ class DatetimelineCanvas {
     }
 
     calc_datetime_at_point(x, y) {
-        console.log('calc_datetime_at_point', x, y)
         let pixel_offset = this.viewport.current_moment_line.top_val - y
         let min_difference = this.viewport.scale.get_y_min_per_px() * pixel_offset
         return moment(this.viewport.now_moment + moment.duration(min_difference, 'minutes')).format('Y-MM-DDTHH:mm:ss')

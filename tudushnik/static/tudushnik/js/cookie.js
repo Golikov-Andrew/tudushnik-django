@@ -64,7 +64,6 @@ class UserSettings{
   set(key, val){
     this.data[key] = val;
     this.save();
-    console.log('set user settings', key, val)
   }
   get(key){
     return this.data[key]
@@ -72,4 +71,3 @@ class UserSettings{
 }
 user_settings = new UserSettings();
 user_settings.load()
-console.log(user_settings.data)

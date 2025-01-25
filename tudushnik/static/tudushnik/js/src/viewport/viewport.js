@@ -5,11 +5,12 @@ import {MomentLine} from "./moment_line";
 import {Task} from "./task";
 import {ViewportScale} from "./viewport_scale";
 import {createSVGElem, modifySVGElemArrowMiddle} from "../svg";
+import {gantt_apply_filters_object} from "./index";
 
 
 class Viewport {
 
-    static init(viewport_dtl) {
+    static init(viewport_dtl, gantt_apply_filters_object) {
         let viewport_type_select = document.getElementById('viewport_type_select')
         let btn_diagram_refresh = document.querySelector('.btn_diagram_refresh')
         let viewport_datetimeline = document.querySelector('.viewport_datetimeline')
@@ -43,7 +44,9 @@ class Viewport {
         } else {
             document.querySelector('.viewport_datetimeline').classList.remove('hidden')
             document.querySelector('#viewport_dt_line_scale').parentElement.classList.remove('hidden')
-            viewport_dtl.fetch_tasks();
+            viewport_dtl.fetch_tasks(gantt_apply_filters_object);
+            document.querySelector('#gantt_chart_datetime_from').value = gantt_apply_filters_object.date_from
+            document.querySelector('#gantt_chart_datetime_to').value = gantt_apply_filters_object.date_to
         }
 
 
@@ -64,7 +67,7 @@ class Viewport {
         document.querySelector('.viewport_datetimeline').classList.remove('hidden')
         document.querySelector('#viewport_dt_line_scale').parentElement.classList.remove('hidden')
         document.querySelector('.btn_diagram_refresh').classList.remove('hidden')
-        viewport_dtl.fetch_tasks(project_id);
+        viewport_dtl.fetch_tasks({selected_projects: [project_id]});
     }
 
     static show_table() {
@@ -95,17 +98,28 @@ class ViewportDateTimeLine {
 
     }
 
-    fetch_tasks(project_id) {
+    fetch_tasks(settings_objects) {
         this.now_moment = moment()
+        let data = {}
         let delta_one_day_in_ms = 1000 * 60 * 60 * 24
-        this.day_forward = moment(this.now_moment + delta_one_day_in_ms)
-        this.day_backward = moment(this.now_moment - delta_one_day_in_ms)
-        let data = {
-            'date_from': this.day_backward.format(),
-            'date_to': this.day_forward.format(),
+
+        if (settings_objects.hasOwnProperty('date_from') &&
+            settings_objects.hasOwnProperty('date_to') &&
+            settings_objects.date_from !== '' &&
+            settings_objects.date_to !== '') {
+            this.day_forward = moment(settings_objects.date_to)
+            this.day_backward = moment(settings_objects.date_from)
+        } else {
+            this.day_forward = moment(this.now_moment + delta_one_day_in_ms)
+            this.day_backward = moment(this.now_moment - delta_one_day_in_ms)
         }
-        if (project_id !== undefined)
-            data.project_id = project_id;
+
+        data = {
+            'date_from': this.day_backward.format('YYYY-MM-DD'),
+            'date_to': this.day_forward.format('YYYY-MM-DD'),
+        }
+        if (settings_objects.hasOwnProperty('selected_projects'))
+            data.selected_projects = settings_objects.selected_projects;
 
 
         $.ajax({
@@ -123,7 +137,6 @@ class ViewportDateTimeLine {
                     this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem, this.svg_container, t.project_color)
                     this.tasks_container_elem.append(this.tasks[t.pk].elem)
                 }
-                console.log(data)
                 this.draw()
             },
             dataType: 'json'
@@ -192,7 +205,6 @@ class ViewportDateTimeLine {
     }
 
     draw_task_relations(task) {
-        console.log('draw_task_relations', this, task)
         // перерисовка отношений к children
         for (let i = 0, current_child_task, rel_elem, current_child_pk, task_cx, task_cy, child_cx, child_cy; i < task.children.length; i++) {
             current_child_pk = task.children[i].pk

@@ -38,7 +38,6 @@ class ViewportScale {
             setTimeout(() => {
                 this.redraw()
                 this.viewport_dt_line.elem.scrollTop = +user_settings.get('datetimeline_scroll_top')
-                console.log('scrollTop', this.viewport_dt_line.elem.scrollTop)
             }, 2000);
         }
 

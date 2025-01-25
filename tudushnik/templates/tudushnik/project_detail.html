@@ -16,7 +16,7 @@
             <div class="page-title-label">{{ entity_type }}</div>
             <div class="page-title">
                 {{ title }}
-                <select name="select_project" id="select_project">
+                <select name="selected_projects[]" id="selected_projects">
                     {% for project in all_projects %}
                         <option value="{{ project.pk }}"
                                 {% if project.pk == object.pk %}

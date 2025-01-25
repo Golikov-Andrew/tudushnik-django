@@ -22,13 +22,13 @@ class Ruler {
         m = end_dt
         roundUp = m.minute() || m.second() || m.millisecond() ? m.add(2, 'hour').startOf('hour') : m.startOf('hour');
         this.end_dt = roundUp
-        console.log('scale_y', this.viewport.scale.y)
+        let delta_days = (end_dt - start_dt) / 1000 / 60 / 60 / 24
         let delta_height = this.viewport.scale.get_y_step_height_px();
         this.elem.style.fontSize = `${this.viewport.scale.get_y_font_size_px()}px`
         this.elem.innerHTML = ''
         let copy_end_dt = this.end_dt.clone()
         let total_height = 0;
-        for (let i = 0, current_hour, new_elem; i < 48; i++) {
+        for (let i = 0, current_hour, new_elem; i < delta_days * 24; i++) {
             current_hour = copy_end_dt.subtract({hours: 1})
             new_elem = new RulerRow(copy_end_dt.format('Y-MM-DD HH:mm')).elem
             new_elem.style.height = `${delta_height}px`

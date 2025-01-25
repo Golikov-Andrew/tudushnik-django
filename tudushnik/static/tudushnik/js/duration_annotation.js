@@ -38,7 +38,6 @@ function calc_duration_in_sec() {
         result += +c.value * (+c.getAttribute('data-seconds'))
     }
     inp_id_duration.value = result
-    console.log(result)
 }
 
 init_duration_controllers(+inp_id_duration.value)

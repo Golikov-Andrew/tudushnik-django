@@ -94,7 +94,7 @@ class Task {
                     'is_done': input_done_ctrl_elem.checked,
                 }),
                 success: (data) => {
-                    console.log(data)
+                    // console.log(data)
                     if (data.success === true) {
                         input_done_ctrl_elem.checked = data.is_done;
                     } else {
@@ -309,7 +309,6 @@ class Task {
                 if (data.success === true) {
                     let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
                     cur_task_obj = Object.assign(cur_task_obj, data)
-                    console.log(data, cur_task_obj)
                     this.remove_task_avatar()
                     this.show_task_elem()
                     window.removeEventListener('mouseup', this.stopEditWidthHandler)
@@ -333,7 +332,6 @@ class Task {
         let new_height = parseFloat(this.current_task_avatar.style.height)
         // let new_top = parseInt(this.current_task_avatar.style.top)
         let new_duration = this.calc_new_duration(new_height)
-        console.log(new_duration)
         $.ajax({
             type: "POST",
             headers: {
@@ -348,7 +346,6 @@ class Task {
                 if (data.success === true) {
                     let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
                     cur_task_obj = Object.assign(cur_task_obj, data)
-                    console.log(data, cur_task_obj)
                     this.remove_task_avatar()
                     this.show_task_elem()
                     window.removeEventListener('mouseup', this.stopEditDurationHandler)
@@ -400,7 +397,6 @@ class Task {
     editWidthTask(evt) {
         evt.preventDefault();
         evt.stopPropagation();
-        console.log()
         let cur_width = parseInt(this.current_task_avatar.style.width)
         let new_width = cur_width + evt.movementX
         this.current_task_avatar.style.width = new_width + 'px'

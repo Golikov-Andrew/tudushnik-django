@@ -312,7 +312,7 @@ def tasks_fetch(request, *args, **kwargs):
     if request.method == 'POST':
         date_from = request.POST['date_from']
         date_to = request.POST['date_to']
-        project_id = request.POST.get('project_id')
+        projects_ids = request.POST.getlist('selected_projects[]')
         cur_tz = set_client_timezone(request, kwargs)
         offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
         date_from_parsed = datetime.fromisoformat(date_from)
@@ -325,8 +325,8 @@ def tasks_fetch(request, *args, **kwargs):
             begin_at__gt=date_from,
             begin_at__lt=date_to
         )
-        if project_id is not None:
-            query = query.filter(project_id=project_id)
+        if projects_ids is not None:
+            query = query.filter(project_id__in=projects_ids)
 
         result = query.all()
 
