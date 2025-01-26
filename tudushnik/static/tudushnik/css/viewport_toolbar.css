@@ -134,6 +134,18 @@
   right: 80px;
   cursor: pointer;
 }
+.task_elem .task_tool.bind_child_btn {
+  position: absolute;
+  top: 0;
+  right: 100px;
+  cursor: pointer;
+}
+.task_elem .task_tool.bind_child_btn.chosen-parent {
+  outline: 2px solid blue;
+}
+.task_elem .task_tool.bind_child_btn.potential-child:hover {
+  outline: 2px solid green;
+}
 .task_elem .task_tool.is_done {
   position: absolute;
   top: 0;

@@ -316,6 +316,12 @@ def task_update_attrs(request, *args, **kwargs):
             print(begin_at)
             target_object.begin_at = begin_at
 
+        new_child_id = json_data.get('new_child_id')
+        if new_child_id is not None:
+            new_child_task = Task.objects.filter(owner_id=request.user.id,
+                                                 pk=new_child_id).first()
+            target_object.children.add(new_child_task)
+
         target_object.save()
         print(request)
         json_resp = {'success': True, 'task_id': task_id}

@@ -191,6 +191,9 @@ class ViewportDateTimeLine {
             let child_cy = parseInt(child.elem.style.height) / 2 + parseInt(child.elem.style.top);
 
             let rel_elem = parent.children_relations_svg_elems[current_child_pk]
+            if(rel_elem === undefined){
+                rel_elem = parent.create_child_relation_svg_elem(child)
+            }
             let delta_width = child_cx - task_cx
             let height = Math.abs(child_cy - task_cy)
             if (!this.svg_container.contains(rel_elem)) {
@@ -205,7 +208,6 @@ class ViewportDateTimeLine {
     }
 
     draw_task_relations(task) {
-        // перерисовка отношений к children
         for (let i = 0, current_child_task, rel_elem, current_child_pk, task_cx, task_cy, child_cx, child_cy; i < task.children.length; i++) {
             current_child_pk = task.children[i].pk
             current_child_task = this.tasks[current_child_pk];

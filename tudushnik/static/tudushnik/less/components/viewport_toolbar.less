@@ -107,6 +107,18 @@
       right: 80px;
       cursor: pointer;
     }
+    &.bind_child_btn {
+      position: absolute;
+      top: 0;
+      right: 100px;
+      cursor: pointer;
+      &.chosen-parent{
+        outline: 2px solid blue;
+      }
+      &.potential-child:hover{
+        outline: 2px solid green;
+      }
+    }
 
     &.is_done {
       position: absolute;

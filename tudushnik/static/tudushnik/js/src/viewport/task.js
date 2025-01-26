@@ -2,6 +2,8 @@ import "jquery";
 import moment from "moment";
 import {createSVGElem} from "../svg";
 
+let parent_task_for_binding_chosen = null;
+
 class Task {
     constructor(task_obj, viewport_dt_line, tasks_container_elem, svg_container, project_color) {
         Object.assign(this, task_obj)
@@ -122,6 +124,33 @@ class Task {
                     }
                 }, csrfToken)
             }
+        })
+
+        this.bind_child_btn = document.createElement('div')
+        this.bind_child_btn.innerHTML = '&#43612;'
+        this.bind_child_btn.setAttribute('data-task-id', this.pk)
+        this.bind_child_btn.classList.add('task_tool')
+        this.bind_child_btn.classList.add('bind_child_btn')
+        this.bind_child_btn.addEventListener('click', (evt) => {
+            let all_bind_child_btn = document.querySelectorAll('.bind_child_btn')
+            if (parent_task_for_binding_chosen === null) {
+                parent_task_for_binding_chosen = this
+                this.bind_child_btn.classList.add('chosen-parent')
+                for (let i = 0; i < all_bind_child_btn.length; i++) {
+                    if (this.bind_child_btn !== all_bind_child_btn[i])
+                        all_bind_child_btn[i].classList.add('potential-child');
+                }
+            } else {
+                if (parent_task_for_binding_chosen !== this) {
+                    let child_task_id = evt.target.getAttribute('data-task-id')
+                    parent_task_for_binding_chosen.add_child_task(child_task_id)
+                }
+                parent_task_for_binding_chosen.bind_child_btn.classList.remove('chosen-parent')
+                parent_task_for_binding_chosen = null
+                for (let i = 0; i < all_bind_child_btn.length; i++) {
+                    all_bind_child_btn[i].classList.remove('potential-child');
+                }
+            }
 
         })
 
@@ -164,15 +193,13 @@ class Task {
         this.elem.append(edit_ctrl_elem)
         this.elem.append(input_done_ctrl_elem_container)
         this.elem.append(delete_task_btn)
+        this.elem.append(this.bind_child_btn)
         this.elem.height = 20
         this.current_task_avatar = undefined
         this.tooltip = undefined
         this.children_relations_svg_elems = {}
-        for (let i = 0, current_child, new_svg; i < this.children.length; i++) {
-            current_child = this.children[i]
-            new_svg = createSVGElem('svg');
-            new_svg.classList.add('task_relation_svg_elem')
-            this.children_relations_svg_elems[current_child.pk] = new_svg
+        for (let i = 0; i < this.children.length; i++) {
+            this.create_child_relation_svg_elem(this.children[i])
         }
     }
 
@@ -195,6 +222,42 @@ class Task {
                 })
             }
         }
+    }
+
+    create_child_relation_svg_elem(child_obj) {
+        let new_svg = createSVGElem('svg');
+        new_svg.classList.add('task_relation_svg_elem')
+        this.children_relations_svg_elems[child_obj.pk] = new_svg
+        return new_svg;
+    }
+
+    add_child_task(child_task_id) {
+        console.log('parent -> child_task', this, this.viewport_dt_line.tasks[child_task_id])
+        $.ajax({
+            type: "POST",
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            url: '/tasks/update_attrs',
+            data: JSON.stringify({
+                'task_id': this.pk,
+                'new_child_id': parseInt(child_task_id),
+            }),
+            success: (data) => {
+                if (data.success === true) {
+                    let new_child_task = this.viewport_dt_line.tasks["" + child_task_id]
+                    let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
+                    cur_task_obj = Object.assign(cur_task_obj, data)
+                    this.children.push(new_child_task)
+                    new_child_task.parents.push(data.task_id)
+                    this.viewport_dt_line.draw_task(cur_task_obj)
+                    this.viewport_dt_line.draw_task_relations(cur_task_obj)
+                } else {
+                    console.error(data.error_message);
+                }
+            },
+            dataType: 'json'
+        });
     }
 
     hide_task_elem() {
@@ -258,7 +321,6 @@ class Task {
                 if (data.success === true) {
                     let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
                     cur_task_obj = Object.assign(cur_task_obj, data)
-                    // console.log(data, cur_task_obj)
                     this.viewport_dt_line.draw_task(cur_task_obj)
                     this.viewport_dt_line.draw_task_relations(cur_task_obj)
                 } else {
