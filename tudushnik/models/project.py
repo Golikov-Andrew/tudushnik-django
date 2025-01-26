@@ -9,6 +9,7 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    color = models.TextField(blank=False, default='#aaaaaa')
 
     def __str__(self):
         return self.title
@@ -23,6 +24,7 @@ class Project(models.Model):
             'created_at': self.created_at,
             'updated_at': self.updated_at,
             'owner': self.owner,
+            'color': self.color,
         }
 
     class Meta:

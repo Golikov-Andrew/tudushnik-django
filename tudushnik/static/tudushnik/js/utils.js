@@ -81,7 +81,7 @@ function getStrOrJSON(str) {
 function tryToStringify(obj){
     let result;
     if (Array.isArray(obj)) {
-        console.log('is array')
+        // console.log('is array')
         result = JSON.stringify(obj)
     } else {
         result = obj
@@ -109,7 +109,6 @@ function addMultiEventListener(el, s, fn){
 
 function showHelper(parent, color, x, y, w, h){
     let new_div = document.createElement('div')
-    console.log('showHelper', new_div)
     new_div.style.backgroundColor = color
     new_div.style.display = 'inline-block'
     new_div.style.opacity = '0.5'

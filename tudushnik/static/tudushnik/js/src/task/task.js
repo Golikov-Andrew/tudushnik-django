@@ -22,7 +22,7 @@ class Task {
                         'is_done': cur_done.checked,
                     }),
                     success: (data) => {
-                        console.log(data)
+                        // console.log(data)
                         if (data.success === true) {
                             cur_done.checked = data.is_done;
                         } else {

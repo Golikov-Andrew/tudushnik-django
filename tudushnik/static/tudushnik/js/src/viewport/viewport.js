@@ -5,38 +5,51 @@ import {MomentLine} from "./moment_line";
 import {Task} from "./task";
 import {ViewportScale} from "./viewport_scale";
 import {createSVGElem, modifySVGElemArrowMiddle} from "../svg";
+import {gantt_apply_filters_object} from "./index";
 
 
 class Viewport {
 
-    static init(viewport_dtl) {
+    static init(viewport_dtl, gantt_apply_filters_object) {
         let viewport_type_select = document.getElementById('viewport_type_select')
         let btn_diagram_refresh = document.querySelector('.btn_diagram_refresh')
         let viewport_datetimeline = document.querySelector('.viewport_datetimeline')
         let viewport_type = user_settings.get('viewport_type');
-        if (viewport_type === 'table') {
-            viewport_type_select.value = 'table'
-            this.show_table()
-        } else if (viewport_type === 'datetimeline') {
-            viewport_type_select.value = 'datetimeline'
-            this.show_datetimeline(viewport_dtl)
-        }
-        viewport_type_select.addEventListener('change', () => {
-            let new_val = viewport_type_select.value
-            if (new_val === 'datetimeline') {
-                this.show_datetimeline(viewport_dtl)
-                user_settings.set('viewport_type', 'datetimeline');
-
-            } else {
+        if (viewport_type_select !== null) {
+            if (viewport_type === 'table') {
+                viewport_type_select.value = 'table'
                 this.show_table()
-                user_settings.set('viewport_type', 'table');
+            } else if (viewport_type === 'datetimeline') {
+                viewport_type_select.value = 'datetimeline'
+                this.show_datetimeline(viewport_dtl, +document.querySelector('.object_pk').innerHTML.trim())
             }
-        })
-        btn_diagram_refresh.addEventListener('click', () => {
-            for (const pk_task_key in viewport_dtl.tasks) {
-                viewport_dtl.draw_task_relations(viewport_dtl.tasks[pk_task_key])
-            }
-        })
+            viewport_type_select.addEventListener('change', () => {
+                let new_val = viewport_type_select.value
+                if (new_val === 'datetimeline') {
+                    this.show_datetimeline(viewport_dtl, +document.querySelector('.object_pk').innerHTML.trim())
+                    user_settings.set('viewport_type', 'datetimeline');
+
+                } else {
+                    this.show_table()
+                    user_settings.set('viewport_type', 'table');
+                }
+            })
+
+            btn_diagram_refresh.addEventListener('click', () => {
+                for (const pk_task_key in viewport_dtl.tasks) {
+                    viewport_dtl.draw_task_relations(viewport_dtl.tasks[pk_task_key])
+                }
+            })
+
+        } else {
+            document.querySelector('.viewport_datetimeline').classList.remove('hidden')
+            document.querySelector('#viewport_dt_line_scale').parentElement.classList.remove('hidden')
+            viewport_dtl.fetch_tasks(gantt_apply_filters_object);
+            document.querySelector('#gantt_chart_datetime_from').value = gantt_apply_filters_object.date_from
+            document.querySelector('#gantt_chart_datetime_to').value = gantt_apply_filters_object.date_to
+        }
+
+
         viewport_datetimeline.addEventListener('scroll', (evt) => {
             if (user_settings.datetimeline_scroll_top_timeout !== null) clearTimeout(user_settings.datetimeline_scroll_top_timeout);
             user_settings.datetimeline_scroll_top_timeout = setTimeout(() => {
@@ -48,13 +61,13 @@ class Viewport {
     constructor() {
     }
 
-    static show_datetimeline(viewport_dtl) {
+    static show_datetimeline(viewport_dtl, project_id) {
         document.querySelector('.pagination').classList.add('hidden')
         document.querySelector('.tasks_table').classList.add('hidden')
         document.querySelector('.viewport_datetimeline').classList.remove('hidden')
         document.querySelector('#viewport_dt_line_scale').parentElement.classList.remove('hidden')
         document.querySelector('.btn_diagram_refresh').classList.remove('hidden')
-        viewport_dtl.fetch_tasks();
+        viewport_dtl.fetch_tasks({selected_projects: [project_id]});
     }
 
     static show_table() {
@@ -85,11 +98,29 @@ class ViewportDateTimeLine {
 
     }
 
-    fetch_tasks() {
+    fetch_tasks(settings_objects) {
         this.now_moment = moment()
+        let data = {}
         let delta_one_day_in_ms = 1000 * 60 * 60 * 24
-        this.day_forward = moment(this.now_moment + delta_one_day_in_ms)
-        this.day_backward = moment(this.now_moment - delta_one_day_in_ms)
+
+        if (settings_objects.hasOwnProperty('date_from') &&
+            settings_objects.hasOwnProperty('date_to') &&
+            settings_objects.date_from !== '' &&
+            settings_objects.date_to !== '') {
+            this.day_forward = moment(settings_objects.date_to)
+            this.day_backward = moment(settings_objects.date_from)
+        } else {
+            this.day_forward = moment(this.now_moment + delta_one_day_in_ms)
+            this.day_backward = moment(this.now_moment - delta_one_day_in_ms)
+        }
+
+        data = {
+            'date_from': this.day_backward.format('Y-MM-DD HH:mm'),
+            'date_to': this.day_forward.format('Y-MM-DD HH:mm'),
+        }
+        if (settings_objects.hasOwnProperty('selected_projects'))
+            data.selected_projects = settings_objects.selected_projects;
+
 
         $.ajax({
             type: "POST",
@@ -97,20 +128,15 @@ class ViewportDateTimeLine {
                 'X-CSRFToken': csrfToken
             },
             url: '/tasks/fetch',
-            data: {
-                'date_from': this.day_backward.format(),
-                'date_to': this.day_forward.format(),
-                'project_id': +document.querySelector('.object_pk').innerHTML.trim(),
-            },
+            data: data,
             success: (data) => {
                 let tasks = data.tasks
                 this.tasks_container_elem.innerHTML = ''
                 for (let i = 0, t; i < tasks.length; i++) {
                     t = tasks[i];
-                    this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem, this.svg_container)
+                    this.tasks[t.pk] = new Task(t, this, this.tasks_container_elem, this.svg_container, t.project_color)
                     this.tasks_container_elem.append(this.tasks[t.pk].elem)
                 }
-                console.log(data)
                 this.draw()
             },
             dataType: 'json'
@@ -134,12 +160,16 @@ class ViewportDateTimeLine {
         this.checkfix_duration_height_px(task_obj, duration_height_px);
         let task_el_height = parseFloat(window.getComputedStyle(task_obj.elem).getPropertyValue("height"))
         let top = this.current_moment_line.top_val - task_el_height - px_diff
-        console.log('top', top)
         task_obj.elem.style.top = `${top}px`
         task_obj.elem.style.left = `${task_obj.diagram_offset_x}px`
         task_obj.description_elem.innerText = task_obj.content
         task_obj.begin_at_elem.innerText = moment(task_obj.begin_at).format('Y-MM-DD HH:mm')
         task_obj.duration_elem.innerText = moment.duration(task_obj.duration, 'seconds').format('h [hours] :mm [minutes]')
+    }
+
+    remove_task(task_obj) {
+        this.tasks_container_elem.removeChild(task_obj.elem)
+        delete this.tasks[task_obj.pk]
     }
 
     draw() {
@@ -161,6 +191,9 @@ class ViewportDateTimeLine {
             let child_cy = parseInt(child.elem.style.height) / 2 + parseInt(child.elem.style.top);
 
             let rel_elem = parent.children_relations_svg_elems[current_child_pk]
+            if(rel_elem === undefined){
+                rel_elem = parent.create_child_relation_svg_elem(child)
+            }
             let delta_width = child_cx - task_cx
             let height = Math.abs(child_cy - task_cy)
             if (!this.svg_container.contains(rel_elem)) {
@@ -175,8 +208,6 @@ class ViewportDateTimeLine {
     }
 
     draw_task_relations(task) {
-        console.log('draw_task_relations', this, task)
-        // перерисовка отношений к children
         for (let i = 0, current_child_task, rel_elem, current_child_pk, task_cx, task_cy, child_cx, child_cy; i < task.children.length; i++) {
             current_child_pk = task.children[i].pk
             current_child_task = this.tasks[current_child_pk];

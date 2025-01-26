@@ -12,9 +12,19 @@
     <div class="entity_header">
         <div class="page-title-container">
             <div class="hidden object_pk">{{ object.pk }}</div>
+            <div class="hidden object_color">{{ object.color }}</div>
             <div class="page-title-label">{{ entity_type }}</div>
             <div class="page-title">
                 {{ title }}
+                <select name="selected_projects[]" id="selected_projects">
+                    {% for project in all_projects %}
+                        <option value="{{ project.pk }}"
+                                {% if project.pk == object.pk %}
+                                selected
+                                {% endif %}
+                        >{{ project.title }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
         <div class="entity_tools">
@@ -72,6 +82,8 @@
                 <div>
                     <input type="checkbox" id="inp_is_move_with_children">
                     <label for="inp_is_move_with_children">с children?</label>
+                    <input type="checkbox" id="inp_is_move_with_children_recursive">
+                <label for="inp_is_move_with_children_recursive">рекурсивно?</label>
                 </div>
                 <div>
                     <input type="checkbox" id="inp_is_move_with_parents">

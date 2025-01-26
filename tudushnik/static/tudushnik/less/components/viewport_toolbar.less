@@ -101,6 +101,24 @@
       right: 20px;
       cursor: ns-resize;
     }
+    &.to_delete_task {
+      position: absolute;
+      top: 0;
+      right: 80px;
+      cursor: pointer;
+    }
+    &.bind_child_btn {
+      position: absolute;
+      top: 0;
+      right: 100px;
+      cursor: pointer;
+      &.chosen-parent{
+        outline: 2px solid blue;
+      }
+      &.potential-child:hover{
+        outline: 2px solid green;
+      }
+    }
 
     &.is_done {
       position: absolute;
@@ -193,4 +211,11 @@
 #move_settings {
   display: inline-block;
   font-size: 12px;
+}
+
+.task_tag {
+  display: inline-block;
+  padding: 4px;
+  margin: 0 2px;
+  border-radius: 12px;
 }

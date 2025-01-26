@@ -120,7 +120,8 @@ class TaskUpdateView(UpdateView):
         other_tasks_without_parents = all_other_tasks.difference(
             all_parents_task)
 
-        context['form'].fields['children'].queryset = other_tasks_without_parents
+        context['form'].fields[
+            'children'].queryset = other_tasks_without_parents
         context[
             'all_other_tasks_and_not_children'] = other_tasks_without_children
         context['parents'] = all_parents_task
@@ -128,14 +129,24 @@ class TaskUpdateView(UpdateView):
         return context
 
     def form_valid(self, form):
+
+        def move_task(task_obj, move_settings):
+            task_obj.begin_at += timedelta(
+                seconds=int(move_settings['begin_at_delta']))
+            task_obj.save()
+            if move_settings['recursive']:
+                for child_obj in task_obj.children.all():
+                    move_task(child_obj, move_settings)
+
         naived = timezone.make_naive(form.instance.begin_at)
         form.instance.begin_at = timezone.make_aware(naived, pytz.timezone(
             self.kwargs['client_timezone']))
         parents_id = [int(i) for i in self.request.POST.getlist('parents[]')]
         prev_parents_ids_set = [i['id'] for i in list(Task.objects.filter(
-                owner_id=self.request.user.id).filter(
+            owner_id=self.request.user.id).filter(
             children=form.instance.pk).values('id'))]
-        parents_for_unlink = set(prev_parents_ids_set).difference(set(parents_id))
+        parents_for_unlink = set(prev_parents_ids_set).difference(
+            set(parents_id))
         parents_for_link = set(parents_id).difference(set(prev_parents_ids_set))
         for pid in parents_for_link:
             parent = Task.objects.filter(
@@ -147,12 +158,18 @@ class TaskUpdateView(UpdateView):
             parent.children.remove(form.instance)
 
         is_move_with_children = self.request.POST.get('is_move_with_children')
+        is_move_with_children_recursive = self.request.POST.get(
+            'is_move_with_children_recursive')
+        is_move_with_children_recursive = False if \
+            is_move_with_children_recursive is None else True
         begin_at_delta = self.request.POST.get('begin_at_delta')
         if is_move_with_children is not None and begin_at_delta is not None:
             children = self.object.children.all()
             for child in children:
-                child.begin_at += timedelta(seconds=int(begin_at_delta))
-                child.save()
+                move_task(child, {
+                    'recursive': is_move_with_children_recursive,
+                    'begin_at_delta': begin_at_delta
+                })
 
         return super().form_valid(form)
 
@@ -174,14 +191,26 @@ def add_task(request, *args, **kwargs):
             form.save()
             return redirect('tasks_page')
     else:
-        form = AddTaskForm(
-            instance=Task(
-                owner=request.user,
-                begin_at=timezone.localtime(
-                    timezone.now(), pytz.timezone(cur_tz)
-                ).strftime('%Y-%m-%dT%H:%M')
+        diagram_offset_x = request.GET.get('diagram_offset_x')
+        begin_at = request.GET.get('begin_at')
+        if diagram_offset_x is not None and begin_at is not None:
+            form = AddTaskForm(
+                instance=Task(
+                    owner=request.user,
+                    begin_at=begin_at,
+                    diagram_offset_x=int(diagram_offset_x)
+                )
             )
-        )
+        else:
+            form = AddTaskForm(
+                instance=Task(
+                    owner=request.user,
+                    begin_at=timezone.localtime(
+                        timezone.now(), pytz.timezone(cur_tz)
+                    ).strftime('%Y-%m-%dT%H:%M')
+                )
+            )
+
         form.fields['project'].queryset = Project.objects.filter(
             owner_id=request.user.id).all()
         form.fields['tags'].queryset = Tag.objects.filter(
@@ -208,15 +237,27 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
             return redirect('project_detail', pk=project_pk)
     else:
         proj = Project.objects.filter(owner_id=request.user.id, pk=project_pk)
-        form = AddTaskForm(
-            instance=Task(
-                project=proj.first(),
-                owner=request.user,
-                begin_at=timezone.localtime(
-                    timezone.now(), pytz.timezone(cur_tz)
-                ).strftime('%Y-%m-%dT%H:%M')
+        diagram_offset_x = request.GET.get('diagram_offset_x')
+        begin_at = request.GET.get('begin_at')
+        if diagram_offset_x is not None and begin_at is not None:
+            form = AddTaskForm(
+                instance=Task(
+                    project=proj.first(),
+                    owner=request.user,
+                    begin_at=begin_at,
+                    diagram_offset_x=int(diagram_offset_x)
+                )
             )
-        )
+        else:
+            form = AddTaskForm(
+                instance=Task(
+                    project=proj.first(),
+                    owner=request.user,
+                    begin_at=timezone.localtime(
+                        timezone.now(), pytz.timezone(cur_tz)
+                    ).strftime('%Y-%m-%dT%H:%M')
+                )
+            )
         form.fields['project'].queryset = proj.all()
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=request.user.id).all()
@@ -275,6 +316,12 @@ def task_update_attrs(request, *args, **kwargs):
             print(begin_at)
             target_object.begin_at = begin_at
 
+        new_child_id = json_data.get('new_child_id')
+        if new_child_id is not None:
+            new_child_task = Task.objects.filter(owner_id=request.user.id,
+                                                 pk=new_child_id).first()
+            target_object.children.add(new_child_task)
+
         target_object.save()
         print(request)
         json_resp = {'success': True, 'task_id': task_id}
@@ -286,11 +333,9 @@ def tasks_fetch(request, *args, **kwargs):
     if request.method == 'POST':
         date_from = request.POST['date_from']
         date_to = request.POST['date_to']
-        project_id = request.POST['project_id']
+        projects_ids = request.POST.getlist('selected_projects[]')
         cur_tz = set_client_timezone(request, kwargs)
         offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
-        # if str(offset) != '0:00:00':
-        #     print(offset)
         date_from_parsed = datetime.fromisoformat(date_from)
         date_to_parsed = datetime.fromisoformat(date_to)
         date_from = (date_from_parsed - offset).strftime('%Y-%m-%dT%H:%M')
@@ -299,9 +344,10 @@ def tasks_fetch(request, *args, **kwargs):
         query = Task.objects.filter(
             owner_id=request.user.id,
             begin_at__gt=date_from,
-            begin_at__lt=date_to,
-            project_id=project_id
+            begin_at__lt=date_to
         )
+        if projects_ids is not None:
+            query = query.filter(project_id__in=projects_ids)
 
         result = query.all()
 

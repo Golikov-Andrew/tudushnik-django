@@ -69,12 +69,15 @@ body > .wrapper {
 .entity_header {
   display: grid;
   grid-template-areas: "page-title-container entity_tools entity_datetimes" "entity_value entity_value entity_value" "entity_description entity_description entity_description";
-  grid-template-columns: 100px 50px auto;
+  grid-template-columns: 148px 50px auto;
   row-gap: 8px;
   margin-bottom: -16px;
 }
 .page-title-container {
   grid-area: page-title-container;
+}
+.page-title-container select {
+  width: 100%;
 }
 .entity_tools {
   font-size: 20px;
@@ -463,6 +466,24 @@ body > .wrapper {
   right: 20px;
   cursor: ns-resize;
 }
+.task_elem .task_tool.to_delete_task {
+  position: absolute;
+  top: 0;
+  right: 80px;
+  cursor: pointer;
+}
+.task_elem .task_tool.bind_child_btn {
+  position: absolute;
+  top: 0;
+  right: 100px;
+  cursor: pointer;
+}
+.task_elem .task_tool.bind_child_btn.chosen-parent {
+  outline: 2px solid blue;
+}
+.task_elem .task_tool.bind_child_btn.potential-child:hover {
+  outline: 2px solid green;
+}
 .task_elem .task_tool.is_done {
   position: absolute;
   top: 0;
@@ -537,6 +558,12 @@ body > .wrapper {
 #move_settings {
   display: inline-block;
   font-size: 12px;
+}
+.task_tag {
+  display: inline-block;
+  padding: 4px;
+  margin: 0 2px;
+  border-radius: 12px;
 }
 .form-input#id_title {
   width: 300px;

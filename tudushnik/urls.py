@@ -4,7 +4,9 @@ from .views import index
 from .views.auth import LoginUser, profile, logout_user, RegisterUser
 from .views.check import CheckListView, CheckDetailView, checks_fetch, check_delete, CheckUpdateView, \
     check_update_attrs, add_check, add_check_to_budget
-from .views.financy import BudgetListView, BudgetDetailView, budget_delete, BudgetUpdateView, add_budget
+from .views.financy import BudgetListView, BudgetDetailView, budget_delete, \
+    BudgetUpdateView, add_budget
+from .views.gantt import gantt_chart_page
 from .views.project import add_project, ProjectListView, ProjectDetailView, \
     project_delete, ProjectUpdateView
 from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
@@ -43,6 +45,8 @@ urlpatterns = [
     path('tasks/add_to_project/<int:project_pk>/', add_task_to_project,
          name='add_task_to_project'),
 
+    path('gantt/', gantt_chart_page, name='gantt_chart_page'),
+
     path('checks/', CheckListView.as_view(), name='checks_page'),
     path('checks/fetch', checks_fetch, name='checks_fetch'),
     path('checks/detail/<int:pk>/', CheckDetailView.as_view(),
@@ -53,8 +57,6 @@ urlpatterns = [
     path('checks/create', add_check, name='add_check'),
     path('checks/add_to_budget/<int:budget_pk>/', add_check_to_budget,
          name='add_check_to_budget'),
-
-
 
     path('tags/', TagListView.as_view(), name='tags_page'),
     path('tags/detail/<int:pk>/', TagDetailView.as_view(), name='tag_detail'),

@@ -8,12 +8,18 @@ class Tag(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     color = models.TextField(blank=False, default='#aaaaaa')
-    # tasks = models.ManyToManyField(Task)
     owner = models.ForeignKey(User, on_delete=models.CASCADE,
                               related_name='tags')
 
     def __str__(self):
         return self.title
+
+    def to_json(self):
+        return {
+            'pk': self.pk,
+            'title': self.title,
+            'color': self.color
+        }
 
     def get_absolute_url(self):
         return reverse('tag_detail', kwargs={'pk': self.pk})
