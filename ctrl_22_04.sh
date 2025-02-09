@@ -24,7 +24,7 @@ fi
 
 if [ "$1" == "logs" ]
 then
-    sudo docker logs --follow --tail 10 cgg_server
+    sudo docker logs --follow --tail 50 $2
     exit 0
 fi
 
