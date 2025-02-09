@@ -1,6 +1,9 @@
 asgiref==3.5.0
 autopep8==1.6.0
 Django==4.0.3
+djangorestframework
+django-rest-swagger
+drf-yasg==1.21.8
 django-debug-toolbar==3.2.4
 Pillow==9.0.1
 pycodestyle==2.8.0
@@ -11,3 +14,6 @@ psycopg2-binary==2.9.1
 pytz~=2022.7.1
 pytest==7.3.1
 pytest-django==4.5.2
+markdown==3.7
+django-filter==23.5
+pygments
