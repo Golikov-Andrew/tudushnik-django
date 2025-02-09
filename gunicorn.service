@@ -1,0 +1,14 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/usr/src/app_tdm
+ExecStart=gunicorn --workers 5 --bind unix:/run/gunicorn.sock
+/usr/src/app_tdm/app_tdm.wsgi:application
+
+
+[Install]
+WantedBy=multi-user.target

@@ -19,4 +19,10 @@ def main():
 
 
 if __name__ == '__main__':
+    from dotenv import load_dotenv
+
+    if ('0.0.0.0:8080' in sys.argv):
+        load_dotenv('.env-dev')
+    else:
+        load_dotenv('.env')
     main()
