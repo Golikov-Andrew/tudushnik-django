@@ -3,13 +3,16 @@ from django.urls import path
 from .views import index
 from .views.auth import LoginUser, profile, logout_user, RegisterUser
 from .views.calendar import calendar_page
-from .views.check import CheckListView, CheckDetailView, checks_fetch, check_delete, CheckUpdateView, \
+from .views.check import CheckListView, CheckDetailView, checks_fetch, \
+    check_delete, CheckUpdateView, \
     check_update_attrs, add_check, add_check_to_budget
 from .views.financy import BudgetListView, BudgetDetailView, budget_delete, \
     BudgetUpdateView, add_budget
 from .views.gantt import gantt_chart_page
 from .views.project import add_project, ProjectListView, ProjectDetailView, \
     project_delete, ProjectUpdateView
+from .views.snippet import SnippetList, SnippetDetail
+# from .views.snippet import view_snippets
 from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
     add_tag
 
@@ -47,7 +50,6 @@ urlpatterns = [
          name='add_task_to_project'),
 
     path('gantt/', gantt_chart_page, name='gantt_chart_page'),
-    path('calendar/', calendar_page, name='calendar_page'),
 
     path('checks/', CheckListView.as_view(), name='checks_page'),
     path('checks/fetch', checks_fetch, name='checks_fetch'),
@@ -69,5 +71,9 @@ urlpatterns = [
     path('login/', LoginUser.as_view(), name='login'),
     path('register/', RegisterUser.as_view(), name='register'),
     path('profile/', profile, name='profile'),
-    path('logout/', logout_user, name='logout')
+    path('logout/', logout_user, name='logout'),
+
+    path('snippets/', SnippetList.as_view()),
+    path('snippets/<int:pk>/', SnippetDetail.as_view()),
+    # path('snippet/', view_snippets, name='view_snippets'),
 ]
