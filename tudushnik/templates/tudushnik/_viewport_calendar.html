@@ -1,0 +1,54 @@
+<div class="calendar_nav_tools">
+    <div class="view_type">
+        <div class="label">Год</div>
+        <div class="current_value">2025</div>
+        <ul class="values hidden">
+            <li>2025</li>
+            <li>2024</li>
+            <li>2023</li>
+        </ul>
+    </div>
+    <div class="view_type">
+        <div class="label">Месяц</div>
+        <div class="current_value">03</div>
+        <ul class="values hidden">
+            <li>12</li>
+            <li>11</li>
+            <li>10</li>
+        </ul>
+    </div>
+    <div class="view_type">
+        <div class="label">Неделя</div>
+        <div class="current_value">09</div>
+        <ul class="values hidden">
+            <li>09</li>
+            <li>08</li>
+            <li>07</li>
+        </ul>
+    </div>
+    <div class="view_type">
+        <div class="label">Дата - День недели</div>
+        <div class="current_value">01 - Сб</div>
+        <ul class="values hidden">
+            <li>01 - Сб</li>
+            <li>02 - Вс</li>
+            <li>03 - Пн</li>
+        </ul>
+    </div>
+</div>
+<div class="viewport_calendar">
+    <div class="viewport_calendar_canvas">
+        {#        <div class="ruler"></div>#}
+        <div class="svg_container"></div>
+        <div class="tasks_container"></div>
+        {#        <div class="current_timeline"></div>#}
+        <div class="context_menu modal_wrapper hidden">
+            <div class="overlay"></div>
+            <div class="modal_window">
+                <div class="btn_close">X</div>
+                <div class="context_menu_info">context_menu_info</div>
+                <button class="btn_ok">Создать новую задачу</button>
+            </div>
+        </div>
+    </div>
+</div>

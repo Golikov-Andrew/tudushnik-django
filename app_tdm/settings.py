@@ -36,6 +36,8 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.tdm-test.someproject.ru',
 # Application definition
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://tudushnik.ru']
+if not PRODUCTION:
+    SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 INSTALLED_APPS = [
     'django.contrib.admin',

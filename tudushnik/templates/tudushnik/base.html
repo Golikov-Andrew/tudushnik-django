@@ -58,6 +58,8 @@
                        href="{% url 'tags_page' %}">Тэги</a>
                     <a class="{{title|create_class_of_navbar_link_by_title:'Диаграмма Ганта' }}"
                        href="{% url 'gantt_chart_page' %}">Диаграмма Ганта</a>
+                    <a class="{{title|create_class_of_navbar_link_by_title:'Календарь' }}"
+                       href="{% url 'calendar_page' %}">Календарь</a>
                 {% endif %}
                 {% if user.is_superuser %}
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>
