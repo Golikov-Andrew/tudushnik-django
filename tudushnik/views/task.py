@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, UpdateView
+from rest_framework import generics
 
 from tudushnik.forms.task import AddTaskForm, TaskUpdateForm
 from tudushnik.middleware import set_client_timezone
@@ -17,6 +18,8 @@ from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
 from tudushnik.models.user_profile_settings import manage_user_settings
+from tudushnik.serializers import TaskSerializer
+
 
 
 class TaskListView(ListView):
@@ -361,3 +364,10 @@ def tasks_fetch(request, *args, **kwargs):
                 'tasks': [t.to_json() for t in result]
             }
         )
+
+
+class TaskList(generics.ListCreateAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        return Task.objects.filter(owner_id=self.request.user.id).all()

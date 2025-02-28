@@ -2,6 +2,7 @@ from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
 from tudushnik.models.snippet import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
+from tudushnik.models.task import Task
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -48,3 +49,10 @@ class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snippet
         fields = ['id', 'title', 'code', 'linenos', 'language', 'style']
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id', 'title', 'content']
+

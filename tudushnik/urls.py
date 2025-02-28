@@ -17,7 +17,7 @@ from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
     add_tag
 
 from .views.task import add_task, TaskListView, TaskDetailView, task_delete, \
-    TaskUpdateView, add_task_to_project, task_update_attrs, tasks_fetch
+    TaskUpdateView, add_task_to_project, task_update_attrs, tasks_fetch, TaskList
 
 urlpatterns = [
     path('', index, name='homepage'),
@@ -50,6 +50,8 @@ urlpatterns = [
          name='add_task_to_project'),
 
     path('gantt/', gantt_chart_page, name='gantt_chart_page'),
+    path('calendar/', calendar_page, name='calendar_page'),
+    path('calendar/list', TaskList.as_view()),
 
     path('checks/', CheckListView.as_view(), name='checks_page'),
     path('checks/fetch', checks_fetch, name='checks_fetch'),
