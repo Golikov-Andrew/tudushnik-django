@@ -15,10 +15,6 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# from tudushnik.views import pageNotFound
-
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,12 +25,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.getenv('DEBUG_MODE_VAL') == 'True' else False
+PRODUCTION = True if os.getenv('PRODUCTION_MODE_VAL') == 'True' else False
 
 # ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.10.10.250', '10.10.12.250',
 # '10.10.10.151', '10.10.12.151', '.tdm-test.someproject.ru']
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.tdm-test.someproject.ru', '77.105.174.107', '192.168.198.128']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.tdm-test.someproject.ru',
+                 '77.105.174.107', '192.168.198.128', 'tudushnik.ru',
+                 'django-dev-upstream']
 # Application definition
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://tudushnik.ru']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -86,10 +87,6 @@ WSGI_APPLICATION = 'app_tdm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-print(sys.argv)
-host_address = 'tdm_db'
-if 'localdev' in sys.argv:
-    host_address = 'localhost'
 
 DATABASES = {
     'default': {
@@ -97,9 +94,8 @@ DATABASES = {
         'NAME': os.environ.get('TDM_DATABASE_DTBS'),
         'USER': os.environ.get('TDM_DATABASE_USER'),
         'PASSWORD': os.environ.get('TDM_DATABASE_PSWD'),
-        'HOST': 'tdm_db',
-        # 'HOST': 'postgres',
-        'PORT': 5432,
+        'HOST': str(os.environ.get('TDM_DATABASE_HOST')),
+        'PORT': int(os.environ.get('TDM_DATABASE_PORT')),
     },
     'test_db': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -144,7 +140,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = 'static/'
 STATICFILES_DIRS = []
 
 MEDIA_URL = '/media/'
@@ -160,3 +157,11 @@ INTERNAL_IPS = [
 ]
 
 # LOGIN_REDIRECT_URL = '/'
+
+if PRODUCTION:
+    SECURE_HSTS_SECONDS = 518400
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

@@ -23,19 +23,12 @@ services:
       context: .
       dockerfile: Dockerfile.python
 #    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    environment:
-      POSTGRES_DB: "${TDM_DATABASE_DTBS}"
-      POSTGRES_USER: "${TDM_DATABASE_USER}"
-      POSTGRES_PASSWORD: "${TDM_DATABASE_PSWD}"
-      VIRTUAL_HOST: "${VIRTUAL_HOST}"
-      LETSENCRYPT_HOST: "${LETSENCRYPT_HOST}"
-      LETSENCRYPT_EMAIL: "${LETSENCRYPT_EMAIL}"
+    ports:
+      - "8000:8000"
     depends_on:
       - tdm_db
-#    ports:
-#      - "8000:8000"
-#    command: python3 /usr/src/app_tdm/manage.py runserver 0.0.0.0:8000
-    command: python3 gunicorn_start.py
+    command: python3 /usr/src/app_tdm/manage.py runserver 0.0.0.0:8000
+#    command: python3 gunicorn_start.py
     #command: python3 /usr/src/app_tdm/manage.py migrate && python3 /usr/src/app_tdm/manage.py collectstatic && python3 /usr/src/app_tdm/manage.py createsuperuser && python3 manage.py runserver 0.0.0.0:8000
     #command: bash init.sh && python3 manage.py runserver 0.0.0.0:8000
     volumes:
@@ -51,8 +44,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./proxy.conf:/etc/nginx/conf.d/proxy.conf
-      - ./certs:/etc/nginx/certs:ro
+      - ./conf:/etc/nginx/conf.d
+#      - ./host.dev.conf:/etc/nginx/conf.d/proxy.conf
       - ./html:/usr/share/nginx/html
       - .:/usr/share/nginx
       - /var/run/docker.sock:/tmp/docker.sock:ro
@@ -61,24 +54,6 @@ services:
     networks:
       - tdm_network
 
-
-  tdm-letsencrypt:
-    container_name: tdm_letsencrypt_container
-    image: nginxproxy/acme-companion
-    restart: always
-    environment:
-      NGINX_PROXY_CONTAINER: tdm_nginx_proxy_container
-      DEFAULT_EMAIL: "${LETSENCRYPT_EMAIL}"
-    volumes:
-      - ./certs:/etc/nginx/certs:rw
-      - ./acme:/etc/acme.sh
-      - .:/usr/share/nginx
-      - ./html:/usr/share/nginx/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    depends_on:
-      - tdm-nginx-proxy
-    networks:
-      - tdm_network
 
 networks:
   tdm_network:
