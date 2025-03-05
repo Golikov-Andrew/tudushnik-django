@@ -57,6 +57,9 @@ body > .wrapper {
   background-color: darkgreen;
   color: white;
 }
+.calendar {
+  user-select: none;
+}
 .calendar div {
   display: inline-block;
   outline: 1px solid black;
@@ -72,4 +75,13 @@ body > .wrapper {
 .calendar .selected_view .view_type {
   display: flex;
   flex-direction: column;
+}
+.calendar .current_date .view_type.selected,
+.calendar .selected_view .view_type.selected {
+  outline: 2px solid blue;
+}
+.calendar .current_date .view_type:hover,
+.calendar .selected_view .view_type:hover {
+  cursor: pointer;
+  outline: 1px solid red;
 }

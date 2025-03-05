@@ -39,7 +39,7 @@ class CurrentWeek extends CurrentAbstract {
 
 class CurrentDay extends CurrentAbstract {
     constructor(val) {
-        super('day', 'День', val);
+        super('day', 'Дата', val);
     }
 }
 
@@ -60,6 +60,9 @@ class CurrentDate {
                 this.views.day.element,
             ]
         }).element
+    }
+    get(view){
+        return this.views[view].value
     }
 }
 

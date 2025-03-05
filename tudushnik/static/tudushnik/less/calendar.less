@@ -3,6 +3,7 @@
 @import 'components/utils/_variables';
 
 .calendar {
+  user-select: none;
   div {
     display: inline-block;
     outline: 1px solid black;
@@ -18,6 +19,13 @@
     .view_type {
       display: flex;
       flex-direction: column;
+      &.selected{
+        outline: 2px solid blue;
+      }
+      &:hover{
+        cursor: pointer;
+        outline: 1px solid red;
+      }
     }
   }
 
