@@ -57,14 +57,19 @@ body > .wrapper {
   background-color: darkgreen;
   color: white;
 }
-.calendar_nav_tools .view_type {
+.calendar div {
   display: inline-block;
   outline: 1px solid black;
   margin: 4px;
   padding: 4px;
 }
-.viewport_calendar {
-  outline: 1px solid black;
-  height: 200px;
+.calendar .current_date,
+.calendar .selected_view {
+  display: flex;
+  flex-direction: row;
 }
-/*# sourceMappingURL=calendar.css.map */
+.calendar .current_date .view_type,
+.calendar .selected_view .view_type {
+  display: flex;
+  flex-direction: column;
+}
