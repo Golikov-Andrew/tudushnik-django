@@ -1,10 +1,12 @@
 import {DOMElem} from "../../dom_utils";
+import {ModalWindow} from "../my_utils/modal_window";
 
 class ViewAbstract {
     constructor(selected_view, view_type, label_text) {
         this.selected_view = selected_view
         this.view_type = view_type
         this.value = ''
+        this.modal_window = null
         this.label_element = new DOMElem('div', {
                 classes: ['label'], listeners: [
                     ['click', (evt) => {
@@ -16,7 +18,9 @@ class ViewAbstract {
         this.value_element = new DOMElem('div', {
             classes: ['value'], listeners: [
                 ['click', (evt) => {
-                    console.log(this.value)
+                    this.modal_window = new ModalWindow()
+                    document.body.appendChild(this.modal_window.element)
+                    this.modal_window.show()
                 }]
             ], html: this.value
         }).element

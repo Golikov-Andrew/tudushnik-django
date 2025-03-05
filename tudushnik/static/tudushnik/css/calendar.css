@@ -85,3 +85,32 @@ body > .wrapper {
   cursor: pointer;
   outline: 1px solid red;
 }
+.modal .overlay {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: black;
+  opacity: 0.5;
+}
+.modal .window {
+  position: fixed;
+  z-index: 1001;
+  background-color: white;
+  color: black;
+  padding: 4px;
+  margin: 4px;
+  width: 50%;
+  left: 25%;
+  height: 15%;
+}
+.modal .window .btn_close {
+  cursor: pointer;
+  text-align: right;
+}
+.modal .window .content {
+  padding: 4px;
+  margin: 4px;
+}
