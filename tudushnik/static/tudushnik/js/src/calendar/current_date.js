@@ -48,9 +48,9 @@ class CurrentDate {
     constructor(moment_now) {
         this.views = {
             year: new CurrentYear(moment_now.year()),
-            month: new CurrentMonth(moment_now.month()),
+            month: new CurrentMonth(moment_now.format('MM')),
             week: new CurrentWeek(moment_now.week()),
-            day: new CurrentDay(moment_now.date()),
+            day: new CurrentDay(moment_now.format('DD')),
         }
         this.element = new DOMElem('div', {
             classes: ['current_date'], children: [

@@ -2,6 +2,7 @@ import {DOMElem} from "../../dom_utils";
 
 class ModalWindow {
     constructor() {
+        this.content = new DOMElem('div', {classes: ['content'], html: ''})
         this.element = new DOMElem('div', {
             classes: ['modal'], children: [
                 new DOMElem('div', {
@@ -20,7 +21,7 @@ class ModalWindow {
                                 }]
                             ]
                         }),
-                        new DOMElem('div', {classes: ['content'], html: 'test test test'}),
+                        this.content,
                     ]
                 })
             ]
@@ -33,6 +34,13 @@ class ModalWindow {
 
     show() {
         showElem(this.element)
+    }
+    remove_from(parent){
+        parent.removeChild(this.element)
+        delete this
+    }
+    set_content(html){
+        this.content.element.innerHTML = html
     }
 }
 

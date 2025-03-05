@@ -1,5 +1,9 @@
 import {DOMElem} from "../../dom_utils";
 import {ModalWindow} from "../my_utils/modal_window";
+import Moment from 'moment';
+import {extendMoment} from 'moment-range';
+
+const moment = extendMoment(Moment);
 
 class ViewAbstract {
     constructor(selected_view, view_type, label_text) {
@@ -20,6 +24,18 @@ class ViewAbstract {
                 ['click', (evt) => {
                     this.modal_window = new ModalWindow()
                     document.body.appendChild(this.modal_window.element)
+                    this.modal_window.hide = () => {
+                        hideElem(this.modal_window.element)
+                        this.modal_window.remove_from(document.body)
+                    }
+                    this.modal_window.set_content(this.create_values_list(this.value).outerHTML)
+                    let elems = this.modal_window.element.querySelectorAll('.option_element')
+                    for (let i = 0; i <elems.length; i++) {
+                        elems[i].addEventListener('click',(evt)=>{
+                            this.set_value(evt.target.innerHTML.trim())
+                            this.modal_window.hide()
+                        })
+                    }
                     this.modal_window.show()
                 }]
             ], html: this.value
@@ -30,13 +46,16 @@ class ViewAbstract {
             ]
         }).element
     }
-    redraw(){
+
+    redraw() {
 
     }
-    create_values_list(){
 
+    create_values_list() {
+        return ''
     }
-    set_value(value){
+
+    set_value(value) {
         this.value = value
         this.value_element.innerHTML = value
     }
@@ -45,6 +64,28 @@ class ViewAbstract {
 class ViewYear extends ViewAbstract {
     constructor(calendar) {
         super(calendar, 'year', 'Год');
+    }
+
+    create_values_list(old_value) {
+        let old_year = moment(old_value, 'YYYY')
+        let start = old_year.clone().subtract(5, 'years')
+        let end = old_year.clone().add(5, 'years')
+        let range = moment.range(start, end)
+        // let values_elems = []
+        let select_element = new DOMElem('div', {classes: ['select_element']}).element
+        let new_elem = null
+        for (let y of range.by('year')) {
+            new_elem = new DOMElem('div', {
+                classes: ['option_element'], html: y.format('YYYY')
+            }).element
+            select_element.appendChild(new_elem)
+            // new_elem.addEventListener('click', (evt)=>{
+            //     console.log(456)
+            //     // this.modal_window.hide()
+            // })
+            // values_elems.push();
+        }
+        return select_element
     }
 }
 
@@ -84,11 +125,13 @@ class SelectedView {
             ]
         }).element
     }
-    set_value(view, value){
+
+    set_value(view, value) {
         this.views[view].set_value(value)
     }
-    select_view(view_type){
-        if(this.selected_view !== null){
+
+    select_view(view_type) {
+        if (this.selected_view !== null) {
             this.selected_view.element.classList.remove('selected')
         }
         this.selected_view = this.views[view_type]
