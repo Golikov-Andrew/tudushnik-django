@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, UpdateView
+from rest_framework import generics
 
 from tudushnik.forms.project import AddProjectForm, ProjectUpdateForm
 from tudushnik.middleware import set_client_timezone
@@ -12,6 +13,7 @@ from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
 from tudushnik.models.user_profile_settings import manage_user_settings
+from tudushnik.serializers import ProjectSerializer
 
 
 class ProjectListView(ListView):
@@ -152,3 +154,10 @@ def project_delete(request, pk: int, *args, **kwargs):
                                                pk=pk).first()
         target_object.delete()
         return JsonResponse({"success": True})
+
+
+class ProjectList(generics.ListCreateAPIView):
+    serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        return Project.objects.filter(owner_id=self.request.user.id).all()

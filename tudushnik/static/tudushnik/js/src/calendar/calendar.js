@@ -19,12 +19,9 @@ class Calendar {
 
     }
 
-    init(options) {
+    init() {
         this.create_gui()
-        // this.redraw_now()
-        // this.fetch_tasks()
         this.redraw_view()
-
     }
 
     create_gui() {
@@ -52,6 +49,17 @@ class Calendar {
 
     redraw_view() {
         this.selected_view.selected_view.redraw()
+    }
+    redraw_tasks(projects, tasks){
+        for (const projectsKey in projects.projects) {
+            console.log(projectsKey, projects.projects[projectsKey])
+        }
+        for (const tasksKey in tasks.tasks) {
+
+            console.log(tasksKey, tasks.tasks[tasksKey])
+            this.viewport.redraw_task(tasks.tasks[tasksKey])
+        }
+
     }
 
     validate_date(view_type) {

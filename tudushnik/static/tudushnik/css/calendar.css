@@ -149,6 +149,10 @@ body > .wrapper {
 .calendar .viewport .body .calendar_grid .row .cell .cell_content {
   height: 64px;
 }
+.calendar .viewport .body .calendar_grid .row .cell .cell_content .calendar_tasks_container .task_widget {
+  max-height: 20px;
+  overflow: hidden;
+}
 .calendar .viewport .body .calendar_grid .row .cell:hover {
   outline: 2px solid blue;
   cursor: pointer;

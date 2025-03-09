@@ -89,7 +89,10 @@ class ViewAbstract {
                 data_month: moment_day.format('MM'),
                 data_year: moment_day.format('YYYY'),
                 data_date: moment_day.format('DD')
-            }, classes: ['cell_content'], html: moment_day.format('DD')
+            }, classes: ['cell_content'], children:[
+                new DOMElem('div',{html: moment_day.format('DD')}),
+                new DOMElem('div',{classes: ['calendar_tasks_container']})
+            ]
         }).element
         if (this.calendar.current_date.get('month') === moment_day.format('MM') &&
             this.calendar.current_date.get('week') === moment_day.format('WW') &&

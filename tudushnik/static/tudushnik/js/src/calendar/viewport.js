@@ -70,6 +70,16 @@ class Viewport {
     create_cell(content){
         return new DOMElem('div',{classes:['cell'], children:[content]}).element
     }
+    redraw_task(task){
+        let task_begin_at_moment = moment(task.begin_at)
+        let year = task_begin_at_moment.format('YYYY')
+        let month = task_begin_at_moment.format('MM')
+        let date = task_begin_at_moment.format('DD')
+        let cell_content = this.calendar_grid.element.querySelector(`.cell_content[data_year="${year}"][data_month="${month}"][data_date="${date}"] .calendar_tasks_container`)
+        if(cell_content !== null){
+            cell_content.appendChild(new DOMElem('div',{classes:['task_widget'], html: `${task.title} - ${task.content}`}).element)
+        }
+    }
 }
 
 export{

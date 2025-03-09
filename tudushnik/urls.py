@@ -10,7 +10,7 @@ from .views.financy import BudgetListView, BudgetDetailView, budget_delete, \
     BudgetUpdateView, add_budget
 from .views.gantt import gantt_chart_page
 from .views.project import add_project, ProjectListView, ProjectDetailView, \
-    project_delete, ProjectUpdateView
+    project_delete, ProjectUpdateView, ProjectList
 from .views.snippet import SnippetList, SnippetDetail
 # from .views.snippet import view_snippets
 from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
@@ -51,7 +51,8 @@ urlpatterns = [
 
     path('gantt/', gantt_chart_page, name='gantt_chart_page'),
     path('calendar/', calendar_page, name='calendar_page'),
-    path('calendar/list', TaskList.as_view()),
+    path('calendar/tasks/list', TaskList.as_view()),
+    path('calendar/projects/list', ProjectList.as_view()),
 
     path('checks/', CheckListView.as_view(), name='checks_page'),
     path('checks/fetch', checks_fetch, name='checks_fetch'),
