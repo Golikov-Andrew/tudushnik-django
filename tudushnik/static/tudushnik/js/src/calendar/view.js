@@ -38,6 +38,7 @@ class ViewAbstract {
                         elems[i].addEventListener('click', (evt) => {
                             this.set_value(evt.target.innerHTML.trim())
                             this.modal_window.hide()
+                            this.calendar.validate_date(this.view_type)
                             this.selected_view.selected_view.redraw()
                         })
                     }
@@ -96,6 +97,13 @@ class ViewAbstract {
             this.calendar.current_date.get('day') === moment_day.format('DD')
         ) {
             elem.classList.add('current_interval')
+        }
+        if (this.calendar.selected_interval.month === moment_day.format('MM') &&
+            this.calendar.selected_interval.week === moment_day.format('WW') &&
+            this.calendar.selected_interval.year === moment_day.format('YYYY') &&
+            this.calendar.selected_interval.day === moment_day.format('DD')
+        ) {
+            elem.classList.add('selected_interval')
         }
         return elem;
     }
@@ -241,7 +249,7 @@ class ViewWeek extends ViewAbstract {
         let new_row;
         let week_range;
         for (let week of my_range.by('weeks')) {
-            console.log(week.format('WW'))
+            // console.log(week.format('WW'))
             if (week.format('WW') === this.calendar.selected_interval.week) {
                 rows_labels_list.push(this.create_row_label(week.format('MM'), week.format('WW'), week.format('YYYY')))
                 new_row = []

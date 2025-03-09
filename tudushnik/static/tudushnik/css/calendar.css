@@ -156,6 +156,9 @@ body > .wrapper {
 .calendar .viewport .body .current_interval {
   outline: 4px solid red;
 }
+.calendar .viewport .body .selected_interval {
+  background-color: #8ce3e8;
+}
 .modal .overlay {
   position: fixed;
   z-index: 1000;
