@@ -59,6 +59,7 @@
         flex-direction: row;
         width: 100%;
         justify-content: space-around;
+        margin-right: 16px;
 
         .col_label {
           width: 100%;
@@ -69,32 +70,50 @@
     }
 
     .body {
+      height: 500px;
+      overflow-y: scroll;
+
       .timeline {
         display: flex;
         flex-direction: column;
         width: 80px;
         min-width: 80px;
+        outline: unset;
+
+        .row_label_content {
+          height: 64px;
+        }
       }
-      .calendar_grid{
+
+      .calendar_grid {
         display: flex;
         flex-direction: column;
         width: 100%;
-        .row{
+        outline: unset;
+
+        .row {
           display: flex;
           flex-direction: row;
           justify-content: space-around;
           width: 100%;
-          .cell{
+
+          .cell {
             width: 100%;
-            &:hover{
+
+            .cell_content {
+              height: 64px;
+            }
+
+            &:hover {
               outline: 2px solid blue;
               cursor: pointer;
             }
           }
         }
       }
-      .current_interval{
-        outline: 2px solid red;
+
+      .current_interval {
+        outline: 4px solid red;
       }
     }
   }

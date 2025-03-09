@@ -110,22 +110,32 @@ body > .wrapper {
   flex-direction: row;
   width: 100%;
   justify-content: space-around;
+  margin-right: 16px;
 }
 .calendar .viewport .head .cols_labels .col_label {
   width: 100%;
   display: flex;
   justify-content: center;
 }
+.calendar .viewport .body {
+  height: 500px;
+  overflow-y: scroll;
+}
 .calendar .viewport .body .timeline {
   display: flex;
   flex-direction: column;
   width: 80px;
   min-width: 80px;
+  outline: unset;
+}
+.calendar .viewport .body .timeline .row_label_content {
+  height: 64px;
 }
 .calendar .viewport .body .calendar_grid {
   display: flex;
   flex-direction: column;
   width: 100%;
+  outline: unset;
 }
 .calendar .viewport .body .calendar_grid .row {
   display: flex;
@@ -136,12 +146,15 @@ body > .wrapper {
 .calendar .viewport .body .calendar_grid .row .cell {
   width: 100%;
 }
+.calendar .viewport .body .calendar_grid .row .cell .cell_content {
+  height: 64px;
+}
 .calendar .viewport .body .calendar_grid .row .cell:hover {
   outline: 2px solid blue;
   cursor: pointer;
 }
 .calendar .viewport .body .current_interval {
-  outline: 2px solid red;
+  outline: 4px solid red;
 }
 .modal .overlay {
   position: fixed;

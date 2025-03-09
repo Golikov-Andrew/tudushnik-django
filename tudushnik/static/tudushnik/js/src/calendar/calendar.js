@@ -51,7 +51,6 @@ class Calendar {
 
     redraw_view() {
         this.selected_view.selected_view.redraw()
-
     }
 }
 

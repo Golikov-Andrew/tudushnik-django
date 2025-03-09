@@ -67,8 +67,8 @@ class Viewport {
     create_row(){
         return new DOMElem('div',{classes:['row']}).element
     }
-    create_cell(text){
-        return new DOMElem('div',{classes:['cell'], html:text}).element
+    create_cell(content){
+        return new DOMElem('div',{classes:['cell'], children:[content]}).element
     }
 }
 
