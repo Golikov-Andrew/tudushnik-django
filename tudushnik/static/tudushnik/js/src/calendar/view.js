@@ -1,16 +1,19 @@
 import {DOMElem} from "../../dom_utils";
 import {ModalWindow} from "../my_utils/modal_window";
-import Moment from 'moment';
-import {extendMoment} from 'moment-range';
 
-const moment = extendMoment(Moment);
+const Moment = require('moment');
+const MomentRange = require('moment-range');
+
+const moment = MomentRange.extendMoment(Moment);
 
 class ViewAbstract {
-    constructor(selected_view, view_type, label_text) {
+    constructor(calendar, selected_view, view_type, label_text) {
+        this.calendar = calendar
         this.selected_view = selected_view
         this.view_type = view_type
         this.value = ''
         this.modal_window = null
+        this.weekdays_labels = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
         this.label_element = new DOMElem('div', {
                 classes: ['label'], listeners: [
                     ['click', (evt) => {
@@ -30,10 +33,11 @@ class ViewAbstract {
                     }
                     this.modal_window.set_content(this.create_values_list(this.value).outerHTML)
                     let elems = this.modal_window.element.querySelectorAll('.option_element')
-                    for (let i = 0; i <elems.length; i++) {
-                        elems[i].addEventListener('click',(evt)=>{
+                    for (let i = 0; i < elems.length; i++) {
+                        elems[i].addEventListener('click', (evt) => {
                             this.set_value(evt.target.innerHTML.trim())
                             this.modal_window.hide()
+                            this.redraw()
                         })
                     }
                     this.modal_window.show()
@@ -48,7 +52,7 @@ class ViewAbstract {
     }
 
     redraw() {
-
+        console.log(this.calendar)
     }
 
     create_values_list() {
@@ -58,12 +62,13 @@ class ViewAbstract {
     set_value(value) {
         this.value = value
         this.value_element.innerHTML = value
+        this.calendar.selected_interval[this.view_type] = value
     }
 }
 
 class ViewYear extends ViewAbstract {
-    constructor(calendar) {
-        super(calendar, 'year', 'Год');
+    constructor(calendar, selected_view) {
+        super(calendar, selected_view, 'year', 'Год');
     }
 
     create_values_list(old_value) {
@@ -87,33 +92,79 @@ class ViewYear extends ViewAbstract {
         }
         return select_element
     }
+
+    redraw() {
+        console.log('ViewYear.redraw()')
+        this.calendar.viewport.redraw_timeline_label('Месяц - Неделя')
+        this.calendar.viewport.redraw_cols_labels(this.weekdays_labels)
+
+        let rows_labels_list = []
+        let cell_list = [] // 2d array
+        let moment_selected_year = moment([this.calendar.selected_interval.year, '01'])
+        moment_selected_year.locale('ru')
+        let start = moment(moment_selected_year).startOf('year')
+        let end = moment(moment_selected_year).endOf('year')
+        let my_range = moment.range(start, end);
+        let new_row;
+        let week_range;
+        for (let rangeKey of my_range.by('weeks')) {
+            rows_labels_list.push(this.create_row_label(rangeKey.format('MM'), rangeKey.format('WW'), rangeKey.format('YYYY')))
+            new_row = []
+            week_range = moment.range(
+                moment(rangeKey).startOf('week'),
+                moment(rangeKey).endOf('week')
+            );
+            for (let day of week_range.by('days')) {
+                new_row.push(day.format('DD'))
+            }
+            cell_list.push(new_row)
+        }
+        this.calendar.viewport.redraw_timeline(rows_labels_list)
+        this.calendar.viewport.redraw_cells(cell_list)
+    }
+
+    create_row_label(month_val, week_val, year_val) {
+        let elem = new DOMElem('div', {
+            attrs: {
+                data_week: week_val, data_month: month_val, data_year: year_val
+            }, classes: ['row_label_content'], html: `${month_val} - ${week_val}`
+        }).element
+        if (this.calendar.current_date.get('month') === month_val &&
+            this.calendar.current_date.get('week') === week_val &&
+            this.calendar.current_date.get('year') === year_val
+        ) {
+            elem.classList.add('current_interval')
+        }
+        return elem;
+    }
 }
 
 class ViewMonth extends ViewAbstract {
-    constructor(calendar) {
-        super(calendar, 'month', 'Месяц');
+    constructor(calendar, selected_view) {
+        super(calendar, selected_view, 'month', 'Месяц');
     }
 }
 
 class ViewWeek extends ViewAbstract {
-    constructor(calendar) {
-        super(calendar, 'week', 'Неделя');
+    constructor(calendar, selected_view) {
+        super(calendar, selected_view, 'week', 'Неделя');
     }
 }
 
 class ViewDay extends ViewAbstract {
-    constructor(calendar) {
-        super(calendar, 'day', 'Дата');
+    constructor(calendar, selected_view) {
+        super(calendar, selected_view, 'day', 'Дата');
     }
 }
 
 class SelectedView {
-    constructor() {
+    constructor(calendar) {
+        this.calendar = calendar
         this.views = {
-            year: new ViewYear(this),
-            month: new ViewMonth(this),
-            week: new ViewWeek(this),
-            day: new ViewDay(this),
+            year: new ViewYear(this.calendar, this),
+            month: new ViewMonth(this.calendar, this),
+            week: new ViewWeek(this.calendar, this),
+            day: new ViewDay(this.calendar, this),
         }
         this.selected_view = null
         this.element = new DOMElem('div', {

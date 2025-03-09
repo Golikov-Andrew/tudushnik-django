@@ -4,9 +4,9 @@
 
 .calendar {
   user-select: none;
+  font-size: 12px;
 
   div {
-    display: inline-block;
     outline: 1px solid black;
     margin: 4px;
     padding: 4px;
@@ -32,12 +32,75 @@
     }
   }
 
+  .viewport {
+    display: flex;
+    flex-direction: column;
+
+    & * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .head, .body {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .head {
+      align-items: center;
+
+      .timeline_label {
+        width: 80px;
+        min-width: 80px;
+      }
+
+      .cols_labels {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+
+        .col_label {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+
+    .body {
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        width: 80px;
+        min-width: 80px;
+      }
+      .calendar_grid{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        .row{
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          width: 100%;
+          .cell{
+            width: 100%;
+            &:hover{
+              outline: 2px solid blue;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .current_interval{
+        outline: 2px solid red;
+      }
+    }
+  }
+
 }
 
-//.viewport_calendar{
-//  outline: 1px solid black;
-//  height: 200px;
-//}
 .modal {
 
   .overlay {
@@ -59,8 +122,9 @@
     padding: 4px;
     margin: 4px;
     width: 50%;
+    top: 25%;
     left: 25%;
-    height: 15%;
+    height: 30%;
 
     .btn_close {
       cursor: pointer;
@@ -73,9 +137,11 @@
     }
   }
 }
-.option_element{
+
+.option_element {
   cursor: pointer;
-  &:hover{
+
+  &:hover {
     outline: 1px solid red;
   }
 }

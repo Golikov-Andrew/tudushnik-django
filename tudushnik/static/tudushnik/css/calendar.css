@@ -59,9 +59,9 @@ body > .wrapper {
 }
 .calendar {
   user-select: none;
+  font-size: 12px;
 }
 .calendar div {
-  display: inline-block;
   outline: 1px solid black;
   margin: 4px;
   padding: 4px;
@@ -85,6 +85,64 @@ body > .wrapper {
   cursor: pointer;
   outline: 1px solid red;
 }
+.calendar .viewport {
+  display: flex;
+  flex-direction: column;
+}
+.calendar .viewport * {
+  margin: 0;
+  padding: 0;
+}
+.calendar .viewport .head,
+.calendar .viewport .body {
+  display: flex;
+  flex-direction: row;
+}
+.calendar .viewport .head {
+  align-items: center;
+}
+.calendar .viewport .head .timeline_label {
+  width: 80px;
+  min-width: 80px;
+}
+.calendar .viewport .head .cols_labels {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+}
+.calendar .viewport .head .cols_labels .col_label {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.calendar .viewport .body .timeline {
+  display: flex;
+  flex-direction: column;
+  width: 80px;
+  min-width: 80px;
+}
+.calendar .viewport .body .calendar_grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.calendar .viewport .body .calendar_grid .row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+}
+.calendar .viewport .body .calendar_grid .row .cell {
+  width: 100%;
+}
+.calendar .viewport .body .calendar_grid .row .cell:hover {
+  outline: 2px solid blue;
+  cursor: pointer;
+}
+.calendar .viewport .body .current_interval {
+  outline: 2px solid red;
+}
 .modal .overlay {
   position: fixed;
   z-index: 1000;
@@ -103,8 +161,9 @@ body > .wrapper {
   padding: 4px;
   margin: 4px;
   width: 50%;
+  top: 25%;
   left: 25%;
-  height: 15%;
+  height: 30%;
 }
 .modal .window .btn_close {
   cursor: pointer;

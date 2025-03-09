@@ -9,7 +9,7 @@ class DOMElem {
             }
             if (options.hasOwnProperty('attrs')) { // id, data, e.t.c
                 for (const attr in options.attrs) {
-                    this.element.setAttribute(attr, options.attrs.attr)
+                    this.element.setAttribute(attr, options.attrs[attr])
                 }
             }
             if (options.hasOwnProperty('children')) {

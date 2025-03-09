@@ -6,7 +6,7 @@ import {Viewport} from "./viewport";
 class Calendar {
     constructor(element) {
         this.element = element
-        this.selected_view = new SelectedView()
+        this.selected_view = new SelectedView(this)
         this.current_date = new CurrentDate(moment())
         this.viewport = new Viewport(this)
         this.selected_interval = {
@@ -50,6 +50,7 @@ class Calendar {
     }
 
     redraw_view() {
+        this.selected_view.selected_view.redraw()
 
     }
 }

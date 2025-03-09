@@ -47,9 +47,9 @@ class CurrentDay extends CurrentAbstract {
 class CurrentDate {
     constructor(moment_now) {
         this.views = {
-            year: new CurrentYear(moment_now.year()),
+            year: new CurrentYear(moment_now.format('YYYY')),
             month: new CurrentMonth(moment_now.format('MM')),
-            week: new CurrentWeek(moment_now.week()),
+            week: new CurrentWeek(moment_now.format('WW')),
             day: new CurrentDay(moment_now.format('DD')),
         }
         this.element = new DOMElem('div', {
