@@ -7,7 +7,7 @@
   font-size: 12px;
 
   div {
-    outline: 1px solid black;
+    outline: 1px solid @cold-medium;
     margin: 4px;
     padding: 4px;
   }
@@ -15,24 +15,31 @@
   .calendar_header {
     display: flex;
     flex-wrap: wrap;
+    background-color: @cold-medium;
 
     .current_date,
     .selected_view {
       display: flex;
       flex-direction: row;
       position: relative;
+      background-color: @cold-dark;
+      color: @cold-very-dark;
 
       .view_type {
         display: flex;
         flex-direction: column;
 
         &.selected {
-          outline: 2px solid blue;
+          outline: 4px solid blue;
         }
 
         &:hover {
           cursor: pointer;
-          outline: 1px solid red;
+          outline: 4px solid @red-delicate-medium;
+        }
+        .value,
+        .label{
+          background-color: @cold-light;
         }
       }
     }
@@ -116,6 +123,7 @@
               .calendar_tasks_container {
                 overflow-y: auto;
                 .task_widget {
+                  color: black;
                   max-height: 20px;
                   overflow: hidden;
                   word-break: break-all;
@@ -132,10 +140,10 @@
       }
 
       .current_interval {
-        outline: 4px solid red;
+        outline: 4px solid @red-delicate;
       }
       .selected_interval {
-        background-color: #8ce3e8;
+        background-color: @cold-medium;
       }
     }
 

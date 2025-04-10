@@ -12,37 +12,49 @@
   });
   position: fixed;
   gap: 4px;
-  background-color: white;
+  background-color: @warm-light;
   z-index: 10;
   top: 0;
   left: 0;
   width: 100%;
-  margin: 0 6px 6px 6px;
-  padding: 10px 4px 4px 4px;
-
-
-  .min768({
-    margin: 0 10px 10px 10px;
-    padding: 10px 10px 10px 10px;
+  margin: 0 6px 6px 0;
+  padding: 4px;
+  .min_768({
+    margin: 0 10px 10px 0;
+    padding: 10px;
   });
-
+  .min_1440({
+    padding: 20px 40px;
+  });
 
   .logo-container {
     grid-area: logo-container;
     padding-top: 2px;
+    color: @cold-gold;
+
     h1 {
       font-size: 16px;
       margin: 0;
-      .min768({font-size: 18px;});
+      .min_768({
+        font-size: 18px;
+      });
+      .min_1200({
+        font-size: 24px;
+      });
+      .min_1440({
+        font-size: 24px;
+      });
     }
   }
 
   .navbar-container {
+    width: 100%;
     text-align: center;
     grid-area: navbar-container;
     display: flex;
-    justify-content: space-between;
-    .min768({
+    flex-wrap: wrap;
+    justify-content: center;
+    .min_768({
       justify-content: center;
       gap: 8px;
     });
@@ -55,16 +67,25 @@
 }
 
 .navbar-link {
+  border-radius: 4px;
   font-size: 12px;
   display: inline-block;
   text-decoration: none;
-  padding: 4px 11px;
-  color: black;
+  padding: 4px 12px;
+  margin: 2px;
+  color: @btn-color;
   background-color: @btn-bg;
+  .min_768({
+    margin: 0;
+  });
+  .min_1200({
+    font-size: 14px;
+    padding: 8px 16px;
+  });
 
   &:hover {
     cursor: pointer;
-    background-color: gray;
+    background-color: @btn-bg-hover;
     color: white;
   }
 

@@ -4,8 +4,9 @@
 #content-container {
   //display: flex;
   //flex-wrap: wrap;
-  margin: 68px 6px 0 6px;
+  margin: 96px 6px 0 6px;
   padding: 4px;
+  color: @cold-dark;
 }
 
 .page-sidebar-left {
@@ -13,9 +14,95 @@
 }
 
 .page-content {
+
+  margin-left: auto;
+  margin-right: auto;
+
+
   .page-title-label {
     .small_label();
   }
+
+  .toolbar,
+  form {
+    background-color: @cold-medium;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 12px 0;
+
+    textarea,
+    select,
+    input[type="password"],
+    input[type="date"],
+    input[type="datetime-local"],
+    input[type="number"],
+    input[type="email"],
+    input[type="text"] {
+      .var_input();
+    }
+
+    input[type="submit"],
+    button[type="submit"] {
+      .var_submit();
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .duration_controller {
+      display: block;
+      width: 100px;
+      //.min_500({
+      //  display: inline-block;
+      //width: 50px;
+      //});
+    }
+  }
+
+  a {
+    color: @cold-very-dark;
+
+    &:visited {
+      color: @cold-very-dark;
+    }
+
+    &.a_btn_primary {
+      display: inline-block;
+      margin: 4px 0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      background-color: @cold-dark;
+      color: white;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+
+      &:hover {
+        background-color: @cold-very-dark;
+      }
+    }
+  }
+
+  &.home_page,
+  &.project_edit,
+  &.projects_create,
+  &.tasks_add_to_project,
+  &.tasks_create,
+  &.tasks_edit,
+  &.login_page,
+  &.register_page,
+  &.account_page {
+    width: 320px;
+    .min_500({
+      width: 420px;
+    });
+  }
+
+
 }
 
 .entity_header {
@@ -31,11 +118,13 @@
 
 .page-title-container {
   grid-area: page-title-container;
-  select{
+
+  select {
     width: 100%;
   }
 }
 
+.table_item_tools,
 .entity_tools {
   font-size: 20px;
   grid-area: entity_tools;
@@ -52,6 +141,7 @@
   .btn_item_delete {
     margin-right: 6px;
     padding: 1px 4px;
+    .var_btn_del();
   }
 }
 
@@ -108,11 +198,11 @@
   }
 
   .add_item {
-    background-color: forestgreen;
-
-    &:hover {
-      background-color: darkgreen;
-    }
+    //background-color: forestgreen;
+    //
+    //&:hover {
+    //  background-color: darkgreen;
+    //}
   }
 
   .del_item {
@@ -144,10 +234,11 @@
     width: 100%;
     border-spacing: unset;
     font-size: 12px;
+    margin-top: 16px;
 
     td, th {
       padding: 0 6px;
-      outline: 1px solid lightgray;
+      outline: 1px solid @cold-medium;
     }
 
     td {
@@ -157,27 +248,32 @@
       }
 
       .ellipsed_text_2 {
-        .ellipsis();
-        -webkit-line-clamp: 2;
+        .ellipsis_rows(2)
+      }
+
+      .ellipsed_text {
+        &.clamp_3 {
+          .ellipsis_rows(3)
+        }
       }
     }
 
     th {
       display: none;
-      .min768({
+      .min_768({
         display: table-cell;
       });
     }
 
     tr {
-      outline: 1px solid lightgray;
+      outline: 1px solid @cold-medium;
 
       .table_item_tools {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 24px;
-        .min768({
+        .min_768({
           flex-direction: unset;
           flex-wrap: wrap;
           justify-content: center;
@@ -191,7 +287,7 @@
 
       .table_item_edit {
         display: none;
-        .min768({
+        .min_768({
           display: block;
         });
 
@@ -201,7 +297,7 @@
         top: 0;
         left: -4px;
         position: absolute;
-        .min768({
+        .min_768({
           position: static;
         });
         text-align: center;
@@ -227,19 +323,27 @@
 
     .task-item-id {
       display: none;
-      .min768({
+      .min_768({
         display: table-cell;
       });
       text-align: center;
     }
 
     .task_item_title input {
+      .var_input();
       font-size: 12px;
       top: 4px;
       left: 36px;
       width: calc(100vw - 170px);
       position: absolute;
-      .min768({
+      background: transparent;
+
+      &:focus-visible,
+      &:focus {
+        outline: none;
+      }
+
+      .min_768({
         position: static;
         width: unset;
       });
@@ -250,7 +354,7 @@
       left: 36px;
       width: calc(100vw - 170px);
       position: absolute;
-      .min768({
+      .min_768({
         position: static;
         width: unset;
       });
@@ -258,7 +362,7 @@
 
     .task_item_created_at, .task_item_updated_at {
       display: none;
-      .min768({
+      .min_768({
         display: table-cell;
       });
     }
@@ -269,7 +373,7 @@
       right: 0;
       width: 100px;
       position: absolute;
-      .min768({
+      .min_768({
         position: static;
         width: unset;
       });
@@ -281,7 +385,7 @@
       right: 0;
       width: 100px;
       position: absolute;
-      .min768({
+      .min_768({
         position: static;
         width: unset;
       });
@@ -295,7 +399,8 @@
       justify-content: center;
       width: 100px;
       position: absolute;
-      .min768({
+
+      .min_768({
         position: static;
         width: unset;
         display: table-cell;
@@ -307,6 +412,7 @@
       min-width: 20px;
       overflow: hidden;
       height: 16px;
+      border-radius: 4px;
     }
 
     .slct_table_column_multi_filter {
@@ -317,5 +423,193 @@
       }
     }
 
+  }
+}
+
+
+.page-content {
+  .multi_filter_widget {
+    .slct_table_column_multi_filter {
+      .var_input();
+    }
+
+  }
+
+  &.tasks_page,
+  &.projects_detail,
+  &.projects_page {
+    width: 100%;
+    .min_1440({
+      padding: 12px 40px;
+    });
+
+    table,
+    tbody,
+    tr,
+    th,
+    td {
+      font-size: 14px;
+
+    }
+
+    table,
+    tbody {
+
+      tr {
+
+        td,
+        th {
+          padding: 2px;
+          vertical-align: top;
+
+          .min_1200({
+            font-size: 16px;
+            padding: 8px;
+          });
+
+          .ellipsed_text {
+            .ellipsis_rows(3);
+            .min_500({
+              .ellipsis_rows(6);
+            });
+            .min_1200({
+              .ellipsis_rows(12);
+            });
+          }
+
+        }
+
+        th {
+          .min_500({
+            display: table-cell;
+          });
+        }
+      }
+    }
+  }
+
+
+  &.projects_page {
+    td, th {
+      .max_499({
+        &:nth-child(6),
+        &:nth-child(7) {
+          display: none;
+        }
+      });
+    }
+  }
+
+  &.projects_detail,
+  &.tasks_page {
+    .add_item {
+      .var_submit();
+    }
+
+    .items_table_wrapper {
+      table {
+        tbody {
+          tr {
+            th, td {
+              .max_767({
+                font-size: 12px;
+              });
+
+              .max_953({
+                outline: none;
+              });
+
+              &:nth-child(6),
+              &:nth-child(7) {
+                .max_953({
+                  display: none;
+                });
+              }
+            }
+
+            th {
+              .max_767({
+                display: none;
+              });
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+  &.projects_detail,
+  &.gantt {
+    .max_499({
+      margin-top: 24px;
+    });
+
+    .entity_header {
+      display: flex;
+      flex-direction: column;
+
+      form {
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        .min_500({
+          flex-direction: row;
+        });
+
+        input,
+        select {
+          font-size: 12px;
+          max-width: unset;
+          margin: 4px;
+        }
+
+        input[type="submit"] {
+          .min_500({
+            height: 32px;
+          });
+        }
+      }
+
+      .chart_datetimes {
+        display: flex;
+        gap: 4px;
+        .min_500({
+          flex-direction: column;
+        });
+        //.min_768({
+        //  flex-direction: row;
+        //});
+      }
+
+
+    }
+
+  }
+
+  &.tasks_add_to_project {
+    margin-top: 20px;
+
+    textarea,
+    input,
+    select {
+      .min_500({
+        //max-width: 200px;
+      });
+    }
+  }
+
+  &.projects_detail {
+    #move_settings {
+      .max_767({
+        margin-top: 20px;
+      });
+
+    }
+  }
+  &.account_page{
+    background-color: @cold-medium;
+    border-radius: 8px;
+    padding: 20px;
   }
 }

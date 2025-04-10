@@ -7,8 +7,8 @@ pip freeze > requirements.txt
 
 Для включения JS вотчера:
 sudo docker exec -it personal-django-site-gav_tdm_server_1 bash
-cd tudushnik/static/tudushnik/js
-npm run dev
+cd tudushnik/static/tudushnik/js && npm run dev
+
 
 ### Вёрстка
 Работаем в less файлах, компилим в css папку.

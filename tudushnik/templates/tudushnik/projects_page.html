@@ -4,76 +4,82 @@
 
 
 {% block content %}
-    {% include 'tudushnik/_pagination.html' %}
+    <div class="project_page items_table_wrapper">
+        {% include 'tudushnik/_pagination.html' %}
 
-    <a href="{% url 'add_project' %}">Добавить проект</a>
-    <br>
-    <table>
-        <tbody>
-        <tr>
-            <th>
+        <a href="{% url 'add_project' %}" class="a_btn_primary">Добавить проект</a>
 
-            </th>
-            <th>
-                <div>id</div>
-                {{ 'id'|create_table_column_search_and_sorting_widget:3 }}
-            </th>
-            <th>
-
-            </th>
-            <th>
-                <div>Название</div>
-                {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
-            </th>
-            <th>
-                <div>Описание</div>
-
-                {{ 'description'|create_table_column_search_and_sorting_widget:3 }}
-            </th>
-            <th>
-                <div>Создан</div>
-
-                {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
-            </th>
-            <th>
-                <div>Обновлён</div>
-
-                {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
-            </th>
-        </tr>
-        {% for item in page_obj %}
+        <table>
+            <tbody>
             <tr>
-                <td>
-                    <input type="checkbox">
-                </td>
-                <td>
-                    {{ item.pk }}
-                </td>
-                <td>
-                    <a href="{% url 'project_detail' pk=item.pk %}">&#128065;</a>
-                    <button class="btn_item_delete" data-item-title="{{ item.title }}" data-entity-name="проект" data-redirect-url="{% url 'projects_page' %}"
-                            data-post-url="{% url 'project_delete' pk=item.pk %}">&#x2613;
-                    </button>
-                    <a href="{% url 'project_edit' pk=item.pk %}">&#9998;</a>
-                </td>
-                <td>
-                    {{ item.title }}
-                </td>
-                <td>
-                    {{ item.description|truncatechars:100 }}
-                </td>
-                <td>
-                    {{ item.created_at|date:'Y-m-d H:i' }}
-                </td>
-                <td>
-                    {{ item.updated_at|date:'Y-m-d H:i' }}
-                </td>
+                <th>
 
+                </th>
+                <th>
+                    <div>id</div>
+                    {{ 'id'|create_table_column_search_and_sorting_widget:3 }}
+                </th>
+                <th>
+
+                </th>
+                <th>
+                    <div>Название</div>
+                    {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
+                </th>
+                <th>
+                    <div>Описание</div>
+
+                    {{ 'description'|create_table_column_search_and_sorting_widget:3 }}
+                </th>
+                <th>
+                    <div>Создан</div>
+
+                    {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
+                </th>
+                <th>
+                    <div>Обновлён</div>
+
+                    {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
+                </th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% for item in page_obj %}
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>
+                        {{ item.pk }}
+                    </td>
+                    <td>
+                        <a href="{% url 'project_detail' pk=item.pk %}">&#128065;</a>
+                        <button class="btn_item_delete" data-item-title="{{ item.title }}" data-entity-name="проект"
+                                data-redirect-url="{% url 'projects_page' %}"
+                                data-post-url="{% url 'project_delete' pk=item.pk %}">&#x2613;
+                        </button>
+                        <a href="{% url 'project_edit' pk=item.pk %}">&#9998;</a>
+                        <input type="color" disabled value="{{ item.color }}">
+                    </td>
+                    <td>
+                        {{ item.title }}
+                    </td>
+                    <td>
+                        <div class="ellipsed_text">
+                            {{ item.description }}
+{#                            {{ item.description|truncatechars:100 }}#}
+                        </div>
+                    </td>
+                    <td>
+                        {{ item.created_at|date:'Y-m-d H:i' }}
+                    </td>
+                    <td>
+                        {{ item.updated_at|date:'Y-m-d H:i' }}
+                    </td>
 
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock content %}
 

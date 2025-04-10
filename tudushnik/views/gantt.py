@@ -29,7 +29,11 @@ def gantt_chart_page(request, *args, **kwargs):
             selected_projects = [int(i.pk) for i in all_projects.all()]
         gantt_apply_filters['selected_projects'] = selected_projects
         kwargs.update(
-            {"title": "Диаграмма Ганта", "all_projects": all_projects,
-             'selected_projects': selected_projects,
-             "gantt_apply_filters": json.dumps(gantt_apply_filters)})
+            {
+                "title": "Диаграмма Ганта", "all_projects": all_projects,
+                'selected_projects': selected_projects,
+                "gantt_apply_filters": json.dumps(gantt_apply_filters),
+                "page_title_eng": 'gantt'
+            }
+        )
         return render(request, 'tudushnik/gantt_chart_page.html', kwargs)

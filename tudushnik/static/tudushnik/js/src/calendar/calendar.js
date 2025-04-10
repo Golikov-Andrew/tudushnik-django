@@ -56,7 +56,10 @@ class Calendar {
         this.selected_view.selected_view.redraw()
     }
     redraw_tasks(){
-        this.viewport.redraw_task(this.tasks[tasksKey])
+        for (const tasksKey in this.tasks) {
+            this.viewport.redraw_task(this.tasks[tasksKey])
+        }
+
     }
 
     validate_date(view_type) {

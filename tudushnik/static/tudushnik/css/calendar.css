@@ -5,6 +5,7 @@ body {
   font-size: 16px;
   margin: 0;
   padding: 0;
+  background-color: #F5FBFF;
 }
 body > .wrapper {
   overflow: hidden;
@@ -57,24 +58,113 @@ body > .wrapper {
   background-color: darkgreen;
   color: white;
 }
+.var_input {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  color: #4A8FC1;
+  font-size: 16px;
+  max-width: 180px;
+}
+@media (min-width: 500px) {
+  .var_input {
+    max-width: unset;
+  }
+}
+.var_input:focus-visible,
+.var_input:focus {
+  outline: 2px solid #4A8FC1;
+}
+.var_submit {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.var_submit:hover {
+  background-color: #34729f;
+}
+.var_btn_del {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 4px 8px;
+  font-size: 10px;
+  background-color: #e56c6c;
+}
+.var_btn_del:hover {
+  background-color: #34729f;
+}
+.var_btn_del:hover {
+  background-color: #9d3c3c;
+}
+.search_and_sorting_widget input[type="text"] {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  color: #4A8FC1;
+  font-size: 16px;
+  max-width: 180px;
+  width: 100%;
+  margin: 4px;
+}
+@media (min-width: 500px) {
+  .search_and_sorting_widget input[type="text"] {
+    max-width: unset;
+  }
+}
+.search_and_sorting_widget input[type="text"]:focus-visible,
+.search_and_sorting_widget input[type="text"]:focus {
+  outline: 2px solid #4A8FC1;
+}
+@media (min-width: 768px) {
+  .search_and_sorting_widget {
+    min-width: 76px;
+  }
+}
+.table_column_sorting {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.table_column_sorting:hover {
+  background-color: #34729f;
+}
 .calendar {
   user-select: none;
   font-size: 12px;
 }
 .calendar div {
-  outline: 1px solid black;
+  outline: 1px solid #97D4FF;
   margin: 4px;
   padding: 4px;
 }
 .calendar .calendar_header {
   display: flex;
   flex-wrap: wrap;
+  background-color: #97D4FF;
 }
 .calendar .calendar_header .current_date,
 .calendar .calendar_header .selected_view {
   display: flex;
   flex-direction: row;
   position: relative;
+  background-color: #4A8FC1;
+  color: #34729f;
 }
 .calendar .calendar_header .current_date .view_type,
 .calendar .calendar_header .selected_view .view_type {
@@ -83,12 +173,18 @@ body > .wrapper {
 }
 .calendar .calendar_header .current_date .view_type.selected,
 .calendar .calendar_header .selected_view .view_type.selected {
-  outline: 2px solid blue;
+  outline: 4px solid blue;
 }
 .calendar .calendar_header .current_date .view_type:hover,
 .calendar .calendar_header .selected_view .view_type:hover {
   cursor: pointer;
-  outline: 1px solid red;
+  outline: 4px solid #9d3c3c;
+}
+.calendar .calendar_header .current_date .view_type .value,
+.calendar .calendar_header .selected_view .view_type .value,
+.calendar .calendar_header .current_date .view_type .label,
+.calendar .calendar_header .selected_view .view_type .label {
+  background-color: #F5FBFF;
 }
 .calendar .calendar_header .calendar_fieldset_legend {
   position: absolute;
@@ -162,6 +258,7 @@ body > .wrapper {
   overflow-y: auto;
 }
 .calendar .viewport .body .calendar_grid .row .cell .cell_content .calendar_tasks_container .task_widget {
+  color: black;
   max-height: 20px;
   overflow: hidden;
   word-break: break-all;
@@ -171,10 +268,10 @@ body > .wrapper {
   cursor: pointer;
 }
 .calendar .viewport .body .current_interval {
-  outline: 4px solid red;
+  outline: 4px solid #e56c6c;
 }
 .calendar .viewport .body .selected_interval {
-  background-color: #8ce3e8;
+  background-color: #97D4FF;
 }
 .calendar .viewport.year .body .calendar_grid .row .cell_content,
 .calendar .viewport.year .body .row_label_content {

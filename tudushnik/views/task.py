@@ -71,6 +71,7 @@ class TaskListView(ListView):
         context['limit'] = per_page
         context['len_records'] = len(all_tasks)
         context['all_tags'] = all_tags
+        context['page_title_eng'] = 'tasks_page'
         set_client_timezone(self.request, context)
 
         return context
@@ -127,6 +128,7 @@ class TaskUpdateView(UpdateView):
         context[
             'all_other_tasks_and_not_children'] = other_tasks_without_children
         context['parents'] = all_parents_task
+        context['page_title_eng'] = 'tasks_edit'
         set_client_timezone(self.request, context)
         return context
 
@@ -219,7 +221,11 @@ def add_task(request, *args, **kwargs):
             owner_id=request.user.id).all()
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=request.user.id).all()
-    kwargs.update({'form': form, 'title': 'Добавление задачи', 'referer': request.META['HTTP_REFERER']})
+    kwargs.update({
+        'form': form, 'title': 'Добавление задачи',
+        'referer': request.META['HTTP_REFERER'],
+        'page_title_eng': 'tasks_create'
+    })
     return render(request, 'tudushnik/add_task.html', kwargs)
 
 
@@ -266,7 +272,7 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=request.user.id).all()
 
-    kwargs.update({'form': form, 'title': 'Добавление задачи в проект'})
+    kwargs.update({'form': form, 'title': 'Добавление задачи в проект', 'page_title_eng': 'tasks_add_to_project'})
     return render(request, 'tudushnik/add_task_to_project.html', kwargs)
 
 

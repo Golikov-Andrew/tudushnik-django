@@ -26,6 +26,7 @@ class TagListView(ListView):
         context['page_obj'] = paginator.get_page(page_number)
         context['limit'] = per_page
         context['len_records'] = len(all_tags)
+        context['page_title_eng'] = 'tags_page'
         set_client_timezone(self.request, context)
         return context
 
