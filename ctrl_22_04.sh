@@ -16,6 +16,12 @@ then
     exit 0
 fi
 
+if [ "$1" == "build_dev" ]
+then
+    sudo docker compose -f docker-compose-dev.yml build $2
+    exit 0
+fi
+
 if [ "$1" == "dev" ]
 then
     sudo docker compose -f docker-compose-dev.yml up --remove-orphans --force-recreate $2

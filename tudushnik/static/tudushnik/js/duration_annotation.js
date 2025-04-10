@@ -5,7 +5,7 @@ function createInputNumber(label_text, data_seconds) {
     let elem = document.createElement('input')
     elem.classList.add('duration_controller')
     elem.setAttribute('type', 'number')
-    elem.style.width = '42px'
+    // elem.style.width = '42px'
     elem.setAttribute('min', '0')
     elem.setAttribute('data-seconds', data_seconds)
     let label = document.createElement('label')

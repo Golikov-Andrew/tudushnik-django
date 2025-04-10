@@ -15,14 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework import routers
+
+from tudushnik.views import user
 
 from tudushnik.views import pageNotFound
 from .settings import DEBUG
 
+router = routers.DefaultRouter()
+router.register(r'users', user.UserViewSet)
+router.register(r'groups', user.GroupViewSet)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('auth/', include('custom_auth.urls')),
-    path('', include('tudushnik.urls'))
+    path('', include('tudushnik.urls')),
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls'))
 ]
 
 handler404 = pageNotFound
@@ -30,9 +39,11 @@ handler404 = pageNotFound
 if DEBUG:
     # import os  # only if you haven't already imported this
     import socket  # only if you haven't already imported this
+
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [
-        ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+                       ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1",
+                                                                    "10.0.2.2"]
     urlpatterns += [
         path('__debug__/', include('debug_toolbar.urls')),
     ]

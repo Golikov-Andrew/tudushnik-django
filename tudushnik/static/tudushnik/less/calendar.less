@@ -1,0 +1,228 @@
+@import 'components/utils/_base';
+@import 'components/utils/_mixins';
+@import 'components/utils/_variables';
+
+.calendar {
+  user-select: none;
+  font-size: 12px;
+
+  div {
+    outline: 1px solid @cold-medium;
+    margin: 4px;
+    padding: 4px;
+  }
+
+  .calendar_header {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: @cold-medium;
+
+    .current_date,
+    .selected_view {
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      background-color: @cold-dark;
+      color: @cold-very-dark;
+
+      .view_type {
+        display: flex;
+        flex-direction: column;
+
+        &.selected {
+          outline: 4px solid blue;
+        }
+
+        &:hover {
+          cursor: pointer;
+          outline: 4px solid @red-delicate-medium;
+        }
+        .value,
+        .label{
+          background-color: @cold-light;
+        }
+      }
+    }
+
+    .calendar_fieldset_legend {
+      position: absolute;
+      top: -16px;
+      background-color: white;
+    }
+  }
+
+  .viewport {
+    display: flex;
+    flex-direction: column;
+
+    & * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .head, .body {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .head {
+      align-items: center;
+
+      .timeline_label {
+        width: 80px;
+        min-width: 80px;
+      }
+
+      .cols_labels {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        margin-right: 16px;
+
+        .col_label {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+
+    .body {
+      overflow-y: scroll;
+
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        width: 80px;
+        min-width: 80px;
+        outline: unset;
+
+        .row_label_content {
+          height: 64px;
+        }
+      }
+
+      .calendar_grid {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        outline: unset;
+
+        .row {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          width: 100%;
+
+          .cell {
+            width: 100%;
+
+            .cell_content {
+              height: 64px;
+              .calendar_tasks_container {
+                overflow-y: auto;
+                .task_widget {
+                  color: black;
+                  max-height: 20px;
+                  overflow: hidden;
+                  word-break: break-all;
+                }
+              }
+            }
+
+            &:hover {
+              outline: 2px solid blue;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .current_interval {
+        outline: 4px solid @red-delicate;
+      }
+      .selected_interval {
+        background-color: @cold-medium;
+      }
+    }
+
+    &.year {
+      .body {
+        .calendar_grid .row .cell_content,
+        .row_label_content {
+          height: 64px;
+        }
+        .calendar_tasks_container{
+          height: 50px;
+        }
+      }
+    }
+
+    &.month {
+      .body {
+        .calendar_grid .row .cell_content,
+        .row_label_content {
+          height: 128px;
+        }
+      }
+    }
+
+    &.week {
+      .body {
+        .calendar_grid .row .cell_content,
+        .row_label_content {
+          height: 70vh;
+        }
+      }
+    }
+  }
+
+}
+
+.modal {
+
+  .overlay {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.5;
+  }
+
+  .window {
+    position: fixed;
+    z-index: 1001;
+    background-color: white;
+    color: black;
+    padding: 4px;
+    margin: 4px;
+    width: 50%;
+    top: 25%;
+    left: 25%;
+    height: 30%;
+
+    .btn_close {
+      cursor: pointer;
+      text-align: right;
+    }
+
+    .content {
+      padding: 4px;
+      margin: 4px;
+      height: calc(100% - 40px);
+      overflow-y: scroll;
+    }
+  }
+}
+
+.option_element {
+  cursor: pointer;
+
+  &:hover {
+    outline: 1px solid red;
+  }
+}

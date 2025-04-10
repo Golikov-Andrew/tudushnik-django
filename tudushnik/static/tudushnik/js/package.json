@@ -14,7 +14,8 @@
   "dependencies": {
     "jquery": "^3.7.0",
     "moment": "^2.29.4",
-    "moment-duration-format": "^2.3.2"
+    "moment-duration-format": "^2.3.2",
+    "moment-range": "^4.0.2"
   },
   "devDependencies": {
     "webpack": "^5.88.2",

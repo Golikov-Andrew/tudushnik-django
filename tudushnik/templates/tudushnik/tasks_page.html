@@ -5,11 +5,14 @@
 
 
 {% block content %}
-    {% include 'tudushnik/_pagination.html' %}
+    <div class="items_table_wrapper">
+        {% include 'tudushnik/_pagination.html' %}
 
-    <a class="add_item" href="{% url 'add_task' %}">+ Добавить</a>
-    <br>
-    {% include 'tudushnik/_tasks_table.html' %}
+        <a class="add_item" href="{% url 'add_task' %}">+ Добавить</a>
+        <br>
+        {% include 'tudushnik/_tasks_table.html' %}
+    </div>
+
 {% endblock content %}
 
 {% block local_scripts %}

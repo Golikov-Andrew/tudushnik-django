@@ -46,6 +46,58 @@ function send_post_json(e, url, json_obj, func, csrftoken) {
     }
 }
 
+function send_json(e, method, url, json_obj, func, csrftoken) {
+    let xhr = new XMLHttpRequest();
+    xhr.open(method, url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    if (csrftoken !== undefined) {
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    }
+
+    xhr.onerror = function () {
+        console.log(xhr.response);
+    }
+    xhr.onload = function () {
+        if (func !== undefined) {
+            func(xhr.response);
+        } else {
+            console.log(xhr.response);
+        }
+    }
+    xhr.send(JSON.stringify(json_obj));
+    if (e !== undefined) {
+        e.preventDefault();
+    }
+}
+
+function send_json_promise(e, method, url, json_obj, csrftoken) {
+    if (e !== undefined) e.preventDefault();
+
+    return new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        if (csrftoken !== undefined) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+
+        xhr.onerror = function () {
+            reject(new Error("Network Error"));
+        }
+        xhr.onload = function () {
+            if (this.status === 200) {
+                resolve(this.response);
+            } else {
+                let error = new Error(this.statusText);
+                error.code = this.status;
+                reject(error);
+            }
+        }
+        xhr.send(JSON.stringify(json_obj));
+
+    })
+}
+
 function send_post_formdata(e, url, formdata, func_on_success) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
@@ -78,7 +130,7 @@ function getStrOrJSON(str) {
     return result
 }
 
-function tryToStringify(obj){
+function tryToStringify(obj) {
     let result;
     if (Array.isArray(obj)) {
         // console.log('is array')
@@ -89,25 +141,25 @@ function tryToStringify(obj){
     return result
 }
 
-function get_dict_from_list_by_key_val(list, key, val, def=false){
+function get_dict_from_list_by_key_val(list, key, val, def = false) {
     for (let i = 0, c; i < list.length; i++) {
         c = list[i]
-        if(c[key]===val){
+        if (c[key] === val) {
             return c
         }
     }
     return def
 }
 
-function div(val, by){
+function div(val, by) {
     return (val - val % by) / by;
 }
 
-function addMultiEventListener(el, s, fn){
+function addMultiEventListener(el, s, fn) {
     s.forEach(e => el.addEventListener(e, fn, false))
 }
 
-function showHelper(parent, color, x, y, w, h){
+function showHelper(parent, color, x, y, w, h) {
     let new_div = document.createElement('div')
     new_div.style.backgroundColor = color
     new_div.style.display = 'inline-block'
@@ -119,7 +171,7 @@ function showHelper(parent, color, x, y, w, h){
     new_div.style.width = `${w}px`
     new_div.style.height = `${h}px`
     parent.appendChild(new_div)
-    setTimeout(()=>{
+    setTimeout(() => {
         parent.removeChild(new_div)
     }, 10000)
 }

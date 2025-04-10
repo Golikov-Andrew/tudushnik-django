@@ -6,7 +6,7 @@ from django.shortcuts import render
 from tudushnik.models.project import Project
 
 
-def gantt_chart_page(request, *args, **kwargs):
+def calendar_page(request, *args, **kwargs):
     if request.method == 'GET':
         gantt_chart_datetime_from = request.GET.get('gantt_chart_datetime_from')
         gantt_chart_datetime_to = request.GET.get('gantt_chart_datetime_to')
@@ -30,10 +30,10 @@ def gantt_chart_page(request, *args, **kwargs):
         gantt_apply_filters['selected_projects'] = selected_projects
         kwargs.update(
             {
-                "title": "Диаграмма Ганта", "all_projects": all_projects,
+                "title": "Календарь", "all_projects": all_projects,
                 'selected_projects': selected_projects,
                 "gantt_apply_filters": json.dumps(gantt_apply_filters),
-                "page_title_eng": 'gantt'
+                "page_title_eng": "calendar_page"
             }
         )
-        return render(request, 'tudushnik/gantt_chart_page.html', kwargs)
+        return render(request, 'tudushnik/calendar_page.html', kwargs)

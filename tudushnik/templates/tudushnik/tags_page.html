@@ -3,11 +3,14 @@
 
 
 {% block content %}
-    {% include 'tudushnik/_pagination.html' %}
+    <div class="items_table_wrapper">
+        {% include 'tudushnik/_pagination.html' %}
 
-    <a href="{% url 'add_tag' %}">Создать тэг</a>
-    <br>
-    {% include 'tudushnik/_tags_table.html' %}
+        <a href="{% url 'add_tag' %}">Создать тэг</a>
+        <br>
+        {% include 'tudushnik/_tags_table.html' %}
+    </div>
+
 {% endblock content %}
 
 {% block local_scripts %}

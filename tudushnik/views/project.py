@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, UpdateView
+from rest_framework import generics
 
 from tudushnik.forms.project import AddProjectForm, ProjectUpdateForm
 from tudushnik.middleware import set_client_timezone
@@ -12,6 +13,7 @@ from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
 from tudushnik.models.user_profile_settings import manage_user_settings
+from tudushnik.serializers import ProjectSerializer
 
 
 class ProjectListView(ListView):
@@ -47,6 +49,7 @@ class ProjectListView(ListView):
         context['limit'] = per_page
         context['len_records'] = len(all_projects)
         context['all_tags'] = all_tags
+        context['page_title_eng'] = 'projects_page'
         set_client_timezone(self.request, context)
         return context
 
@@ -100,6 +103,7 @@ class ProjectDetailView(DetailView):
         context['all_projects'] = all_projects
         context['project_id'] = project_id
         context['entity_type'] = 'Проект'
+        context['page_title_eng'] = 'projects_detail'
         set_client_timezone(self.request, context)
         return context
 
@@ -117,11 +121,12 @@ class ProjectUpdateView(UpdateView):
     #     obj = super().get_object()
     #     return obj
     #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     Project.objects.filter(owner_id=self.request.user.id)
-    #     context['title'] = context["project"]
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Project.objects.filter(owner_id=self.request.user.id)
+        # context['title'] = context["project"]
+        context['page_title_eng'] = 'project_edit'
+        return context
 
 
 # def projects_page(request):
@@ -143,7 +148,7 @@ def add_project(request, *args, **kwargs):
     else:
         form = AddProjectForm()
     return render(request, 'tudushnik/add_project.html',
-                  {'form': form, 'title': 'Добавление проекта'})
+                  {'form': form, 'title': 'Добавление проекта', 'page_title_eng': 'projects_create'})
 
 
 def project_delete(request, pk: int, *args, **kwargs):
@@ -152,3 +157,10 @@ def project_delete(request, pk: int, *args, **kwargs):
                                                pk=pk).first()
         target_object.delete()
         return JsonResponse({"success": True})
+
+
+class ProjectList(generics.ListCreateAPIView):
+    serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        return Project.objects.filter(owner_id=self.request.user.id).all()

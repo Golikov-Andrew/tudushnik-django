@@ -42,6 +42,92 @@
   background-color: darkgreen;
   color: white;
 }
+.var_input {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  color: #4A8FC1;
+  font-size: 16px;
+  max-width: 180px;
+}
+@media (min-width: 500px) {
+  .var_input {
+    max-width: unset;
+  }
+}
+.var_input:focus-visible,
+.var_input:focus {
+  outline: 2px solid #4A8FC1;
+}
+.var_submit {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.var_submit:hover {
+  background-color: #34729f;
+}
+.var_btn_del {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 4px 8px;
+  font-size: 10px;
+  background-color: #e56c6c;
+}
+.var_btn_del:hover {
+  background-color: #34729f;
+}
+.var_btn_del:hover {
+  background-color: #9d3c3c;
+}
+.search_and_sorting_widget input[type="text"] {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  color: #4A8FC1;
+  font-size: 16px;
+  max-width: 180px;
+  width: 100%;
+  margin: 4px;
+}
+@media (min-width: 500px) {
+  .search_and_sorting_widget input[type="text"] {
+    max-width: unset;
+  }
+}
+.search_and_sorting_widget input[type="text"]:focus-visible,
+.search_and_sorting_widget input[type="text"]:focus {
+  outline: 2px solid #4A8FC1;
+}
+@media (min-width: 768px) {
+  .search_and_sorting_widget {
+    min-width: 76px;
+  }
+}
+.table_column_sorting {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.table_column_sorting:hover {
+  background-color: #34729f;
+}
 .viewport_toolbar {
   font-size: 12px;
 }
@@ -63,14 +149,15 @@
 }
 .ruler {
   width: 100px;
-  background-color: #626262;
+  background-color: #4A8FC1;
   position: absolute;
   top: 0;
   left: 0;
   height: 1000px;
 }
 .ruler_row {
-  outline: 1px solid gray;
+  outline: 1px solid #F5FBFF;
+  color: #F5FBFF;
 }
 .viewport_datetimeline_canvas {
   position: absolute;

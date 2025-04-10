@@ -26,7 +26,7 @@
 
 .ruler {
   width: 100px;
-  background-color: #626262;
+  background-color: @cold-dark;
   position: absolute;
   top: 0;
   left: 0;
@@ -34,7 +34,8 @@
 }
 
 .ruler_row {
-  outline: 1px solid gray;
+  outline: 1px solid @cold-light;
+  color: @cold-light;
 }
 
 .viewport_datetimeline_canvas {
@@ -211,6 +212,7 @@
 #move_settings {
   display: inline-block;
   font-size: 12px;
+  //margin-top: 20px;
 }
 
 .task_tag {

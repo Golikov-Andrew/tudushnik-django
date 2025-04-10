@@ -4,6 +4,7 @@
 {% block content %}
     <form action="{% url 'add_task' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <input type="hidden" name="referer" value="{{ referer }}">
         <div class="form-error">{{ form.non_field_errors }}</div>
         <table>
             <tbody>

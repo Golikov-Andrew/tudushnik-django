@@ -1,0 +1,86 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/calendar.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+
+    <div class="page-title-container">
+        <div class="page-title">
+            {{ title }}
+        </div>
+    </div>
+
+    {#    <div class="entity_header">#}
+    {#        <div id="gantt_apply_filters"#}
+    {#             class="hidden">{{ gantt_apply_filters }}</div>#}
+    {#        <div class="page-title-container">#}
+    {#            <div class="page-title">#}
+    {#                {{ title }}#}
+    {#            </div>#}
+    {#        </div>#}
+    {##}
+    {#        <form id="form_calendar">#}
+    {##}
+    {#            <select name="selected_projects[]" id="selected_projects" multiple>#}
+    {#                {% for project in all_projects %}#}
+    {#                    <option value="{{ project.pk }}"#}
+    {#                            {% if project.pk in selected_projects %}#}
+    {#                            selected#}
+    {#                            {% endif %}#}
+    {#                    >{{ project.title }}</option>#}
+    {#                {% endfor %}#}
+    {#            </select>#}
+    {##}
+    {#            <input type="submit">Применить критерии</input>#}
+    {##}
+    {#        </form>#}
+    {##}
+    {#    </div>#}
+    {##}
+    {#    <div class="toolbar">#}
+    {#        <label class="select_dt_scale_label hidden"#}
+    {#               for="viewport_dt_line_scale">Scale Y: <select#}
+    {#                name="viewport_dt_line_scale"#}
+    {#                id="viewport_dt_line_scale"></select></label>#}
+    {##}
+    {#        <div id="move_settings">#}
+    {#            <div>Перемещать</div>#}
+    {#            <div>#}
+    {#                <input type="checkbox" id="inp_is_move_with_children">#}
+    {#                <label for="inp_is_move_with_children">с children?</label>#}
+    {#                <input type="checkbox" id="inp_is_move_with_children_recursive">#}
+    {#                <label for="inp_is_move_with_children_recursive">рекурсивно?</label>#}
+    {#            </div>#}
+    {#            <div>#}
+    {#                <input type="checkbox" id="inp_is_move_with_parents">#}
+    {#                <label for="inp_is_move_with_parents">с parents?</label>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+
+    {% include 'tudushnik/_viewport_calendar.html' %}
+
+
+{% endblock content %}
+
+
+{% block local_scripts %}
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/task.js' %}"></script>
+    {#    <script type="text/javascript"#}
+    {#            src="{% static 'tudushnik/js/dist/viewport.js' %}"></script>#}
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/projects_detail.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/sorting.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/calendar.js' %}"></script>
+{% endblock local_scripts %}

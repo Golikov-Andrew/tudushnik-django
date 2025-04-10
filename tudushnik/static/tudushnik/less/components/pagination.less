@@ -2,9 +2,13 @@
 @import 'utils/_variables';
 
 .pagination {
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   align-items: baseline;
+  margin-bottom: 4px;
+  .min_1200({
+    font-size: 16px;
+  });
 }
 
 .pagination_per_page,
@@ -22,5 +26,30 @@
 }
 
 #pagination_limit {
-  font-size: 12px;
+  font-size: 14px;
+  margin: 8px 0;
+  padding: 2px;
+  border: none;
+  border-radius: 2px;
+  outline: 1px solid @cold-dark;
+
+  .min_1200({
+    font-size: 16px;
+  });
+
+  &:focus-visible,
+  &:focus {
+    outline: 2px solid @cold-dark !important;
+  }
+}
+
+.btn_pagination_ctrl {
+  .var_submit();
+  .max_1199({
+    padding: 4px;
+    font-size: 12px;
+    font-weight: 300;
+  });
+
+
 }
