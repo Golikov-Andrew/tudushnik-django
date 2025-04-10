@@ -21,7 +21,6 @@ from tudushnik.models.user_profile_settings import manage_user_settings
 from tudushnik.serializers import TaskSerializer
 
 
-
 class TaskListView(ListView):
     model = Task
     template_name = 'tudushnik/tasks_page.html'
@@ -192,6 +191,8 @@ def add_task(request, *args, **kwargs):
                 form.instance.begin_at = temp
 
             form.save()
+            if request.POST.get('referer') is not None and request.POST.get('referer') != '':
+                return redirect(request.POST.get('referer'))
             return redirect('tasks_page')
     else:
         diagram_offset_x = request.GET.get('diagram_offset_x')
@@ -218,7 +219,7 @@ def add_task(request, *args, **kwargs):
             owner_id=request.user.id).all()
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=request.user.id).all()
-    kwargs.update({'form': form, 'title': 'Добавление задачи'})
+    kwargs.update({'form': form, 'title': 'Добавление задачи', 'referer': request.META['HTTP_REFERER']})
     return render(request, 'tudushnik/add_task.html', kwargs)
 
 

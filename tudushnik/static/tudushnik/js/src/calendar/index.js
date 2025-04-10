@@ -10,7 +10,6 @@ const tasks = new Tasks(calendar)
 projects.fetch().then(
     (response) => {
         let json_obj = JSON.parse(response)
-        console.log('json_obj', json_obj)
         for (let i = 0; i < json_obj.results.length; i++) {
             projects.projects[json_obj.results[i].id] = json_obj.results[i]
         }
@@ -18,13 +17,11 @@ projects.fetch().then(
         tasks.fetch().then(
             (response) => {
                 let json_obj = JSON.parse(response)
-                console.log('json_obj', json_obj)
                 for (let i = 0; i < json_obj.results.length; i++) {
                     tasks.tasks[json_obj.results[i].id] = json_obj.results[i]
                 }
-                console.log('projects', projects)
-                console.log('tasks', tasks)
-                calendar.redraw_tasks(projects, tasks)
+                calendar.add_projects(projects)
+                calendar.add_tasks(tasks)
             }
         )
     }
@@ -33,4 +30,4 @@ projects.fetch().then(
 })
 
 
-console.log('calendar', calendar)
+window.mycalendar = calendar

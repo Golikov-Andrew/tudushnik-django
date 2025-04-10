@@ -66,24 +66,34 @@ body > .wrapper {
   margin: 4px;
   padding: 4px;
 }
-.calendar .current_date,
-.calendar .selected_view {
+.calendar .calendar_header {
+  display: flex;
+  flex-wrap: wrap;
+}
+.calendar .calendar_header .current_date,
+.calendar .calendar_header .selected_view {
   display: flex;
   flex-direction: row;
+  position: relative;
 }
-.calendar .current_date .view_type,
-.calendar .selected_view .view_type {
+.calendar .calendar_header .current_date .view_type,
+.calendar .calendar_header .selected_view .view_type {
   display: flex;
   flex-direction: column;
 }
-.calendar .current_date .view_type.selected,
-.calendar .selected_view .view_type.selected {
+.calendar .calendar_header .current_date .view_type.selected,
+.calendar .calendar_header .selected_view .view_type.selected {
   outline: 2px solid blue;
 }
-.calendar .current_date .view_type:hover,
-.calendar .selected_view .view_type:hover {
+.calendar .calendar_header .current_date .view_type:hover,
+.calendar .calendar_header .selected_view .view_type:hover {
   cursor: pointer;
   outline: 1px solid red;
+}
+.calendar .calendar_header .calendar_fieldset_legend {
+  position: absolute;
+  top: -16px;
+  background-color: white;
 }
 .calendar .viewport {
   display: flex;
@@ -118,7 +128,6 @@ body > .wrapper {
   justify-content: center;
 }
 .calendar .viewport .body {
-  height: 500px;
   overflow-y: scroll;
 }
 .calendar .viewport .body .timeline {
@@ -149,9 +158,13 @@ body > .wrapper {
 .calendar .viewport .body .calendar_grid .row .cell .cell_content {
   height: 64px;
 }
+.calendar .viewport .body .calendar_grid .row .cell .cell_content .calendar_tasks_container {
+  overflow-y: auto;
+}
 .calendar .viewport .body .calendar_grid .row .cell .cell_content .calendar_tasks_container .task_widget {
   max-height: 20px;
   overflow: hidden;
+  word-break: break-all;
 }
 .calendar .viewport .body .calendar_grid .row .cell:hover {
   outline: 2px solid blue;
@@ -162,6 +175,21 @@ body > .wrapper {
 }
 .calendar .viewport .body .selected_interval {
   background-color: #8ce3e8;
+}
+.calendar .viewport.year .body .calendar_grid .row .cell_content,
+.calendar .viewport.year .body .row_label_content {
+  height: 64px;
+}
+.calendar .viewport.year .body .calendar_tasks_container {
+  height: 50px;
+}
+.calendar .viewport.month .body .calendar_grid .row .cell_content,
+.calendar .viewport.month .body .row_label_content {
+  height: 128px;
+}
+.calendar .viewport.week .body .calendar_grid .row .cell_content,
+.calendar .viewport.week .body .row_label_content {
+  height: 70vh;
 }
 .modal .overlay {
   position: fixed;
@@ -192,6 +220,8 @@ body > .wrapper {
 .modal .window .content {
   padding: 4px;
   margin: 4px;
+  height: calc(100% - 40px);
+  overflow-y: scroll;
 }
 .option_element {
   cursor: pointer;

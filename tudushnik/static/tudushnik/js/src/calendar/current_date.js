@@ -54,6 +54,7 @@ class CurrentDate {
         }
         this.element = new DOMElem('div', {
             classes: ['current_date'], children: [
+                new DOMElem('div', {classes: ['calendar_fieldset_legend'], html:'Сегодня:'}),
                 this.views.year.element,
                 this.views.month.element,
                 this.views.week.element,

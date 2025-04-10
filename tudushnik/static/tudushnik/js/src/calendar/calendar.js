@@ -2,11 +2,13 @@ import {SelectedView} from "./view";
 import {CurrentDate} from "./current_date";
 import {Viewport} from "./viewport";
 import moment from "moment/moment";
+import {DOMElem} from "../../dom_utils";
 
 
 class Calendar {
     constructor(element) {
         this.element = element
+        this.header = new DOMElem('div', {classes:['calendar_header']})
         this.selected_view = new SelectedView(this)
         this.current_date = new CurrentDate(moment())
         this.viewport = new Viewport(this)
@@ -16,6 +18,8 @@ class Calendar {
             week: this.current_date.get('week'),
             day: this.current_date.get('day'),
         }
+        this.projects = {}
+        this.tasks = {}
 
     }
 
@@ -25,8 +29,9 @@ class Calendar {
     }
 
     create_gui() {
-        this.element.appendChild(this.current_date.element)
-        this.element.appendChild(this.selected_view.element)
+        this.element.appendChild(this.header.element)
+        this.header.element.appendChild(this.current_date.element)
+        this.header.element.appendChild(this.selected_view.element)
         this.selected_view.set_value('year', this.selected_interval.year)
         this.selected_view.set_value('month', this.selected_interval.month)
         this.selected_view.set_value('week', this.selected_interval.week)
@@ -50,16 +55,8 @@ class Calendar {
     redraw_view() {
         this.selected_view.selected_view.redraw()
     }
-    redraw_tasks(projects, tasks){
-        for (const projectsKey in projects.projects) {
-            console.log(projectsKey, projects.projects[projectsKey])
-        }
-        for (const tasksKey in tasks.tasks) {
-
-            console.log(tasksKey, tasks.tasks[tasksKey])
-            this.viewport.redraw_task(tasks.tasks[tasksKey])
-        }
-
+    redraw_tasks(){
+        this.viewport.redraw_task(this.tasks[tasksKey])
     }
 
     validate_date(view_type) {
@@ -94,6 +91,17 @@ class Calendar {
                 this.selected_view.set_value('month', start.format('MM'))
                 // console.log('day changed', start.format('DD'))
             }
+        }
+    }
+
+    add_projects(projects) {
+        for (const projectsKey in projects.projects) {
+            this.projects[projectsKey] = projects.projects[projectsKey];
+        }
+    }
+    add_tasks(tasks) {
+        for (const tasksKey in tasks.tasks) {
+            this.viewport.redraw_task(tasks.tasks[tasksKey])
         }
     }
 }

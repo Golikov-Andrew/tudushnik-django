@@ -12,23 +12,35 @@
     padding: 4px;
   }
 
-  .current_date,
-  .selected_view {
+  .calendar_header {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
 
-    .view_type {
+    .current_date,
+    .selected_view {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      position: relative;
 
-      &.selected {
-        outline: 2px solid blue;
-      }
+      .view_type {
+        display: flex;
+        flex-direction: column;
 
-      &:hover {
-        cursor: pointer;
-        outline: 1px solid red;
+        &.selected {
+          outline: 2px solid blue;
+        }
+
+        &:hover {
+          cursor: pointer;
+          outline: 1px solid red;
+        }
       }
+    }
+
+    .calendar_fieldset_legend {
+      position: absolute;
+      top: -16px;
+      background-color: white;
     }
   }
 
@@ -70,7 +82,6 @@
     }
 
     .body {
-      height: 500px;
       overflow-y: scroll;
 
       .timeline {
@@ -102,10 +113,12 @@
 
             .cell_content {
               height: 64px;
-              .calendar_tasks_container{
-                .task_widget{
+              .calendar_tasks_container {
+                overflow-y: auto;
+                .task_widget {
                   max-height: 20px;
                   overflow: hidden;
+                  word-break: break-all;
                 }
               }
             }
@@ -121,8 +134,38 @@
       .current_interval {
         outline: 4px solid red;
       }
-      .selected_interval{
+      .selected_interval {
         background-color: #8ce3e8;
+      }
+    }
+
+    &.year {
+      .body {
+        .calendar_grid .row .cell_content,
+        .row_label_content {
+          height: 64px;
+        }
+        .calendar_tasks_container{
+          height: 50px;
+        }
+      }
+    }
+
+    &.month {
+      .body {
+        .calendar_grid .row .cell_content,
+        .row_label_content {
+          height: 128px;
+        }
+      }
+    }
+
+    &.week {
+      .body {
+        .calendar_grid .row .cell_content,
+        .row_label_content {
+          height: 70vh;
+        }
       }
     }
   }
@@ -162,6 +205,8 @@
     .content {
       padding: 4px;
       margin: 4px;
+      height: calc(100% - 40px);
+      overflow-y: scroll;
     }
   }
 }

@@ -89,11 +89,19 @@ class ViewAbstract {
                 data_month: moment_day.format('MM'),
                 data_year: moment_day.format('YYYY'),
                 data_date: moment_day.format('DD')
-            }, classes: ['cell_content'], children:[
-                new DOMElem('div',{html: moment_day.format('DD')}),
-                new DOMElem('div',{classes: ['calendar_tasks_container']})
+            }, classes: ['cell_content'], children: [
+                new DOMElem('div', {html: moment_day.format('DD')}),
+                new DOMElem('div', {classes: ['calendar_tasks_container']})
             ]
         }).element
+        elem.addEventListener('click', () => {
+            this.calendar.selected_view.views.year.set_value(elem.getAttribute('data_year'))
+            this.calendar.selected_view.views.month.set_value(elem.getAttribute('data_month'))
+            this.calendar.selected_view.views.week.set_value(elem.getAttribute('data_week'))
+            this.calendar.selected_view.views.day.set_value(elem.getAttribute('data_date'))
+            this.calendar.select_view('day')
+            this.selected_view.selected_view.redraw()
+        })
         if (this.calendar.current_date.get('month') === moment_day.format('MM') &&
             this.calendar.current_date.get('week') === moment_day.format('WW') &&
             this.calendar.current_date.get('year') === moment_day.format('YYYY') &&
@@ -134,7 +142,6 @@ class ViewYear extends ViewAbstract {
     }
 
     redraw() {
-        console.log('ViewYear.redraw()')
         this.calendar.viewport.redraw_timeline_label('Месяц - Неделя')
         this.calendar.viewport.redraw_cols_labels(this.weekdays_labels)
 
@@ -161,6 +168,7 @@ class ViewYear extends ViewAbstract {
         }
         this.calendar.viewport.redraw_timeline(rows_labels_list)
         this.calendar.viewport.redraw_cells(cell_list)
+        this.calendar.redraw_tasks();
     }
 
 
@@ -182,7 +190,6 @@ class ViewMonth extends ViewAbstract {
     }
 
     redraw() {
-        console.log('ViewMonth.redraw()')
 
         this.calendar.viewport.redraw_cols_labels(this.weekdays_labels)
 
@@ -211,6 +218,7 @@ class ViewMonth extends ViewAbstract {
         }
         this.calendar.viewport.redraw_timeline(rows_labels_list)
         this.calendar.viewport.redraw_cells(cell_list)
+        this.calendar.redraw_tasks();
     }
 
 }
@@ -237,7 +245,6 @@ class ViewWeek extends ViewAbstract {
     }
 
     redraw() {
-        console.log('ViewWeek.redraw()')
         this.calendar.viewport.redraw_cols_labels(this.weekdays_labels)
 
         let rows_labels_list = []
@@ -268,6 +275,7 @@ class ViewWeek extends ViewAbstract {
         }
         this.calendar.viewport.redraw_timeline(rows_labels_list)
         this.calendar.viewport.redraw_cells(cell_list)
+        this.calendar.redraw_tasks();
     }
 
 }
@@ -292,7 +300,6 @@ class ViewDay extends ViewAbstract {
     }
 
     redraw() {
-        console.log('ViewDay.redraw()')
 
         let rows_labels_list = []
         let cell_list = [] // 2d array
@@ -313,6 +320,7 @@ class ViewDay extends ViewAbstract {
         }
         this.calendar.viewport.redraw_timeline(rows_labels_list)
         this.calendar.viewport.redraw_cells(cell_list)
+        this.calendar.redraw_tasks();
     }
 
     create_row_label(hour) {
@@ -332,7 +340,11 @@ class ViewDay extends ViewAbstract {
                 data_year: moment_hour.format('YYYY'),
                 data_date: moment_hour.format('DD'),
                 data_hour: moment_hour.format('HH')
-            }, classes: ['cell_content'], html: moment_hour.format('HH:mm')
+            }, classes: ['cell_content'],
+            children: [
+                new DOMElem('div', {html: moment_hour.format('HH:mm')}),
+                new DOMElem('div', {classes: ['calendar_tasks_container']})
+            ]
         }).element
     }
 }
@@ -349,6 +361,7 @@ class SelectedView {
         this.selected_view = null
         this.element = new DOMElem('div', {
             classes: ['selected_view'], children: [
+                new DOMElem('div', {classes: ['calendar_fieldset_legend'], html:'Выбранная дата:'}),
                 this.views.year.element,
                 this.views.month.element,
                 this.views.week.element,
@@ -367,7 +380,10 @@ class SelectedView {
         }
         this.selected_view = this.views[view_type]
         this.selected_view.element.classList.add('selected')
-        console.log('view selected ->', this.selected_view.view_type)
+        for (const key in this.views) {
+            this.calendar.viewport.element.classList.remove(key)
+        }
+        this.calendar.viewport.element.classList.add(view_type)
     }
 
     redraw() {
