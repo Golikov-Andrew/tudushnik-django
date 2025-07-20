@@ -324,6 +324,10 @@ body > .wrapper {
   row-gap: 8px;
   margin-bottom: -16px;
 }
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+}
 .page-title-container {
   grid-area: page-title-container;
 }
@@ -406,6 +410,9 @@ body > .wrapper {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+.items_table_wrapper {
+  margin-top: 20px;
 }
 .items_table_wrapper .items_table_label {
   margin: 6px 0;

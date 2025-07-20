@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth import get_user
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, UpdateView
@@ -76,6 +77,7 @@ class ProjectDetailView(DetailView):
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
         sorting_section = self.request.GET.get('sorting')
+        tags_section = self.request.GET.get('tags')
         per_page = manage_user_settings(self.request.user.id, per_page)
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
         all_projects = Project.objects.filter(
@@ -86,6 +88,14 @@ class ProjectDetailView(DetailView):
             for key, value in search_section_obj.items():
                 kw[key + '__icontains'] = value
             all_tasks = all_tasks.filter(**kw)
+
+        if tags_section is not None:
+            tags_section_obj = [int(i) for i in tags_section.split(',')]
+            query = Q()
+            for t in tags_section_obj:
+                query |= Q(tags=t)
+            all_tasks = all_tasks.filter(query).distinct()
+
         if sorting_section is not None:
             sorting_section_list = json.loads(sorting_section)
             ls = list()
@@ -102,6 +112,10 @@ class ProjectDetailView(DetailView):
         context['all_tags'] = all_tags
         context['all_projects'] = all_projects
         context['project_id'] = project_id
+        context['json_data'] = {
+            'tags': [t.to_json() for t in all_tags],
+            'project': context["project"].to_json()
+        }
         context['entity_type'] = 'Проект'
         context['page_title_eng'] = 'projects_detail'
         set_client_timezone(self.request, context)

@@ -116,6 +116,11 @@
   margin-bottom: -16px;
 }
 
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+}
+
 .page-title-container {
   grid-area: page-title-container;
 
@@ -182,6 +187,8 @@
 }
 
 .items_table_wrapper {
+  margin-top: 20px;
+
   .items_table_label {
     margin: 6px 0;
     .small_label();
@@ -407,6 +414,7 @@
       });
     }
 
+
     .task_item_tag {
       display: flex;
       min-width: 20px;
@@ -425,6 +433,8 @@
 
   }
 }
+
+
 
 
 .page-content {
@@ -607,7 +617,8 @@
 
     }
   }
-  &.account_page{
+
+  &.account_page {
     background-color: @cold-medium;
     border-radius: 8px;
     padding: 20px;

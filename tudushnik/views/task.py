@@ -31,6 +31,7 @@ class TaskListView(ListView):
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
         sorting_section = self.request.GET.get('sorting')
+        tags_section = self.request.GET.get('tags')
         filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
 
@@ -45,6 +46,13 @@ class TaskListView(ListView):
             for key, value in search_section_obj.items():
                 kw[key + '__icontains'] = value
             all_tasks = all_tasks.filter(**kw)
+
+        if tags_section is not None:
+            tags_section_obj = [int(i) for i in tags_section.split(',')]
+            query = Q()
+            for t in tags_section_obj:
+                query |= Q(tags=t)
+            all_tasks = all_tasks.filter(query).distinct()
         if sorting_section is not None:
             sorting_section_list = json.loads(sorting_section)
             ls = list()
@@ -71,6 +79,9 @@ class TaskListView(ListView):
         context['limit'] = per_page
         context['len_records'] = len(all_tasks)
         context['all_tags'] = all_tags
+        context['json_data'] = {
+            'tags': [t.to_json() for t in all_tags]
+        }
         context['page_title_eng'] = 'tasks_page'
         set_client_timezone(self.request, context)
 
