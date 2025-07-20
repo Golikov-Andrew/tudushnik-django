@@ -47,6 +47,7 @@ function init_duration_controllers(new_val) {
     inp_duration_hours_ctrl.value = hours
     inp_duration_minutes_ctrl.value = minutes
     // inp_duration_seconds_ctrl.value = seconds
+    calc_duration_in_sec();
 }
 
 const id_begin_at = document.querySelector('#id_begin_at')
