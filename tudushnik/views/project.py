@@ -140,6 +140,8 @@ class ProjectUpdateView(UpdateView):
         # Project.objects.filter(owner_id=self.request.user.id)
         # context['title'] = context["project"]
         context['page_title_eng'] = 'project_edit'
+        context['form'].fields['tags'].queryset = Tag.objects.filter(
+            owner_id=self.request.user.id).all()
         return context
 
 
@@ -161,6 +163,8 @@ def add_project(request, *args, **kwargs):
             return redirect('projects_page')
     else:
         form = AddProjectForm()
+        form.fields['tags'].queryset = Tag.objects.filter(
+            owner_id=request.user.id).all()
     return render(request, 'tudushnik/add_project.html',
                   {'form': form, 'title': 'Добавление проекта', 'page_title_eng': 'projects_create'})
 
