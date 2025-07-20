@@ -26,7 +26,7 @@
         </th>
         <th>
             <div>Описание</div>
-            {{ 'content'|create_table_column_search_and_sorting_widget:3 }}
+            {{ 'content'|safe|create_table_column_search_and_sorting_widget:3 }}
         </th>
         <th>
             <div>Создана</div>
@@ -88,7 +88,7 @@
             </td>
             <td class="task_item_description">
                 <div class="ellipsed_text_2">
-                    {{ item.content }}
+                    {{ item.content|safe }}
                 </div>
             </td>
             <td class="task_item_created_at">
