@@ -1,0 +1,86 @@
+@import 'components/utils/_base';
+@import 'components/utils/_mixins';
+@import 'components/utils/_variables';
+
+.object-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.object_item_tag {
+  display: flex;
+  position: relative;
+  min-width: 20px;
+  overflow: hidden;
+  border-radius: 12px;
+  font-size: 12px;
+  padding: 4px 12px 4px 28px;
+  border: none;
+  outline: none;
+  align-items: center;
+
+  label {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  input {
+    position: absolute;
+    left: 4px;
+  }
+
+}
+
+.btn_show_tasks_tags_modal {
+  background-color: @cold-dark;
+  border: none;
+  outline: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 16px;
+  padding: 4px;
+  margin-top: 20px;
+}
+
+//#tasks_tags_modal_buffer{
+.modal {
+
+  .overlay {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.5;
+  }
+
+  .window {
+    position: fixed;
+    z-index: 1001;
+    background-color: white;
+    color: black;
+    padding: 4px;
+    margin: 4px;
+    width: 50%;
+    top: 25%;
+    left: 25%;
+    height: 30%;
+
+    .btn_close {
+      cursor: pointer;
+      text-align: right;
+    }
+
+    .content {
+      padding: 4px;
+      margin: 4px;
+      height: calc(100% - 50px);
+      overflow-y: scroll;
+    }
+  }
+}
+
+//}

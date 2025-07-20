@@ -1,13 +1,3 @@
-class Project {
-    constructor() {
-    }
-}
-
-class Task {
-    constructor() {
-    }
-}
-
 class Projects {
     constructor(calendar) {
         this.calendar = calendar
