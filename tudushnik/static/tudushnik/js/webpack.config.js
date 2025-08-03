@@ -9,6 +9,7 @@ module.exports = {
         calendar: ['./src/calendar/index.js'],
         projects_detail: ['./src/projects_detail/index.js'],
         tasks_page: ['./src/tasks_page/index.js'],
+        user_profile: ['./src/user_profile/index.js'],
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

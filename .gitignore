@@ -14,4 +14,6 @@ __pycache__/
 
 static/
 .htpasswd
+media/user_avatars/*
+!media/user_avatars/default_user_avatar.jpg
 

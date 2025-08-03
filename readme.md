@@ -10,7 +10,7 @@ pip freeze > requirements.txt
 `sudo bash ctrl_22_04.sh dev`
 
 Для включения JS вотчера:  
-`sudo docker exec -it personal-django-site-gav_tdm_server_1 bash`  
+`sudo docker exec -it tudushnik-django-tdm_server-1 bash`  
 `cd tudushnik/static/tudushnik/js && npm run dev`
 
 

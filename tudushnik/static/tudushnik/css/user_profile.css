@@ -1,0 +1,341 @@
+body {
+  font-family: Tahoma, "Trebuchet MS", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  background-color: #F5FBFF;
+}
+body > .wrapper {
+  overflow: hidden;
+}
+* {
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+}
+@media (min-width: 768px) {
+  .color-red {
+    color: red;
+  }
+}
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+.small_label {
+  font-size: 10px;
+  margin: 0;
+  color: #626262;
+}
+.hidden {
+  display: none;
+}
+.modal_wrapper .overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: black;
+  opacity: 0.5;
+}
+.modal_wrapper .modal_window {
+  display: inline-block;
+  position: absolute;
+  width: 100px;
+  height: 60px;
+  background-color: white;
+  font-size: 12px;
+}
+.modal_wrapper .modal_window .btn_close {
+  cursor: pointer;
+}
+.modal_wrapper .modal_window .btn_ok {
+  cursor: pointer;
+  background-color: darkgreen;
+  color: white;
+}
+.var_input {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  color: #4A8FC1;
+  font-size: 16px;
+  max-width: 180px;
+}
+@media (min-width: 500px) {
+  .var_input {
+    max-width: unset;
+  }
+}
+.var_input:focus-visible,
+.var_input:focus {
+  outline: 2px solid #4A8FC1;
+}
+.var_submit {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.var_submit:hover {
+  background-color: #34729f;
+}
+.var_btn_del {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 4px 8px;
+  font-size: 10px;
+  background-color: #e56c6c;
+}
+.var_btn_del:hover {
+  background-color: #34729f;
+}
+.var_btn_del:hover {
+  background-color: #9d3c3c;
+}
+.search_and_sorting_widget input[type="text"] {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  color: #4A8FC1;
+  font-size: 16px;
+  max-width: 180px;
+  width: 100%;
+  margin: 4px;
+}
+@media (min-width: 500px) {
+  .search_and_sorting_widget input[type="text"] {
+    max-width: unset;
+  }
+}
+.search_and_sorting_widget input[type="text"]:focus-visible,
+.search_and_sorting_widget input[type="text"]:focus {
+  outline: 2px solid #4A8FC1;
+}
+@media (min-width: 768px) {
+  .search_and_sorting_widget {
+    min-width: 76px;
+  }
+}
+.table_column_sorting {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.table_column_sorting:hover {
+  background-color: #34729f;
+}
+.user_avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+#modal_upload_avatar.modal .overlay {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: black;
+  opacity: 0.5;
+}
+#modal_upload_avatar.modal .window {
+  position: fixed;
+  z-index: 1001;
+  background-color: white;
+  color: black;
+  padding: 12px;
+  margin: 0;
+  border-radius: 20px;
+}
+@media (max-width: 767px) and (orientation: portrait) {
+  #modal_upload_avatar.modal .window {
+    left: 10vw;
+    width: 80vw;
+    top: 8vh;
+  }
+}
+@media (max-width: 953px) and (orientation: landscape) {
+  #modal_upload_avatar.modal .window {
+    left: 10vw;
+    width: 80vw;
+    top: 5vh;
+    height: 80vh;
+    min-height: 320px;
+    max-height: 460px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait) {
+  #modal_upload_avatar.modal .window {
+    left: 20vw;
+    width: 60vw;
+    top: 5vw;
+  }
+}
+@media (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  #modal_upload_avatar.modal .window {
+    left: 20vw;
+    width: 60vw;
+    top: 5vh;
+    height: 80vh;
+    min-height: 320px;
+    max-height: 460px;
+  }
+}
+@media (min-width: 1200px) {
+  #modal_upload_avatar.modal .window {
+    width: 648px;
+    left: calc((100vw - 648px) / 2);
+    top: 20vh;
+  }
+}
+#modal_upload_avatar.modal .window .btn_close {
+  cursor: pointer;
+  text-align: right;
+  font-size: 38px;
+  color: #969696;
+}
+#modal_upload_avatar.modal .window .content {
+  padding: 4px;
+  margin: 4px;
+  grid-template-rows: 64px auto;
+}
+@media (max-width: 767px) and (orientation: portrait) {
+  #modal_upload_avatar.modal .window .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+@media (max-width: 953px) and (orientation: landscape) {
+  #modal_upload_avatar.modal .window .content {
+    display: grid;
+    grid-template-areas: "image input-file" "image errors";
+    justify-content: center;
+    column-gap: 20px;
+    row-gap: 4px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait) {
+  #modal_upload_avatar.modal .window .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+@media (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  #modal_upload_avatar.modal .window .content {
+    display: grid;
+    grid-template-areas: "image input-file" "image errors";
+    justify-content: center;
+    column-gap: 20px;
+    row-gap: 4px;
+  }
+}
+@media (min-width: 1200px) {
+  #modal_upload_avatar.modal .window .content {
+    display: grid;
+    grid-template-areas: "image input-file" "image errors";
+    justify-content: center;
+    column-gap: 20px;
+    row-gap: 4px;
+  }
+}
+#modal_upload_avatar.modal .window .content input[type="file"] {
+  margin: 16px;
+  font-size: 20px;
+  width: 100%;
+  max-width: 300px;
+  grid-area: input-file;
+}
+@media (min-width: 1200px) {
+  #modal_upload_avatar.modal .window .content input[type="file"] {
+    font-size: 16px;
+  }
+}
+#modal_upload_avatar.modal .window .content .validation_errors {
+  color: red;
+  font-size: 16px;
+  grid-area: errors;
+}
+#modal_upload_avatar.modal .window .content .validation_errors .hint {
+  color: #585858;
+}
+#modal_upload_avatar.modal .window .buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+#modal_upload_avatar.modal .window .buttons button {
+  font-size: 20px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  padding: 20px;
+  border-radius: 20px;
+}
+@media (min-width: 1200px) {
+  #modal_upload_avatar.modal .window .buttons button {
+    font-size: 16px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+}
+#modal_upload_avatar.modal .window .buttons .btn_ok {
+  color: white;
+  background-color: #84b085;
+}
+#modal_upload_avatar.modal .window .buttons .btn_ok:hover {
+  background-color: #5c8c5d;
+}
+.modal_avatar_img {
+  max-width: 300px;
+  max-height: 300px;
+  grid-area: image;
+}
+@media (max-width: 767px) and (orientation: portrait) {
+  .modal_avatar_img {
+    width: 100%;
+  }
+}
+@media (max-width: 953px) and (orientation: landscape) {
+  .modal_avatar_img {
+    height: 46vh;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait) {
+  .modal_avatar_img {
+    width: 100%;
+  }
+}
+@media (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  .modal_avatar_img {
+    height: 46vh;
+  }
+}
+@media (min-width: 1200px) {
+  .modal_avatar_img {
+    width: 100%;
+  }
+}
