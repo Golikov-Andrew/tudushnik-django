@@ -313,6 +313,7 @@
 
     .task-item-row {
       position: relative;
+      height: 120px;
 
       &.profit {
         background-color: green;
@@ -325,6 +326,9 @@
       a {
         text-decoration: none;
         cursor: pointer;
+      }
+      table{
+        margin: 0;
       }
     }
 
@@ -625,5 +629,29 @@
     background-color: @cold-medium;
     border-radius: 8px;
     padding: 20px;
+  }
+}
+
+.tasks_table {
+  .ava_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .ava_item_wrapper{
+    position: relative;
+    height: 30px;
+  }
+  .user_avatar {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: -15px;
+    border-radius: 20px;
+    &:hover{
+      cursor:pointer;
+      z-index: 100;
+    }
+
   }
 }
