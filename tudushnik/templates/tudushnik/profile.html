@@ -1,4 +1,10 @@
 {% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet"
+          href="{% static 'tudushnik/css/user_profile.css' %}">
+{% endblock local_styles %}
 
 
 {% block content %}
@@ -36,11 +42,15 @@
             Аватарка:
         </td>
         <td>
-            Тут будет возможность загружать аватарку
+            <img src="{{ user.profile_settings.avatar.url }}" alt="ava" class="user_avatar">
         </td>
     </tr>
     </tbody>
     </table>
 
 {% endblock content %}
+
+{% block local_scripts %}
+    <script type="text/javascript" src="{% static 'tudushnik/js/dist/user_profile.js' %}"></script>
+{% endblock local_scripts %}
 

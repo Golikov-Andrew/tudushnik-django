@@ -22,7 +22,7 @@ class ModalWindow {
                 new DOMElem('div', {
                     classes: ['window'], children: [
                         new DOMElem('div', {
-                            classes: ['btn_close'], html: 'X', listeners: [
+                            classes: ['btn_close'], html: '&#x2715;', listeners: [
                                 ['click', () => {
                                     this.perform_cancel()
                                     this.hide()
@@ -48,6 +48,7 @@ class ModalWindow {
                 if (options.buttons.indexOf('ok') !== -1)
                     this.buttons.element.appendChild(
                         new DOMElem('button', {
+                            classes: ['btn_ok'],
                             html: 'OK',
                             listeners: [
                                 ['click', () => {
@@ -65,6 +66,7 @@ class ModalWindow {
                 if (options.buttons.indexOf('cancel') !== -1)
                     this.buttons.element.appendChild(
                         new DOMElem('button', {
+                            classes: ['btn_cancel'],
                             html: 'Отмена',
                             listeners: [
                                 ['click', () => {
@@ -115,6 +117,11 @@ class ModalWindow {
     show_errors() {
         throw new Error('show_errors is not implemented!!!')
     }
+    init(){
+        this.hide()
+        document.body.appendChild(this.element)
+    }
+
 }
 
 export {
