@@ -534,6 +534,7 @@ body > .wrapper {
 }
 .items_table_wrapper table .task-item-row {
   position: relative;
+  height: 120px;
 }
 .items_table_wrapper table .task-item-row.profit {
   background-color: green;
@@ -544,6 +545,9 @@ body > .wrapper {
 .items_table_wrapper table .task-item-row a {
   text-decoration: none;
   cursor: pointer;
+}
+.items_table_wrapper table .task-item-row table {
+  margin: 0;
 }
 .items_table_wrapper table .task-item-id {
   display: none;
@@ -930,6 +934,26 @@ body > .wrapper {
   background-color: #97D4FF;
   border-radius: 8px;
   padding: 20px;
+}
+.tasks_table .ava_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.tasks_table .ava_item_wrapper {
+  position: relative;
+  height: 30px;
+}
+.tasks_table .user_avatar {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: -15px;
+  border-radius: 20px;
+}
+.tasks_table .user_avatar:hover {
+  cursor: pointer;
+  z-index: 100;
 }
 .pagination {
   font-size: 14px;

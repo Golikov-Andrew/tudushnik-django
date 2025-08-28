@@ -8,8 +8,26 @@
 
         </th>
         <th>
-            <div>id</div>
-            {{ 'id'|create_table_column_search_and_sorting_widget:3 }}
+            <div>Участники</div>
+            {#            {{ 'id'|create_table_column_search_and_sorting_widget:3 }}#}
+            <table>
+                <tr>
+                    <td class="user_role_responsible">
+                        Res
+                    </td>
+                    <td class="user_role_accountable">
+                        Acc
+                    </td>
+                </tr>
+                <tr>
+                    <td class="user_role_consult">
+                        Con
+                    </td>
+                    <td class="user_role_inform">
+                        Inf
+                    </td>
+                </tr>
+            </table>
         </th>
 
         <th>
@@ -67,7 +85,38 @@
                 <a class="table_item_edit" href="{% url 'task_edit' pk=item.pk %}">&#9998;</a>
             </td>
             <td class="task-item-id" data-task-id="{{ item.pk }}">
-                {{ item.pk }}
+                <table>
+                    <tr>
+                        <td class="user_role_responsible">
+                            <div class="ava_container">
+
+                            </div>
+                        </td>
+                        <td class="user_role_accountable">
+                            <div class="ava_container">
+                                <div class="ava_item_wrapper">
+                                    <img src="{{ item.owner.profile_settings.avatar.url }}" alt="creator"
+                                         class="user_avatar"
+                                         title="{{ item.owner }}">
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="user_role_consult">
+                            <div class="ava_container">
+
+                            </div>
+                        </td>
+                        <td class="user_role_inform">
+                            <div class="ava_container">
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
             </td>
 
             <td class="task_item_done">
