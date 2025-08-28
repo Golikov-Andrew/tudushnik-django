@@ -18,6 +18,7 @@ from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
 
 from .views.task import add_task, TaskListView, TaskDetailView, task_delete, \
     TaskUpdateView, add_task_to_project, task_update_attrs, tasks_fetch, TaskList
+from .views.user_settings import upload_avatar
 
 urlpatterns = [
     path('', index, name='homepage'),
@@ -75,6 +76,8 @@ urlpatterns = [
     path('register/', RegisterUser.as_view(), name='register'),
     path('profile/', profile, name='profile'),
     path('logout/', logout_user, name='logout'),
+
+    path('user/avatar', upload_avatar, name='upload_avatar'),
 
     path('snippets/', SnippetList.as_view()),
     path('snippets/<int:pk>/', SnippetDetail.as_view()),

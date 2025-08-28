@@ -36,23 +36,23 @@ services:
     networks:
       - tdm_network
 
-#  tdm-nginx-proxy:
-#    container_name: tdm_nginx_proxy_container
-#    image: nginxproxy/nginx-proxy
-#    restart: always
-#    ports:
-#      - "80:80"
+  tdm-nginx-proxy:
+    container_name: tdm_nginx_proxy_container
+    image: nginxproxy/nginx-proxy
+    restart: always
+    ports:
+      - "8083:80"
 #      - "443:443"
-#    volumes:
-#      - ./conf:/etc/nginx/conf.d
-##      - ./host.dev.conf:/etc/nginx/conf.d/proxy.conf
+    volumes:
+      - ./conf:/etc/nginx/conf.d
+#      - ./host.dev.conf:/etc/nginx/conf.d/proxy.conf
 #      - ./html:/usr/share/nginx/html
-#      - .:/usr/share/nginx
-#      - /var/run/docker.sock:/tmp/docker.sock:ro
-#    depends_on:
-#      - tdm_server
-#    networks:
-#      - tdm_network
+      - .:/usr/share/nginx
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - tdm_server
+    networks:
+      - tdm_network
 
 
 networks:

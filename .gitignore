@@ -13,4 +13,7 @@ __pycache__/
 .pytest_cache
 
 static/
+.htpasswd
+media/user_avatars/*
+!media/user_avatars/default_user_avatar.jpg
 

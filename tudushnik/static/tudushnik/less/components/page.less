@@ -116,6 +116,11 @@
   margin-bottom: -16px;
 }
 
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+}
+
 .page-title-container {
   grid-area: page-title-container;
 
@@ -182,6 +187,8 @@
 }
 
 .items_table_wrapper {
+  margin-top: 20px;
+
   .items_table_label {
     margin: 6px 0;
     .small_label();
@@ -306,6 +313,7 @@
 
     .task-item-row {
       position: relative;
+      height: 120px;
 
       &.profit {
         background-color: green;
@@ -318,6 +326,9 @@
       a {
         text-decoration: none;
         cursor: pointer;
+      }
+      table{
+        margin: 0;
       }
     }
 
@@ -358,6 +369,9 @@
         position: static;
         width: unset;
       });
+      > div{
+        word-break: break-all;
+      }
     }
 
     .task_item_created_at, .task_item_updated_at {
@@ -407,6 +421,7 @@
       });
     }
 
+
     .task_item_tag {
       display: flex;
       min-width: 20px;
@@ -425,6 +440,8 @@
 
   }
 }
+
+
 
 
 .page-content {
@@ -607,9 +624,34 @@
 
     }
   }
-  &.account_page{
+
+  &.account_page {
     background-color: @cold-medium;
     border-radius: 8px;
     padding: 20px;
+  }
+}
+
+.tasks_table {
+  .ava_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .ava_item_wrapper{
+    position: relative;
+    height: 30px;
+  }
+  .user_avatar {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: -15px;
+    border-radius: 20px;
+    &:hover{
+      cursor:pointer;
+      z-index: 100;
+    }
+
   }
 }

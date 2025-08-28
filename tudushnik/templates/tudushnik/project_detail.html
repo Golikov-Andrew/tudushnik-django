@@ -4,6 +4,8 @@
 {% block local_styles %}
     <link rel="stylesheet"
           href="{% static 'tudushnik/css/viewport_toolbar.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'tudushnik/css/projects_detail.css' %}">
 {% endblock local_styles %}
 
 
@@ -27,29 +29,38 @@
                 </select>
             </div>
         </div>
-        <div class="entity_tools">
-            <button class="btn_item_delete" data-item-title="{{ object.title }}"
-                    data-entity-name="проект"
-                    data-redirect-url="{% url 'projects_page' %}"
-                    data-post-url="{% url 'project_delete' pk=object.pk %}">
-                &#x2715;
-            </button>
-            <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
-        </div>
-        <br>
-        <div class="entity_datetimes">
-            <div>
-                Создан: {{ object.created_at|date:'Y-m-d H:i' }}
+        <div class="flex-row">
+            <div class="entity_tools">
+                <button class="btn_item_delete" data-item-title="{{ object.title }}"
+                        data-entity-name="проект"
+                        data-redirect-url="{% url 'projects_page' %}"
+                        data-post-url="{% url 'project_delete' pk=object.pk %}">
+                    &#x2715;
+                </button>
+                <a href="{% url 'project_edit' pk=object.pk %}">&#9998;</a>
             </div>
-            <div>
-                Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
+            <div class="entity_datetimes">
+                <div>
+                    Создан: {{ object.created_at|date:'Y-m-d H:i' }}
+                </div>
+                <div>
+                    Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
+                </div>
             </div>
         </div>
+
         <div class="entity_description">
             <div class="entity_description_label">Описание</div>
             <div class="entity_description_value">
-                {{ object.description }}
+                {{ object.description|safe }}
             </div>
+        </div>
+        <div class="object-tags">
+            {% for tag in object.tags.all %}
+                <div class="object_item_tag" style="background-color: {{ tag.color }}">
+                    <label><input type="checkbox" class="object_pk_{{ tag.pk }}">{{ tag.title }}</label>
+                </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -83,7 +94,7 @@
                     <input type="checkbox" id="inp_is_move_with_children">
                     <label for="inp_is_move_with_children">с children?</label>
                     <input type="checkbox" id="inp_is_move_with_children_recursive">
-                <label for="inp_is_move_with_children_recursive">рекурсивно?</label>
+                    <label for="inp_is_move_with_children_recursive">рекурсивно?</label>
                 </div>
                 <div>
                     <input type="checkbox" id="inp_is_move_with_parents">
@@ -99,6 +110,7 @@
 
 
 {% block local_scripts %}
+    {{ json_data|json_script:"my-json-data" }}
     <script type="text/javascript"
             src="{% static 'tudushnik/js/dist/task.js' %}"></script>
     <script type="text/javascript"
@@ -108,7 +120,7 @@
     <script type="text/javascript"
             src="{% static 'tudushnik/js/crud.js' %}"></script>
     <script type="text/javascript"
-            src="{% static 'tudushnik/js/projects_detail.js' %}"></script>
+            src="{% static 'tudushnik/js/dist/projects_detail.js' %}"></script>
     <script type="text/javascript"
             src="{% static 'tudushnik/js/searching.js' %}"></script>
     <script type="text/javascript"

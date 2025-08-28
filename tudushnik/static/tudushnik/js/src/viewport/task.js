@@ -18,19 +18,17 @@ class Task {
         this.stopEditWidthHandler;
         this.moveTaskHandler;
         this.editWidthHandler;
+        this.lastX = 0;
+        this.lastY = 0;
         let anchor_elem = document.createElement('div')
         anchor_elem.innerHTML = '&#8226;'
         anchor_elem.classList.add('task_tool')
         anchor_elem.classList.add('to_move_x')
         anchor_elem.addEventListener('mousedown', (evt) => {
-            if (evt.button === 0) {
-
-                this.create_task_avatar(evt, `x: ${this.diagram_offset_x}\nbegin_at: ${this.begin_at}`)
-                this.dropTaskHandler = this.dropTask.bind(this)
-                this.moveTaskHandler = this.moveTask.bind(this)
-                window.addEventListener('mouseup', this.dropTaskHandler)
-                window.addEventListener('mousemove', this.moveTaskHandler)
-            }
+            if (evt.button === 0) this.start_move_task(evt);
+        })
+        anchor_elem.addEventListener('touchstart', (evt) => {
+            this.start_move_task(evt, true)
         })
 
         let width_ctrl_elem = document.createElement('div')
@@ -38,14 +36,10 @@ class Task {
         width_ctrl_elem.classList.add('task_tool')
         width_ctrl_elem.classList.add('to_edit_width')
         width_ctrl_elem.addEventListener('mousedown', (evt) => {
-            if (evt.button === 0) {
-                this.create_task_avatar(evt, `width: ${this.width}`)
-                this.hide_task_elem()
-                this.stopEditWidthHandler = this.stopEditWidthTask.bind(this)
-                this.editWidthHandler = this.editWidthTask.bind(this)
-                window.addEventListener('mouseup', this.stopEditWidthHandler)
-                window.addEventListener('mousemove', this.editWidthHandler)
-            }
+            if (evt.button === 0) this.start_edit_width(evt);
+        })
+        width_ctrl_elem.addEventListener('touchstart', (evt) => {
+            this.start_edit_width(evt, true)
         })
 
         let duration_ctrl_elem = document.createElement('div')
@@ -53,14 +47,10 @@ class Task {
         duration_ctrl_elem.classList.add('task_tool')
         duration_ctrl_elem.classList.add('to_edit_duration')
         duration_ctrl_elem.addEventListener('mousedown', (evt) => {
-            if (evt.button === 0) {
-                this.create_task_avatar(evt, `duration: ${moment.duration(this.duration, 'seconds').format('h [hours] :mm [minutes]')}`)
-                this.hide_task_elem()
-                this.stopEditDurationHandler = this.stopEditDurationTask.bind(this)
-                this.editDurationHandler = this.editDurationTask.bind(this)
-                window.addEventListener('mouseup', this.stopEditDurationHandler)
-                window.addEventListener('mousemove', this.editDurationHandler)
-            }
+            if (evt.button === 0) this.start_edit_duration(evt);
+        })
+        duration_ctrl_elem.addEventListener('touchstart', (evt) => {
+            this.start_edit_duration(evt, true);
         })
 
         let edit_ctrl_elem = document.createElement('div')
@@ -278,13 +268,19 @@ class Task {
         return new_height_of_task_elem * this.viewport_dt_line.scale.get_y_min_per_px() * 60
     }
 
-    create_tooltip(evt, initial_tooltip_text) {
+    create_tooltip(evt, initial_tooltip_text, is_touch) {
+        let is_touched = (is_touch !== undefined) ? is_touch : false;
         this.tooltip = document.createElement('div')
         this.tooltip.innerText = initial_tooltip_text
         this.tooltip.classList.add('task_tooltip')
         this.tasks_container_elem.append(this.tooltip)
-        this.tooltip.style.top = evt.clientY - 50 + 'px'
-        this.tooltip.style.left = evt.clientX - 50 + 'px'
+        if (!is_touched) {
+            this.tooltip.style.top = evt.clientY - 50 + 'px'
+            this.tooltip.style.left = evt.clientX - 50 + 'px'
+        } else {
+            this.tooltip.style.top = evt.touches[0].clientY - 50 + 'px'
+            this.tooltip.style.left = evt.touches[0].clientX - 50 + 'px'
+        }
 
     }
 
@@ -293,10 +289,76 @@ class Task {
         this.tooltip = undefined
     }
 
-    create_task_avatar(evt, initial_tooltip_text) {
+    create_task_avatar(evt, initial_tooltip_text, is_touch) {
+        let is_touched = (is_touch !== undefined) ? is_touch : false;
         this.current_task_avatar = this.elem.cloneNode(true)
-        this.create_tooltip(evt, initial_tooltip_text)
+        this.create_tooltip(evt, initial_tooltip_text, is_touched)
         this.tasks_container_elem.append(this.current_task_avatar)
+    }
+
+    start_move_task(evt, is_touch) {
+        let is_touched = (is_touch !== undefined) ? is_touch : false;
+        if (is_touched) {
+            this.lastX = evt.touches[0].clientX
+            this.lastY = evt.touches[0].clientY
+        }
+        this.create_task_avatar(evt, `x: ${this.diagram_offset_x}\nbegin_at: ${this.begin_at}`, is_touched)
+        evt.preventDefault()
+        this.dropTaskHandler = this.dropTask.bind(this)
+        if (is_touched) {
+            this.moveTaskHandler = this.moveTaskTouch.bind(this)
+            window.addEventListener('touchend', this.dropTaskHandler)
+            window.addEventListener('touchmove', this.moveTaskHandler)
+        } else {
+            this.moveTaskHandler = this.moveTask.bind(this)
+            window.addEventListener('mouseup', this.dropTaskHandler)
+            window.addEventListener('mousemove', this.moveTaskHandler)
+        }
+
+    }
+
+    start_edit_width(evt, is_touch) {
+        let is_touched = (is_touch !== undefined) ? is_touch : false;
+        if (is_touched) {
+            this.lastX = evt.touches[0].clientX
+            this.lastY = evt.touches[0].clientY
+        }
+        this.create_task_avatar(evt, `width: ${this.width}`, is_touched)
+        evt.preventDefault()
+        this.hide_task_elem()
+        this.stopEditWidthHandler = this.stopEditWidthTask.bind(this)
+        if (is_touched) {
+            this.editWidthHandler = this.editWidthTaskTouch.bind(this)
+            window.addEventListener('touchend', this.stopEditWidthHandler)
+            window.addEventListener('touchmove', this.editWidthHandler)
+        } else {
+            this.editWidthHandler = this.editWidthTask.bind(this)
+            window.addEventListener('mouseup', this.stopEditWidthHandler)
+            window.addEventListener('mousemove', this.editWidthHandler)
+        }
+
+    }
+
+    start_edit_duration(evt, is_touch) {
+        let is_touched = (is_touch !== undefined) ? is_touch : false;
+        if (is_touched) {
+            this.lastX = evt.touches[0].clientX
+            this.lastY = evt.touches[0].clientY
+        }
+        this.create_task_avatar(evt, `duration: ${moment.duration(this.duration, 'seconds').format('h [hours] :mm [minutes]')}`)
+        evt.preventDefault()
+        this.hide_task_elem()
+        this.stopEditDurationHandler = this.stopEditDurationTask.bind(this)
+        if (is_touched) {
+            this.editDurationHandler = this.editDurationTaskTouch.bind(this)
+            window.addEventListener('touchend', this.stopEditDurationHandler)
+            window.addEventListener('touchmove', this.editDurationHandler)
+        } else {
+            this.editDurationHandler = this.editDurationTask.bind(this)
+            window.addEventListener('mouseup', this.stopEditDurationHandler)
+            window.addEventListener('mousemove', this.editDurationHandler)
+        }
+
     }
 
     remove_task_avatar() {
@@ -330,6 +392,8 @@ class Task {
                     this.remove_task_avatar()
                     window.removeEventListener('mouseup', this.dropTaskHandler)
                     window.removeEventListener('mousemove', this.moveTaskHandler)
+                    window.removeEventListener('touchend', this.dropTaskHandler)
+                    window.removeEventListener('touchmove', this.moveTaskHandler)
                 }
             },
             dataType: 'json'
@@ -345,7 +409,7 @@ class Task {
     }
 
     dropTask(evt) {
-        evt.preventDefault();
+        // evt.preventDefault();
         evt.stopPropagation();
 
         let is_move_with_children = document.querySelector('#inp_is_move_with_children').checked
@@ -390,20 +454,22 @@ class Task {
                 'width': new_width
             }),
             success: (data) => {
+                const func = () => {
+                    this.remove_task_avatar()
+                    this.show_task_elem()
+                    window.removeEventListener('mouseup', this.stopEditWidthHandler)
+                    window.removeEventListener('mousemove', this.editWidthHandler)
+                    window.removeEventListener('touchend', this.stopEditWidthHandler)
+                    window.removeEventListener('touchmove', this.editWidthHandler)
+                }
                 if (data.success === true) {
                     let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
                     cur_task_obj = Object.assign(cur_task_obj, data)
-                    this.remove_task_avatar()
-                    this.show_task_elem()
-                    window.removeEventListener('mouseup', this.stopEditWidthHandler)
-                    window.removeEventListener('mousemove', this.editWidthHandler)
+                    func();
                     this.viewport_dt_line.draw_task(cur_task_obj)
                 } else {
                     alert(data.error_message);
-                    this.remove_task_avatar()
-                    this.show_task_elem()
-                    window.removeEventListener('mouseup', this.stopEditWidthHandler)
-                    window.removeEventListener('mousemove', this.editWidthHandler)
+                    func();
                 }
             },
             dataType: 'json'
@@ -411,7 +477,7 @@ class Task {
     }
 
     stopEditDurationTask(evt) {
-        evt.preventDefault();
+        // evt.preventDefault();
         evt.stopPropagation();
         let new_height = parseFloat(this.current_task_avatar.style.height)
         // let new_top = parseInt(this.current_task_avatar.style.top)
@@ -427,20 +493,24 @@ class Task {
                 'duration': new_duration
             }),
             success: (data) => {
+
+                const func = ()=>{
+                    this.remove_task_avatar()
+                    this.show_task_elem()
+                    window.removeEventListener('mouseup', this.stopEditDurationHandler)
+                    window.removeEventListener('mousemove', this.editDurationHandler)
+                    window.removeEventListener('touchend', this.stopEditDurationHandler)
+                    window.removeEventListener('touchmove', this.editDurationHandler)
+                }
+
                 if (data.success === true) {
                     let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
                     cur_task_obj = Object.assign(cur_task_obj, data)
-                    this.remove_task_avatar()
-                    this.show_task_elem()
-                    window.removeEventListener('mouseup', this.stopEditDurationHandler)
-                    window.removeEventListener('mousemove', this.editDurationHandler)
+                    func()
                     this.viewport_dt_line.draw_task(cur_task_obj)
                 } else {
                     alert(data.error_message);
-                    this.remove_task_avatar()
-                    this.show_task_elem()
-                    window.removeEventListener('mouseup', this.stopEditDurationHandler)
-                    window.removeEventListener('mousemove', this.editDurationHandler)
+                    func()
                 }
             },
             dataType: 'json'
@@ -462,8 +532,25 @@ class Task {
         this.tooltip.innerText = `duration: ${moment.duration(new_dur, 'seconds').format('h [hours] :mm [minutes]')}`
     }
 
+    editDurationTaskTouch(evt) {
+        // evt.preventDefault();
+        evt.stopPropagation();
+        let cur_top = parseInt(this.current_task_avatar.style.top)
+        let new_top = cur_top + evt.touches[0].clientY - this.lastY
+        let height_of_task_elem = parseFloat(this.current_task_avatar.style.height)
+        let new_height = height_of_task_elem - (evt.touches[0].clientY - this.lastY);
+        this.current_task_avatar.style.top = new_top + 'px'
+        this.current_task_avatar.style.height = new_height + 'px'
+        this.tooltip.style.top = evt.touches[0].clientY - 50 + 'px'
+        this.tooltip.style.left = evt.touches[0].clientX - 50 + 'px'
+        let new_dur = this.calc_new_duration(new_height)
+        this.tooltip.innerText = `duration: ${moment.duration(new_dur, 'seconds').format('h [hours] :mm [minutes]')}`
+        this.lastY = evt.touches[0].clientY
+        this.lastX = evt.touches[0].clientX
+    }
+
     moveTask(evt) {
-        evt.preventDefault();
+        // evt.preventDefault();
         evt.stopPropagation();
         let cur_top = parseInt(this.current_task_avatar.style.top)
         let cur_left = parseInt(this.current_task_avatar.style.left)
@@ -478,8 +565,27 @@ class Task {
         this.tooltip.innerText = `x: ${new_left}\nbegin_at: ${new_begin_at}`
     }
 
+    moveTaskTouch(evt) {
+        // evt.preventDefault();
+        evt.stopPropagation();
+        let cur_top = parseInt(this.current_task_avatar.style.top)
+        let cur_left = parseInt(this.current_task_avatar.style.left)
+        let new_top = cur_top + evt.touches[0].clientY - this.lastY;
+        let height_of_task_elem = parseFloat(this.current_task_avatar.style.height)
+        let new_left = cur_left + evt.touches[0].clientX - this.lastX;
+
+        this.current_task_avatar.style.top = new_top + 'px'
+        this.tooltip.style.top = evt.touches[0].clientY - 50 + 'px'
+        this.current_task_avatar.style.left = new_left + 'px'
+        this.tooltip.style.left = evt.touches[0].clientX - 50 + 'px'
+        let new_begin_at = this.calc_new_begin_at(this.viewport_dt_line.current_moment_line.top_val, new_top, height_of_task_elem)
+        this.tooltip.innerText = `x: ${new_left}\nbegin_at: ${new_begin_at}`
+        this.lastY = evt.touches[0].clientY
+        this.lastX = evt.touches[0].clientX
+    }
+
     editWidthTask(evt) {
-        evt.preventDefault();
+        // evt.preventDefault();
         evt.stopPropagation();
         let cur_width = parseInt(this.current_task_avatar.style.width)
         let new_width = cur_width + evt.movementX
@@ -487,6 +593,19 @@ class Task {
         this.tooltip.style.top = evt.clientY - 50 + 'px'
         this.tooltip.style.left = evt.clientX - 50 + 'px'
         this.tooltip.innerText = `width: ${new_width}`
+    }
+
+    editWidthTaskTouch(evt) {
+        // evt.preventDefault();
+        evt.stopPropagation();
+        let cur_width = parseInt(this.current_task_avatar.style.width)
+        let new_width = cur_width + evt.touches[0].clientX - this.lastX
+        this.current_task_avatar.style.width = new_width + 'px'
+        this.tooltip.style.top = evt.touches[0].clientY - 50 + 'px'
+        this.tooltip.style.left = evt.touches[0].clientX - 50 + 'px'
+        this.tooltip.innerText = `width: ${new_width}`
+        // this.lastY = evt.touches[0].clientY
+        this.lastX = evt.touches[0].clientX
     }
 }
 

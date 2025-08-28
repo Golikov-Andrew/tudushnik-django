@@ -31,13 +31,15 @@ PRODUCTION = True if os.getenv('PRODUCTION_MODE_VAL') == 'True' else False
 # ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.10.10.250', '10.10.12.250',
 # '10.10.10.151', '10.10.12.151', '.tdm-test.someproject.ru']
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.tdm-test.someproject.ru',
-                 '77.105.174.107', '192.168.198.129', 'tudushnik.ru',
+                 '77.105.174.107', 'tudushnik.ru',
                  'django-dev-upstream']
 # Application definition
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://tudushnik.ru']
 if not PRODUCTION:
     SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+    ALLOWED_HOSTS += ['192.168.198.129']
+    CSRF_TRUSTED_ORIGINS += ['http://192.168.198.129:8083', 'http://localhost:8083', 'http://tdm_server:8000']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -66,7 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'tudushnik.middleware.DetectTimeZoneMiddleware',
-    'tudushnik.www_basic_auth_middleware.WWWBasicAuthMiddleware'
+    # 'tudushnik.www_basic_auth_middleware.WWWBasicAuthMiddleware'
 ]
 
 ROOT_URLCONF = 'app_tdm.urls'
