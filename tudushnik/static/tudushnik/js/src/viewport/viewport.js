@@ -6,6 +6,7 @@ import {Task} from "./task";
 import {ViewportScale} from "./viewport_scale";
 import {createSVGElem, modifySVGElemArrowMiddle} from "../svg";
 import {gantt_apply_filters_object} from "./index";
+import {DayHelpersContainer} from "./day_line";
 
 
 class Viewport {
@@ -89,6 +90,7 @@ class ViewportDateTimeLine {
         this.tasks = {}
         this.viewport_canvas = new DatetimelineCanvas(this)
         this.ruler = new Ruler(this)
+        this.day_helpers_container = new DayHelpersContainer(this)
         this.current_moment_line = new MomentLine(this)
         this.now_moment = null
         // this.viewport_canvas.elem.addEventListener('contextmenu',(evt)=>{
@@ -174,6 +176,7 @@ class ViewportDateTimeLine {
 
     draw() {
         let end_dt_ceiled = this.ruler.draw(this.day_backward, this.day_forward)
+        this.day_helpers_container.draw(this.day_backward, this.day_forward)
         this.current_moment_line.draw(this.now_moment, end_dt_ceiled)
         for (const pk_task_key in this.tasks) {
             this.draw_task(this.tasks[pk_task_key])
