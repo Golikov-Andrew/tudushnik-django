@@ -1,0 +1,29 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet"
+          href="{% static 'tudushnik/css/users_groups.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+    <div class="items_table_wrapper">
+        {% include 'tudushnik/_pagination.html' %}
+
+        <a class="add_item" href="{% url 'add_users_group' %}">+ Добавить</a>
+        <br>
+        {% include 'tudushnik/_users_groups_table.html' %}
+    </div>
+
+{% endblock content %}
+
+{% block local_scripts %}
+    {{ json_data|json_script:"my-json-data" }}
+    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+{#    <script type="text/javascript" src="{% static 'tudushnik/js/dist/tasks_page.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+{#    <script type="text/javascript" src="{% static 'tudushnik/js/filtering.js' %}"></script>#}
+{% endblock local_scripts %}

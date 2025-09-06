@@ -24,4 +24,32 @@ td, th {
   left: -1000px;
 }
 
+#project-list-table {
+  .ava_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .ava_item_wrapper {
+    position: relative;
+    height: 30px;
+  }
+
+  .user_avatar {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: -15px;
+    border-radius: 20px;
+
+    &:hover {
+      cursor: pointer;
+      z-index: 100;
+    }
+
+  }
+}
+
+
 

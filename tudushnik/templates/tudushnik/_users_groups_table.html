@@ -1,0 +1,109 @@
+{% load custom_filters %}
+
+
+<table class="tasks_table users_groups_table">
+    <tbody>
+    <tr>
+        <th>
+            <div>Создатель</div>
+            {{ 'creator'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Активна?</div>
+        </th>
+        <th>
+            <div>Название</div>
+            {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Описание</div>
+            {{ 'description'|safe|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Создана</div>
+            {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Обновлена</div>
+            {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Проекты</div>
+            {{ 'projects'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Пользователи</div>
+            {{ 'users'|create_table_column_search_and_sorting_widget:3 }}
+        </th>
+        <th>
+            <div>Тэги</div>
+            {{ 'tags'|create_table_column_multi_filter_widget:all_tags }}
+
+        </th>
+    </tr>
+    {% for item in page_obj %}
+        <tr class="task-item-row">
+            <td class="table_item_tools">
+                <input type="checkbox">
+                <a href="{% url 'users_group_detail' pk=item.pk %}">&#128065;</a>
+                <button class="btn_item_delete"
+                        data-item-title="{{ item.title }}"
+                        data-entity-name="группу"
+                        data-redirect-url="{% url 'users_groups_page' %}"
+                        data-post-url="{% url 'users_group_delete' pk=item.pk %}">
+                    &#x2715;
+                </button>
+                <a class="table_item_edit"
+                   href="{% url 'users_group_edit' pk=item.pk %}">&#9998;</a>
+                <br>
+                <div class="ava_container">
+                    <div class="ava_item_wrapper">
+                        <img src="{{ item.creator.profile_settings.avatar.url }}"
+                             alt="creator"
+                             class="user_avatar"
+                             title="{{ item.creator }}">
+                    </div>
+                </div>
+            </td>
+            <td class="task-item-id" data-task-id="{{ item.pk }}">
+                {{ item.is_active }}
+            </td>
+            <td class="task_item_title">
+                <div class="ellipsed_text_1">
+                    <input type="text" value="{{ item.title }}">
+                </div>
+            </td>
+            <td class="task_item_description">
+                <div class="ellipsed_text_2">
+                    {{ item.description|safe }}
+                </div>
+            </td>
+            <td class="task_item_created_at">
+                {{ item.created_at|date:'Y-m-d H:i' }}
+            </td>
+            <td class="task_item_updated_at">
+                {{ item.updated_at|date:'Y-m-d H:i' }}
+            </td>
+            <td class="task_item_begin_at">
+                {% for item in item.projects.all %}
+                    <div>{{ item.title }}</div>
+                {% endfor %}
+            </td>
+            <td class="task_item_duration">
+                {% for user in item.users.all %}
+                    <div>
+                        {{ user }}
+                    </div>
+                {% endfor %}
+            </td>
+            <td class="task_item_tags">
+                {% for item in item.tags.all %}
+                    <span class="task_item_tag"
+                          style="background-color: {{ item.color }}">{{ item.title }}</span>
+                {% endfor %}
+            </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

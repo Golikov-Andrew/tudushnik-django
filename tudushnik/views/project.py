@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import get_user
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
@@ -34,6 +35,8 @@ class ProjectListView(ListView):
             search_section_obj = json.loads(search_section)
             kw = dict()
             for key, value in search_section_obj.items():
+                if key == 'owner':
+                    key = 'owner__username'
                 kw[key + '__icontains'] = value
             all_projects = all_projects.filter(**kw)
         if sorting_section is not None:
@@ -41,8 +44,25 @@ class ProjectListView(ListView):
             ls = list()
             for item in sorting_section_list:
                 ls.append(item['v'] + item['n'])
-            print(ls)
             all_projects = all_projects.order_by(*ls)
+
+        other_projects = Project.objects.filter(
+            Q(users_groups__users=self.request.user.id) & Q(
+                users_groups__is_active=True) & Q(
+                users_groups__permission_view_project=True))
+
+        # if search_section is not None:
+        #     search_section_obj = json.loads(search_section)
+        #     kw = dict()
+        #
+        #     for key, value in search_section_obj.items():
+        #         if key == 'owner':
+        #             key = 'users_groups__users__username'
+        #         kw[key + '__icontains'] = value
+        #     other_projects = other_projects.filter(**kw)
+
+        all_projects = all_projects.union(other_projects)
+        print('union', all_projects.query)
 
         paginator = Paginator(all_projects, int(per_page))
         page_number = self.request.GET.get('page')
@@ -68,6 +88,19 @@ class ProjectDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        target_project = Project.objects.filter(
+            Q(owner_id=self.request.user.id) & Q(pk=context["project"].id)
+        ).first()
+        if target_project is None:
+            target_project = Project.objects.filter(
+                Q(users_groups__users=self.request.user.id) & Q(
+                    users_groups__is_active=True) & Q(
+                    users_groups__permission_view_project=True) & Q(
+                    pk=context["project"].id)).first()
+            if target_project is None:
+                raise PermissionDenied(
+                    "You do not have permission to view this object.")
+
         context['title'] = context["project"]
         context['project_color'] = context["project"].color
         project_id = context["project"].id
@@ -82,6 +115,14 @@ class ProjectDetailView(DetailView):
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
         all_projects = Project.objects.filter(
             owner_id=self.request.user.id).all()
+
+        other_projects = Project.objects.filter(
+            Q(users_groups__users=self.request.user.id) & Q(
+                users_groups__is_active=True) & Q(
+                users_groups__permission_view_project=True))
+
+        all_projects = all_projects.union(other_projects)
+
         if search_section is not None:
             search_section_obj = json.loads(search_section)
             kw = dict()
@@ -166,7 +207,8 @@ def add_project(request, *args, **kwargs):
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=request.user.id).all()
     return render(request, 'tudushnik/add_project.html',
-                  {'form': form, 'title': 'Добавление проекта', 'page_title_eng': 'projects_create'})
+                  {'form': form, 'title': 'Добавление проекта',
+                   'page_title_eng': 'projects_create'})
 
 
 def project_delete(request, pk: int, *args, **kwargs):
