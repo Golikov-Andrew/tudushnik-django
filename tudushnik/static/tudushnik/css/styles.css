@@ -1231,3 +1231,23 @@ th {
   position: fixed;
   left: -1000px;
 }
+#project-list-table .ava_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+#project-list-table .ava_item_wrapper {
+  position: relative;
+  height: 30px;
+}
+#project-list-table .user_avatar {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: -15px;
+  border-radius: 20px;
+}
+#project-list-table .user_avatar:hover {
+  cursor: pointer;
+  z-index: 100;
+}

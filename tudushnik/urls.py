@@ -17,8 +17,11 @@ from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
     add_tag
 
 from .views.task import add_task, TaskListView, TaskDetailView, task_delete, \
-    TaskUpdateView, add_task_to_project, task_update_attrs, tasks_fetch, TaskList
+    TaskUpdateView, add_task_to_project, task_update_attrs, tasks_fetch, \
+    TaskList
 from .views.user_settings import upload_avatar
+from .views.users_group import UsersGroupListView, add_users_group, \
+    UsersGroupDetailView, users_group_delete, UsersGroupUpdateView
 
 urlpatterns = [
     path('', index, name='homepage'),
@@ -82,4 +85,15 @@ urlpatterns = [
     path('snippets/', SnippetList.as_view()),
     path('snippets/<int:pk>/', SnippetDetail.as_view()),
     # path('snippet/', view_snippets, name='view_snippets'),
+
+    path('users_groups/', UsersGroupListView.as_view(),
+         name='users_groups_page'),
+    path('users_groups/create', add_users_group,
+         name='add_users_group'),
+    path('users_groups/detail/<int:pk>/', UsersGroupDetailView.as_view(),
+         name='users_group_detail'),
+    path('users_group/delete/<int:pk>/', users_group_delete,
+         name='users_group_delete'),
+    path('users_group/edit/<int:pk>/', UsersGroupUpdateView.as_view(),
+         name='users_group_edit'),
 ]

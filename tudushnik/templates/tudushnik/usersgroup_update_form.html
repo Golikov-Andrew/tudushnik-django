@@ -1,0 +1,19 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <h2>Редактирование группы</h2>
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="OK">
+    </form>
+
+{% endblock content %}
+
+
+{% block local_scripts %}
+{#    <script type="text/javascript"#}
+{#            src="{% static 'tudushnik/js/duration_annotation.js' %}"></script>#}
+{% endblock local_scripts %}
+

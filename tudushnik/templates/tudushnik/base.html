@@ -60,6 +60,8 @@
                        href="{% url 'gantt_chart_page' %}">Диаграмма Ганта</a>
                     <a class="{{title|create_class_of_navbar_link_by_title:'Календарь' }}"
                        href="{% url 'calendar_page' %}">Календарь</a>
+                    <a class="{{title|create_class_of_navbar_link_by_title:'Группы' }}"
+                       href="{% url 'users_groups_page' %}">Группы</a>
                 {% endif %}
                 {% if user.is_superuser %}
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>

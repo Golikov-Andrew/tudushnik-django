@@ -5,6 +5,8 @@ function item_delete_handle_response(json_data, redirect_url) {
     if ('success' in json_obj) {
         if (json_obj['success'] === true) {
             window.location.href = redirect_url
+        }else if(json_obj['success'] === false){
+            alert(json_obj['errors'][0])
         }
     }
 }

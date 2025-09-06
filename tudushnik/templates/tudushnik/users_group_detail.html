@@ -1,0 +1,65 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div><a href="{% url 'users_groups_page' %}">Группы</a>&nbsp;-&gt;&nbsp;<span>{{ object.title }}</span></div>
+    <br>
+    <div>
+        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="группу"
+                data-redirect-url="{% url 'users_groups_page' %}"
+                data-post-url="{% url 'users_group_delete' pk=object.pk %}">&#x2613;
+        </button>
+        <a href="{% url 'users_group_edit' pk=object.pk %}">&#9998;</a>
+    </div>
+    <br>
+
+    <div>
+        Создана: {{ object.created_at|date:'Y-m-d H:i' }}
+    </div>
+    <div>
+        Обновлена: {{ object.updated_at|date:'Y-m-d H:i' }}
+    </div>
+
+    <br>
+    <div>
+        Тэги:
+        {% for item in object.tags.all %}
+            <span style="background-color: {{ item.color }}">{{ item.title }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        <h4>Содержание</h4>
+        <span>
+            {{ object.description|safe }}
+        </span>
+    </div>
+    <div>
+        <h4>Проекты</h4>
+        <ul>
+            {% for project in object.projects.all %}
+                <li><a href="{% url 'project_detail' pk=project.pk %}">
+                    {{ project }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+        <h4>Участники</h4>
+        <ul>
+            {% for user in object.users.all %}
+{#                TODO: сделать страничку просмотра пользователя #}
+                <li><a href="#">
+                    {{ user }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock content %}
+
+{% block local_scripts %}
+    {#    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/users_group_detail.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+{% endblock local_scripts %}

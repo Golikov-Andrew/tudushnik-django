@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timedelta
 
 import pytz
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
@@ -101,6 +101,19 @@ class TaskDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        target_project = Project.objects.filter(
+            Q(owner_id=self.request.user.id) & Q(pk=context["task"].project.pk)
+        ).first()
+        if target_project is None:
+            target_project = Project.objects.filter(
+                Q(users_groups__users=self.request.user.id) & Q(
+                    users_groups__is_active=True) & Q(
+                    users_groups__permission_view_project_tasks=True) & Q(
+                    pk=context["task"].project.pk)).first()
+            if target_project is None:
+                raise PermissionDenied(
+                    "You do not have permission to view this object.")
+
         context['title'] = context["task"]
         set_client_timezone(self.request, context)
         return context
@@ -114,14 +127,37 @@ class TaskUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_task = context['task']
+        owner_editor = True
+        target_project = Project.objects.filter(owner_id=self.request.user.id,
+                                                pk=current_task.project.pk)
+        if len(target_project) == 0:
+            target_project = Project.objects.filter(
+                Q(users_groups__users=self.request.user.id) & Q(
+                    users_groups__is_active=True) & Q(
+                    users_groups__permission_update_task=True) & Q(
+                    pk=current_task.project.pk))
+            if len(target_project) == 0:
+                raise PermissionDenied(
+                    "You do not have permission for this operation.")
+            owner_editor = False
+
         task_pk = current_task.pk
         owner_id = self.request.user.id
-        context['form'].fields['project'].queryset = Project.objects.filter(
-            owner_id=owner_id).all()
-        context['form'].fields['tags'].queryset = Tag.objects.filter(
-            owner_id=owner_id).all()
+        if owner_editor:
+            context['form'].fields['project'].queryset = Project.objects.filter(
+                owner_id=owner_id).all()
+            context['form'].fields['tags'].queryset = Tag.objects.filter(
+                owner_id=owner_id).all()
 
-        all_other_tasks = Task.objects.filter(owner_id=owner_id).exclude(
+        else:
+            context['form'].fields['project'].queryset = Project.objects.filter(
+                pk=current_task.project.pk).all()
+            context['form'].fields['tags'].queryset = Tag.objects.filter(
+                owner_id=target_project.first().owner.id).filter(
+                projects=current_task.project.pk).all()
+
+        all_other_tasks = Task.objects.filter(
+            project=target_project.first()).exclude(
             pk=task_pk)
 
         all_parents_task = all_other_tasks.filter(
@@ -144,6 +180,17 @@ class TaskUpdateView(UpdateView):
         return context
 
     def form_valid(self, form):
+        target_project = Project.objects.filter(owner_id=self.request.user.id,
+                                                pk=form.instance.project.pk)
+        if len(target_project) == 0:
+            target_project = Project.objects.filter(
+                Q(users_groups__users=self.request.user.id) & Q(
+                    users_groups__is_active=True) & Q(
+                    users_groups__permission_update_task=True) & Q(
+                    pk=form.instance.project.pk))
+            if len(target_project) == 0:
+                raise PermissionDenied(
+                    "You do not have permission for this operation.")
 
         def move_task(task_obj, move_settings):
             task_obj.begin_at += timedelta(
@@ -204,7 +251,8 @@ def add_task(request, *args, **kwargs):
                 form.instance.begin_at = temp
 
             form.save()
-            if request.POST.get('referer') is not None and request.POST.get('referer') != '':
+            if request.POST.get('referer') is not None and request.POST.get(
+                    'referer') != '':
                 return redirect(request.POST.get('referer'))
             return redirect('tasks_page')
     else:
@@ -241,6 +289,18 @@ def add_task(request, *args, **kwargs):
 
 
 def add_task_to_project(request, project_pk, *args, **kwargs):
+    target_project = Project.objects.filter(owner_id=request.user.id,
+                                            pk=project_pk)
+    if len(target_project) == 0:
+        target_project = Project.objects.filter(
+            Q(users_groups__users=request.user.id) & Q(
+                users_groups__is_active=True) & Q(
+                users_groups__permission_create_task=True) & Q(
+                pk=project_pk))
+        if len(target_project) == 0:
+            raise PermissionDenied(
+                "You do not have permission for this operation.")
+
     cur_tz = set_client_timezone(request, kwargs)
     if request.method == 'POST':
         form = AddTaskForm(request.POST, request.FILES)
@@ -257,13 +317,12 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
             form.save()
             return redirect('project_detail', pk=project_pk)
     else:
-        proj = Project.objects.filter(owner_id=request.user.id, pk=project_pk)
         diagram_offset_x = request.GET.get('diagram_offset_x')
         begin_at = request.GET.get('begin_at')
         if diagram_offset_x is not None and begin_at is not None:
             form = AddTaskForm(
                 instance=Task(
-                    project=proj.first(),
+                    project=target_project.first(),
                     owner=request.user,
                     begin_at=begin_at,
                     diagram_offset_x=int(diagram_offset_x)
@@ -272,25 +331,38 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
         else:
             form = AddTaskForm(
                 instance=Task(
-                    project=proj.first(),
+                    project=target_project.first(),
                     owner=request.user,
                     begin_at=timezone.localtime(
                         timezone.now(), pytz.timezone(cur_tz)
                     ).strftime('%Y-%m-%dT%H:%M')
                 )
             )
-        form.fields['project'].queryset = proj.all()
+        form.fields['project'].queryset = target_project.all()
         form.fields['tags'].queryset = Tag.objects.filter(
-            owner_id=request.user.id).all()
+            owner_id=target_project.first().owner.id).filter(
+            projects=project_pk)
 
-    kwargs.update({'form': form, 'title': 'Добавление задачи в проект', 'page_title_eng': 'tasks_add_to_project'})
+    kwargs.update({'form': form, 'title': 'Добавление задачи в проект',
+                   'page_title_eng': 'tasks_add_to_project'})
     return render(request, 'tudushnik/add_task_to_project.html', kwargs)
 
 
 def task_delete(request, pk: int, *args, **kwargs):
     if request.method == 'POST':
-        target_object = Task.objects.filter(owner_id=request.user.id,
-                                            pk=pk).first()
+        target_task = Task.objects.filter(pk=pk).first()
+        target_project = Project.objects.filter(owner_id=request.user.id,
+                                                pk=target_task.project.pk).first()
+        if target_project is None:
+            target_project = Project.objects.filter(
+                Q(users_groups__users=request.user.id) & Q(
+                    users_groups__is_active=True) & Q(
+                    users_groups__permission_delete_task=True) & Q(
+                    pk=target_task.project.pk)).first()
+            if target_project is None:
+                return JsonResponse({"success": False, "errors": [
+                    "You do not have permission for this operation."]})
+        target_object = Task.objects.filter(pk=pk).first()
         target_object.delete()
         return JsonResponse({"success": True})
 
@@ -302,13 +374,32 @@ def task_update_attrs(request, *args, **kwargs):
         json_data['task_id'] = task_id
         target_object = None
         try:
-            target_object = Task.objects.filter(owner_id=request.user.id,
-                                                pk=task_id).first()
+            target_object = Task.objects.filter(pk=task_id).first()
+            target_project = Project.objects.filter(owner_id=request.user.id,
+                                                    pk=target_object.project.pk)
+            if len(target_project) == 0:
+                target_project = Project.objects.filter(
+                    Q(users_groups__users=request.user.id) & Q(
+                        users_groups__is_active=True) & Q(
+                        users_groups__permission_update_task=True) & Q(
+                        pk=target_object.project.pk))
+                if len(target_project) == 0:
+                    raise PermissionDenied(
+                        "You do not have permission for this operation.")
+
         except ObjectDoesNotExist:
             json_resp = {
                 'success': False,
                 'error_message': f'Ошибка! '
                                  f'Задачи с id {task_id} не существует!'
+            }
+            json_resp.update(json_data)
+            return JsonResponse(json_resp)
+
+        except PermissionDenied:
+            json_resp = {
+                'success': False,
+                'error_message': 'You do not have permission for this operation!'
             }
             json_resp.update(json_data)
             return JsonResponse(json_resp)
@@ -344,7 +435,6 @@ def task_update_attrs(request, *args, **kwargs):
             target_object.children.add(new_child_task)
 
         target_object.save()
-        print(request)
         json_resp = {'success': True, 'task_id': task_id}
         json_resp.update(json_data)
         return JsonResponse(json_resp)
@@ -371,15 +461,30 @@ def tasks_fetch(request, *args, **kwargs):
             query = query.filter(project_id__in=projects_ids)
 
         result = query.all()
-
         if result is None:
             result = list()
+
+        query_2 = Task.objects.filter(
+            Q(project__users_groups__is_active=True) &
+            Q(project__users_groups__permission_view_tasks_list=True) &
+            Q(project__users_groups__users=request.user.id) &
+            Q(begin_at__gt=date_from) &
+            Q(begin_at__lt=date_to)
+        )
+        if projects_ids is not None:
+            query_2 = query_2.filter(project_id__in=projects_ids)
+
+        result_2 = query_2.all()
+        if result_2 is None:
+            result_2 = list()
+
+        total_result = result.union(result_2)
 
         return JsonResponse(
             {
                 'success': True,
                 'offset': str(offset),
-                'tasks': [t.to_json() for t in result]
+                'tasks': [t.to_json() for t in total_result]
             }
         )
 

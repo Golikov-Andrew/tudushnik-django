@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta
 
+from django.db.models import Q
 from django.shortcuts import render
 
 from tudushnik.models.project import Project
@@ -25,6 +26,14 @@ def gantt_chart_page(request, *args, **kwargs):
             "date_to": gantt_chart_datetime_to,
         }
         all_projects = Project.objects.filter(owner_id=request.user.id)
+
+        other_projects = Project.objects.filter(
+            Q(users_groups__users=request.user.id) & Q(
+                users_groups__is_active=True) & Q(
+                users_groups__permission_view_project=True))
+
+        all_projects = all_projects.union(other_projects)
+
         if len(selected_projects) == 0:
             selected_projects = [int(i.pk) for i in all_projects.all()]
         gantt_apply_filters['selected_projects'] = selected_projects
