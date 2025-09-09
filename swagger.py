@@ -3,6 +3,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from tuduapi.generators import BothHttpAndHttpsSchemaGenerator
+
 schema_view = get_schema_view(
     openapi.Info(
         title="TUDUSHNIK API",
@@ -15,5 +17,6 @@ schema_view = get_schema_view(
     public=True,
     patterns=[path('api/v1/', include('tuduapi.urls')), ],
     permission_classes=[permissions.IsAuthenticated],
+    generator_class=BothHttpAndHttpsSchemaGenerator
 
 )
