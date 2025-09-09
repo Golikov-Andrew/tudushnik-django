@@ -18,7 +18,7 @@ from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
 from tudushnik.models.user_profile_settings import manage_user_settings
-from tudushnik.serializers import TaskSerializer
+from tuduapi.serializers import TaskSerializer
 
 
 class TaskListView(ListView):

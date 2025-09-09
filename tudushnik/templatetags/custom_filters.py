@@ -16,6 +16,11 @@ def is_selected(choosen_val, val: str):
     return ''
 
 
+@register.filter(name='has_group')
+def has_group(user, group_name):
+    return user.groups.filter(name=group_name).exists()
+
+
 def duration_humanize(dur_val):
     result = list()
     dur_val = int(dur_val)
@@ -50,10 +55,11 @@ def create_table_column_multi_filter_widget(data_field_name: str,
                                             val_list: list):
     options = list()
     for val in val_list:
-        options.append(f'<div class="object_item_tag" style="background-color: {val.color}">'
-                       f'<label><input type="checkbox" class="object_pk_{val.pk}">{val.title}</label>'
-                    
-                       '</div>')
+        options.append(
+            f'<div class="object_item_tag" style="background-color: {val.color}">'
+            f'<label><input type="checkbox" class="object_pk_{val.pk}">{val.title}</label>'
+
+            '</div>')
     return mark_safe(f"""
     <div class="multi_filter_widget" data-field-name="{data_field_name}">
     <button class="btn_show_tasks_tags_modal">Настроить фильтр</button>

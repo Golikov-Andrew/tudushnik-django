@@ -39,7 +39,8 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://tudushnik.ru']
 if not PRODUCTION:
     SECURE_CROSS_ORIGIN_OPENER_POLICY = None
     ALLOWED_HOSTS += ['192.168.198.129']
-    CSRF_TRUSTED_ORIGINS += ['http://192.168.198.129:8083', 'http://localhost:8083', 'http://tdm_server:8000']
+    CSRF_TRUSTED_ORIGINS += ['http://192.168.198.129:8083',
+                             'http://localhost:8083', 'http://tdm_server:8000']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -50,10 +51,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     # 'rest_framework_swagger',
-    # 'drf_yasg',
+    'drf_yasg',
     'debug_toolbar',
     # 'custom_auth',
-    'tudushnik'
+    'tudushnik',
+    'tuduapi'
 ]
 
 # AUTH_USER_MODEL = 'custom_auth.AuthUser'
@@ -174,20 +176,15 @@ if PRODUCTION:
     CSRF_COOKIE_SECURE = True
 
 SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': False,
-    'api_version': '0.1',
-    'enabled_methods': [
-        'get',
-        'post',
-        'put',
-        'patch',
-        'delete'
-    ],
-    'info': {
-        'title': 'My API documentation',
-        'description': 'API documentation for My App',
-        'version': '1.0.0',
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
     },
+    'USE_SESSION_AUTH': False,
+    'BASE_URL': '/api/v1/',
 }
 
 REST_FRAMEWORK = {
@@ -197,6 +194,9 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
         # 'rest_framework.permissions.DjangoModelPermissions'
     ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
