@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import path, include
 
+from swagger import schema_view
 from .views import index
 from .views.auth import LoginUser, profile, logout_user, RegisterUser
 from .views.calendar import calendar_page
@@ -10,9 +11,8 @@ from .views.financy import BudgetListView, BudgetDetailView, budget_delete, \
     BudgetUpdateView, add_budget
 from .views.gantt import gantt_chart_page
 from .views.project import add_project, ProjectListView, ProjectDetailView, \
-    project_delete, ProjectUpdateView, ProjectList
-from .views.snippet import SnippetList, SnippetDetail
-# from .views.snippet import view_snippets
+    project_delete, ProjectUpdateView, ProjectList, ProjectAPI
+
 from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
     add_tag
 
@@ -82,9 +82,6 @@ urlpatterns = [
 
     path('user/avatar', upload_avatar, name='upload_avatar'),
 
-    path('snippets/', SnippetList.as_view()),
-    path('snippets/<int:pk>/', SnippetDetail.as_view()),
-    # path('snippet/', view_snippets, name='view_snippets'),
 
     path('users_groups/', UsersGroupListView.as_view(),
          name='users_groups_page'),
@@ -96,4 +93,13 @@ urlpatterns = [
          name='users_group_delete'),
     path('users_group/edit/<int:pk>/', UsersGroupUpdateView.as_view(),
          name='users_group_edit'),
+
+    path('swagger/',
+         schema_view.with_ui(
+             'swagger',
+             cache_timeout=0
+         ),
+         name='schema-swagger-ui'),
+
+    path('api/v1/', include('tuduapi.urls'))
 ]

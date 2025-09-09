@@ -20,7 +20,6 @@ from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
 from tudushnik.models.user_profile_settings import manage_user_settings
 from tudushnik.models.users_group import UsersGroup
-from tudushnik.serializers import TaskSerializer
 
 
 class UsersGroupListView(ListView):

@@ -15,7 +15,7 @@ from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
 from tudushnik.models.user_profile_settings import manage_user_settings
-from tudushnik.serializers import ProjectSerializer
+from tuduapi.serializers import ProjectSerializer
 
 
 class ProjectListView(ListView):
@@ -220,6 +220,13 @@ def project_delete(request, pk: int, *args, **kwargs):
 
 
 class ProjectList(generics.ListCreateAPIView):
+    serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        return Project.objects.filter(owner_id=self.request.user.id).all()
+
+
+class ProjectAPI(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
 
     def get_queryset(self):

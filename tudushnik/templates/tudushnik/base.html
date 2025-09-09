@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="{% static 'tudushnik/css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'tudushnik/css/header.css' %}">
     <link rel="stylesheet" href="{% static 'tudushnik/css/debug_panel.css' %}">
-    <input type="text" hidden value="{{ csrf_token }}" name="csrfmiddlewaretoken">
+    <input type="text" hidden value="{{ csrf_token }}"
+           name="csrfmiddlewaretoken">
     {% block local_styles %}
     {% endblock local_styles %}
 </head>
@@ -56,22 +57,29 @@
                        href="{% url 'tasks_page' %}">Задачи</a>
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Тэги' }}"
                        href="{% url 'tags_page' %}">Тэги</a>
-                    <a class="{{title|create_class_of_navbar_link_by_title:'Диаграмма Ганта' }}"
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Диаграмма Ганта' }}"
                        href="{% url 'gantt_chart_page' %}">Диаграмма Ганта</a>
-                    <a class="{{title|create_class_of_navbar_link_by_title:'Календарь' }}"
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Календарь' }}"
                        href="{% url 'calendar_page' %}">Календарь</a>
-                    <a class="{{title|create_class_of_navbar_link_by_title:'Группы' }}"
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Группы' }}"
                        href="{% url 'users_groups_page' %}">Группы</a>
                 {% endif %}
                 {% if user.is_superuser %}
-                    <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}" href="/admin">Админка</a>
-                    <a class="{{ title|create_class_of_navbar_link_by_title:'Финансы' }}" href="{% url 'budgets_page' %}">Финансы</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}"
+                       href="/admin">Админка</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Финансы' }}"
+                       href="{% url 'budgets_page' %}">Финансы</a>
+                {% endif %}
+                {% if user|has_group:"dev" %}
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'API' }}"
+                       href="{% url 'schema-swagger-ui' %}">API</a>
                 {% endif %}
             </nav>
 
             <div class="profile-container">
                 {% if request.user.is_authenticated %}
-                    <a class="navbar-link" href="{% url 'profile' %}">Профиль</a>
+                    <a class="navbar-link"
+                       href="{% url 'profile' %}">Профиль</a>
                     <a class="navbar-link" href="{% url 'logout' %}">Выйти</a>
                 {% else %}
                     <a class="navbar-link" href="{% url 'login' %}">Войти</a>
@@ -101,11 +109,16 @@
         </div>
     {% endtimezone %}
 </div>
-<script type="text/javascript" src="{% static 'tudushnik/js/moment-with-locales.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'tudushnik/js/moment-timezone-with-data.js' %}"></script>
-<script type="text/javascript" src="{% static 'tudushnik/js/cookie.js' %}"></script>
-<script type="text/javascript" src="{% static 'tudushnik/js/detect_timezone.js' %}"></script>
-<script type="text/javascript" src="{% static 'tudushnik/js/utils.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'tudushnik/js/moment-with-locales.min.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'tudushnik/js/moment-timezone-with-data.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'tudushnik/js/cookie.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'tudushnik/js/detect_timezone.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'tudushnik/js/utils.js' %}"></script>
 {% block local_scripts %}
 {% endblock local_scripts %}
 </body>
