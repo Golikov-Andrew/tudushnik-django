@@ -32,8 +32,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('auth/', include('custom_auth.urls')),
     path('', include('tudushnik.urls')),
-    path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls'))
 ]
 
 handler404 = pageNotFound

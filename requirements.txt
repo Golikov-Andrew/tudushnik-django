@@ -2,6 +2,7 @@ asgiref==3.5.0
 autopep8==1.6.0
 Django==4.0.3
 djangorestframework
+djangorestframework-simplejwt
 django-rest-swagger
 drf-yasg==1.21.8
 gunicorn

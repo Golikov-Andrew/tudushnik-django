@@ -1,7 +1,22 @@
 from django.urls import path
 from . import api
+from .views import DecoratedTokenObtainPairView, DecoratedTokenRefreshView
 
 urlpatterns = [
+    path('token/', DecoratedTokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('token/refresh/', DecoratedTokenRefreshView.as_view(),
+         name='token_refresh'),
+
+    path('users/', api.UserAPIList.as_view(),
+         name='api_users_list'),
+    path('users/create/', api.UserAPICreate.as_view(),
+         name='api_users_create'),
+    path('users/details/<int:pk>/', api.UserAPIRetrieve.as_view(),
+         name='api_users_retrieve'),
+    path('users/update/<int:pk>/', api.UserAPIUpdate.as_view(),
+         name='api_users_update'),
+
     path('tasks/', api.TaskAPIListCreate.as_view(),
          name='api_tasks_list_create'),
     path('tasks/<int:pk>/', api.TaskAPIRetrieveUpdateDestroy.as_view(),
