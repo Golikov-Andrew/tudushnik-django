@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 import sys
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'rest_framework_simplejwt.token_blacklist',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -66,6 +68,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'tuduapi.middleware.JWTAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -174,6 +177,9 @@ if PRODUCTION:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    # TODO: enable and check in production
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -194,9 +200,30 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
         # 'rest_framework.permissions.DjangoModelPermissions'
     ],
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.TokenAuthentication',
-    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFY_SIGNATURE': True,
+    'VERIFY_ALGORITHM': True,
+    'VERIFY_EXP': True,
+    'VERIFY_NBF': True,
+    'VERIFY_AUD': False,
+    'VERIFY_ISS': False,
+    'VERIFY_SUB': False,
+    'VERIFY_JTI': False,
+    'LEEWAY': 0,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_TYPES': ('access', 'refresh'),
 }

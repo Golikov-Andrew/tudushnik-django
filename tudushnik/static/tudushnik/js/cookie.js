@@ -1,3 +1,16 @@
+function is_cookie_exists(name) {
+    const cookies = document.cookie.split(';');
+    return cookies.some(cookie => cookie.trim().startsWith(name + '='));
+}
+
+function delete_cookie(name, path, domain) {
+    document.cookie = name +
+                     '=; ' +
+                     'expires=Thu, 01 Jan 1970 00:00:00 GMT; ' +
+                     (path ? 'path=' + path + '; ' : '') +
+                     (domain ? 'domain=' + domain + '; ' : '');
+}
+
 function getCookie(name) {
   let matches = document.cookie.match(new RegExp(
     "(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + "=([^;]*)"

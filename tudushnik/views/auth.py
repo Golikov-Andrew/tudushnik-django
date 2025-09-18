@@ -1,8 +1,10 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from tudushnik.forms.user import RegisterUserForm, LoginUserForm
 from tudushnik.middleware import set_client_timezone
@@ -36,6 +38,20 @@ class LoginUser(LoginView):
     def get_success_url(self):
         return reverse_lazy('profile')
 
+    def form_valid(self, form):
+        user = form.get_user()
+        refresh = RefreshToken.for_user(user)
+        response = super().form_valid(form)
+
+        response.set_cookie('refresh_token', str(refresh),
+                             httponly=True, secure=True, samesite='None')
+        response.set_cookie('access_token', str(refresh.access_token),
+                             httponly=True, secure=True, samesite='None')
+        return response
+
+    def form_invalid(self, form):
+        return HttpResponseForbidden({'error': 'Неверные учетные данные'})
+
 
 def profile(request, **kwargs):
     set_client_timezone(request, kwargs)
@@ -46,4 +62,7 @@ def profile(request, **kwargs):
 
 def logout_user(request, **kwargs):
     logout(request)
-    return redirect('login')
+    response = redirect('login')
+    response.delete_cookie('refresh_token', samesite='None')
+    response.delete_cookie('access_token', samesite='None')
+    return response
