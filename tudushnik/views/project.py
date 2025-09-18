@@ -226,8 +226,8 @@ class ProjectList(generics.ListCreateAPIView):
         return Project.objects.filter(owner_id=self.request.user.id).all()
 
 
-class ProjectAPI(generics.ListCreateAPIView):
-    serializer_class = ProjectSerializer
-
-    def get_queryset(self):
-        return Project.objects.filter(owner_id=self.request.user.id).all()
+# class ProjectAPI(generics.ListCreateAPIView):
+#     serializer_class = ProjectSerializer
+#
+#     def get_queryset(self):
+#         return Project.objects.filter(owner_id=self.request.user.id).all()

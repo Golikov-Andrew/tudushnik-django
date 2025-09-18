@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models import NOT_PROVIDED
 from rest_framework import serializers
 
 from tudushnik.models.project import Project
@@ -19,7 +20,6 @@ class DefaultValueSerializerMixin:
 class TaskSerializer(DefaultValueSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Task
-        # fields = ['id', 'title', 'content', 'begin_at', 'duration', 'project_id']
         read_only_fields = ('owner',)
         fields = '__all__'
 
@@ -27,7 +27,8 @@ class TaskSerializer(DefaultValueSerializerMixin, serializers.ModelSerializer):
         validated_data['owner_id'] = self.context.get('request').user.pk
         tags = validated_data.pop('tags')
         task = Task.objects.create(**validated_data)
-        task.tags.set(tags)
+        if not isinstance(tags, NOT_PROVIDED):
+            task.tags.set(tags)
         task.save()
         return task
 
@@ -35,11 +36,32 @@ class TaskSerializer(DefaultValueSerializerMixin, serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        # fields = ['id', 'title', 'description', 'color']
         fields = '__all__'
+        read_only_fields = ('owner',)
+        tags = serializers.ListField(
+            child=serializers.IntegerField(),
+            required=False
+        )
+
+    def create(self, validated_data):
+        validated_data['owner_id'] = self.context.get('request').user.pk
+        tags = None
+        if 'tags' in validated_data:
+            tags = validated_data.pop('tags')
+
+        project = Project.objects.create(**validated_data)
+        if not isinstance(tags, NOT_PROVIDED) and tags is not None:
+            project.tags.set(tags)
+        project.save()
+        return project
 
 
-class TagSerializer(serializers.ModelSerializer):
+class TagSerializer(DefaultValueSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
+        read_only_fields = ('owner',)
+
+    def create(self, validated_data):
+        validated_data['owner_id'] = self.context.get('request').user.pk
+        return Tag.objects.create(**validated_data)

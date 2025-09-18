@@ -11,7 +11,7 @@ from .views.financy import BudgetListView, BudgetDetailView, budget_delete, \
     BudgetUpdateView, add_budget
 from .views.gantt import gantt_chart_page
 from .views.project import add_project, ProjectListView, ProjectDetailView, \
-    project_delete, ProjectUpdateView, ProjectList, ProjectAPI
+    project_delete, ProjectUpdateView, ProjectList
 
 from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
     add_tag
