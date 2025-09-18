@@ -1,0 +1,11 @@
+.users_groups_table tr.task-item-row {
+  height: unset;
+  max-height: 120px;
+}
+.users_groups_table tr th:nth-child(1),
+.users_groups_table tr td:nth-child(1) {
+  width: 100px;
+}
+.users_groups_table .ava_container {
+  width: 100%;
+}
