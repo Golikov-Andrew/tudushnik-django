@@ -36,7 +36,12 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.tdm-test.someproject.ru',
                  'django-dev-upstream']
 # Application definition
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://tudushnik.ru']
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://tudushnik.ru',
+                        'http://localhost:8083', 'http://tdm_server:8000',
+                        'http://django-dev-upstream']
+# CSRF_ALLOWED_ORIGINS = ['http://localhost', 'https://tudushnik.ru',
+#                         'http://localhost:8083', 'http://tdm_server:8000',
+#                         'http://django-dev-upstream']
 if not PRODUCTION:
     SECURE_CROSS_ORIGIN_OPENER_POLICY = None
     ALLOWED_HOSTS += ['192.168.198.129']
@@ -177,7 +182,6 @@ if PRODUCTION:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    # TODO: enable and check in production
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
@@ -185,22 +189,22 @@ SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
             'type': 'apiKey',
-            'name': 'Authorization',
+            'name': 'Api-Authorization',
             'in': 'header'
         }
     },
-    'USE_SESSION_AUTH': False,
+    'USE_SESSION_AUTH': True,
     'BASE_URL': '/api/v1/',
 }
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
         # 'rest_framework.permissions.DjangoModelPermissions'
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -224,6 +228,7 @@ SIMPLE_JWT = {
     'VERIFY_SUB': False,
     'VERIFY_JTI': False,
     'LEEWAY': 0,
+    "AUTH_HEADER_NAME": "HTTP_API_AUTHORIZATION",
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_TOKEN_TYPES': ('access', 'refresh'),
 }
