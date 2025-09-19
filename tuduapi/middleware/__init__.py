@@ -12,7 +12,7 @@ class JWTAuthenticationMiddleware:
         path_info = request.META.get('PATH_INFO')
         is_new_access_token = False
         if path_info is not None and '/swagger' in path_info:
-            access_token = request.META.get('HTTP_AUTHORIZATION')
+            access_token = request.META.get('HTTP_API_AUTHORIZATION')
             if access_token is None:
                 # при обычном заходе на сваггер
                 access_token = request.COOKIES.get('access_token')
@@ -29,7 +29,7 @@ class JWTAuthenticationMiddleware:
                             is_new_access_token = True
                         finally:
                             request.META[
-                                'HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
+                                'HTTP_API_AUTHORIZATION'] = f'Bearer {access_token}'
 
                     except TokenError:
                         response = self.get_response(request)

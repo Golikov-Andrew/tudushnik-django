@@ -82,7 +82,6 @@ urlpatterns = [
 
     path('user/avatar', upload_avatar, name='upload_avatar'),
 
-
     path('users_groups/', UsersGroupListView.as_view(),
          name='users_groups_page'),
     path('users_groups/create', add_users_group,
@@ -101,5 +100,12 @@ urlpatterns = [
          ),
          name='schema-swagger-ui'),
 
-    path('api/v1/', include('tuduapi.urls'))
+    path('api/v1/', include('tuduapi.urls')),
+    path(
+        'swagger/export/<str:format>/',
+        schema_view.without_ui(
+            cache_timeout=0
+        ),
+        name='schema-json'
+    ),
 ]
