@@ -95,7 +95,7 @@ class Viewport {
                 html: `${task.title} - ${task.content}`,
                 // attrs: {'style':''}
             }).element
-            new_task_widget_element.style.backgroundColor = `${this.calendar.projects[task.project_id].color}`;
+            new_task_widget_element.style.backgroundColor = `${this.calendar.projects[task.project].color}`;
             cell_content.appendChild(new_task_widget_element)
             if (this.calendar.selected_view.selected_view === this.calendar.selected_view.views.day) {
                 new_task_widget_element.addEventListener('click', () => {
