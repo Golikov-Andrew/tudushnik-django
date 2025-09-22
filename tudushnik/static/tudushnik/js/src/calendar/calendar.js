@@ -80,7 +80,6 @@ class Calendar {
             'YYYY-MM-DD').format('WW')
             this.selected_view.set_value('week', new_week_value)
         }else{
-            // console.log('WEEK')
             let check_moment = moment(`${this.selected_interval.year}-${this.selected_interval.month}-${this.selected_interval.day}`,'YYYY-MM-DD')
             check_moment.locale('ru')
             let check_week_value = check_moment.format('WW')
@@ -105,6 +104,11 @@ class Calendar {
     add_tasks(tasks) {
         for (const tasksKey in tasks.tasks) {
             this.viewport.redraw_task(tasks.tasks[tasksKey])
+        }
+    }
+    remove_task(pk){
+        if(this.tasks.hasOwnProperty(pk)){
+            delete this.tasks[pk]
         }
     }
 }
