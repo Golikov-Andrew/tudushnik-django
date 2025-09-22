@@ -6,6 +6,7 @@
     <h2>Редактирование задачи</h2>
     <form method="post">{% csrf_token %}
         {{ form.as_p }}
+        <input type="hidden" name="referer" value="{{ referer }}">
         <label for="id_parents">Родительские задачи:</label>
         <select name="parents[]" id="id_parents" multiple>
             {% for item in all_other_tasks_and_not_children %}

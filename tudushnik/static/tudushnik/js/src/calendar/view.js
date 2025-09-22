@@ -1,5 +1,6 @@
 import {DOMElem} from "../../dom_utils";
 import {ModalWindow} from "../my_utils/modal_window";
+import {ContextMenu, ContextMenuAction} from "../my_utils/context_menu";
 
 const Moment = require('moment');
 const MomentRange = require('moment-range');
@@ -71,7 +72,9 @@ class ViewAbstract {
         let elem = new DOMElem('div', {
             attrs: {
                 data_week: week_val, data_month: month_val, data_year: year_val
-            }, classes: ['row_label_content'], html: `${month_val} - ${week_val}`
+            },
+            classes: ['row_label_content'],
+            html: `${month_val} - ${week_val}`
         }).element
         if (this.calendar.current_date.get('month') === month_val &&
             this.calendar.current_date.get('week') === week_val &&
@@ -101,6 +104,53 @@ class ViewAbstract {
             this.calendar.selected_view.views.day.set_value(elem.getAttribute('data_date'))
             this.calendar.select_view('day')
             this.selected_view.selected_view.redraw()
+        })
+        elem.addEventListener('contextmenu', (evt) => {
+            evt.preventDefault()
+            console.log(evt.target.closest('.cell_content'))
+            let begin_at = `${elem.getAttribute('data_year')}-${elem.getAttribute('data_month')}-${elem.getAttribute('data_date')}`
+            let context_menu = new ContextMenu({
+                actions: [
+                    new ContextMenuAction('Создать задачу', () => {
+                        window.location.href = `/tasks/create?begin_at=${begin_at}T12:00`
+                    })
+                ],
+                event: evt,
+                data: {
+                    year: elem.getAttribute('data_year'),
+                    month: elem.getAttribute('data_month'),
+                    date: elem.getAttribute('data_date')
+                }
+            })
+            let pk = evt.target.getAttribute('data-task-id')
+            if (pk !== null) {
+                context_menu.add_action(
+                    new ContextMenuAction('Редактировать задачу', () => {
+                        window.location.href = `/tasks/edit/${evt.target.getAttribute('data-task-id')}/`
+                    })
+                )
+                context_menu.add_action(
+                    new ContextMenuAction('Удалить задачу', () => {
+                        let ans = confirm(`Вы действительно хотите удалить задачу '${evt.target.innerHTML}'?`)
+                        if (ans === true) {
+                            send_post_json(evt, `/tasks/delete/${evt.target.getAttribute('data-task-id')}/`, {}, (resp) => {
+                                let json_obj = JSON.parse(resp)
+                                if ('success' in json_obj) {
+                                    if (json_obj['success'] === true) {
+                                        evt.target.parentElement.removeChild(evt.target)
+                                        context_menu.destroy()
+                                        this.calendar.remove_task(+evt.target.getAttribute('data-task-id'))
+                                    }
+                                }
+                            }, csrfToken)
+                        }
+                    })
+                )
+            }
+            console.log(context_menu)
+            context_menu.create()
+
+
         })
         if (this.calendar.current_date.get('month') === moment_day.format('MM') &&
             this.calendar.current_date.get('week') === moment_day.format('WW') &&
@@ -186,7 +236,10 @@ class ViewMonth extends ViewAbstract {
                 classes: ['option_element'], html: ('' + i).padStart(2, '0')
             }))
         }
-        return new DOMElem('div', {classes: ['select_element'], children: options_elems}).element
+        return new DOMElem('div', {
+            classes: ['select_element'],
+            children: options_elems
+        }).element
     }
 
     redraw() {
@@ -361,7 +414,10 @@ class SelectedView {
         this.selected_view = null
         this.element = new DOMElem('div', {
             classes: ['selected_view'], children: [
-                new DOMElem('div', {classes: ['calendar_fieldset_legend'], html:'Выбранная дата:'}),
+                new DOMElem('div', {
+                    classes: ['calendar_fieldset_legend'],
+                    html: 'Выбранная дата:'
+                }),
                 this.views.year.element,
                 this.views.month.element,
                 this.views.week.element,

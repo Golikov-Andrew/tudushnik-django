@@ -144,6 +144,20 @@ body > .wrapper {
 .table_column_sorting:hover {
   background-color: #34729f;
 }
+.modal.context_menu .window {
+  width: unset;
+  top: unset;
+  left: unset;
+  height: unset;
+}
+.btn_context_menu_action {
+  cursor: pointer;
+  padding: 8px;
+}
+.btn_context_menu_action:hover {
+  background-color: #4A8FC1;
+  color: #F5FBFF;
+}
 .calendar {
   user-select: none;
   font-size: 12px;
@@ -262,6 +276,9 @@ body > .wrapper {
   max-height: 20px;
   overflow: hidden;
   word-break: break-all;
+}
+.calendar .viewport .body .calendar_grid .row .cell .cell_content .calendar_tasks_container .task_widget:hover {
+  outline: 1px solid darkred;
 }
 .calendar .viewport .body .calendar_grid .row .cell:hover {
   outline: 2px solid blue;

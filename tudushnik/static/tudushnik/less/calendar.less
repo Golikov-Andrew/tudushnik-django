@@ -1,6 +1,7 @@
 @import 'components/utils/_base';
 @import 'components/utils/_mixins';
 @import 'components/utils/_variables';
+@import 'components/context_menu';
 
 .calendar {
   user-select: none;
@@ -127,6 +128,9 @@
                   max-height: 20px;
                   overflow: hidden;
                   word-break: break-all;
+                  &:hover{
+                    outline: 1px solid darkred;
+                  }
                 }
               }
             }

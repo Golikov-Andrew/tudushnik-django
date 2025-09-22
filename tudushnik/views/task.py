@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, UpdateView
 from rest_framework import generics
@@ -124,6 +125,12 @@ class TaskUpdateView(UpdateView):
     template_name_suffix = '_update_form'
     form_class = TaskUpdateForm
 
+    def get_success_url(self):
+        if self.request.POST.get('referer') is not None and self.request.POST.get(
+                'referer') != '':
+            return self.request.POST.get('referer')
+        return reverse('task_detail', kwargs={'pk': self.object.pk})
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_task = context['task']
@@ -143,6 +150,7 @@ class TaskUpdateView(UpdateView):
 
         task_pk = current_task.pk
         owner_id = self.request.user.id
+        context['form'].initial['begin_at'] = context['form'].initial['begin_at'].replace(microsecond=0)
         if owner_editor:
             context['form'].fields['project'].queryset = Project.objects.filter(
                 owner_id=owner_id).all()
@@ -176,6 +184,7 @@ class TaskUpdateView(UpdateView):
             'all_other_tasks_and_not_children'] = other_tasks_without_children
         context['parents'] = all_parents_task
         context['page_title_eng'] = 'tasks_edit'
+        context['referer'] = str(self.request.META['HTTP_REFERER'])
         set_client_timezone(self.request, context)
         return context
 
@@ -256,26 +265,20 @@ def add_task(request, *args, **kwargs):
                 return redirect(request.POST.get('referer'))
             return redirect('tasks_page')
     else:
+        task = Task(owner=request.user)
         diagram_offset_x = request.GET.get('diagram_offset_x')
-        begin_at = request.GET.get('begin_at')
-        if diagram_offset_x is not None and begin_at is not None:
-            form = AddTaskForm(
-                instance=Task(
-                    owner=request.user,
-                    begin_at=begin_at,
-                    diagram_offset_x=int(diagram_offset_x)
-                )
-            )
-        else:
-            form = AddTaskForm(
-                instance=Task(
-                    owner=request.user,
-                    begin_at=timezone.localtime(
-                        timezone.now(), pytz.timezone(cur_tz)
-                    ).strftime('%Y-%m-%dT%H:%M')
-                )
-            )
+        if diagram_offset_x is not None:
+            task.diagram_offset_x = int(diagram_offset_x)
 
+        begin_at = request.GET.get('begin_at')
+        if begin_at is not None:
+            task.begin_at = begin_at
+        else:
+            task.begin_at = timezone.localtime(
+                timezone.now(), pytz.timezone(cur_tz)
+            ).strftime('%Y-%m-%dT%H:%M')
+
+        form = AddTaskForm(instance=task)
         form.fields['project'].queryset = Project.objects.filter(
             owner_id=request.user.id).all()
         form.fields['tags'].queryset = Tag.objects.filter(

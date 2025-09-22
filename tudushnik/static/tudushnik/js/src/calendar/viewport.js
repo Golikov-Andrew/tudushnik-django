@@ -64,7 +64,10 @@ class Viewport {
     }
 
     create_rows_label(content) {
-        return new DOMElem('div', {classes: ['row_label'], children: [content]}).element
+        return new DOMElem('div', {
+            classes: ['row_label'],
+            children: [content]
+        }).element
     }
 
     create_row() {
@@ -72,7 +75,10 @@ class Viewport {
     }
 
     create_cell(content) {
-        return new DOMElem('div', {classes: ['cell'], children: [content]}).element
+        return new DOMElem('div', {
+            classes: ['cell'],
+            children: [content]
+        }).element
     }
 
     redraw_task(task) {
@@ -89,13 +95,13 @@ class Viewport {
         }
 
         if (cell_content !== null) {
-            console.log('task', task)
+            // console.log('task', task)
             let new_task_widget_element = new DOMElem('div', {
                 classes: ['task_widget'],
                 html: `${task.title} - ${task.content}`,
-                // attrs: {'style':''}
+                attrs: {'data-task-id': task.id}
             }).element
-            new_task_widget_element.style.backgroundColor = `${this.calendar.projects[task.project_id].color}`;
+            new_task_widget_element.style.backgroundColor = `${this.calendar.projects[task.project].color}`;
             cell_content.appendChild(new_task_widget_element)
             if (this.calendar.selected_view.selected_view === this.calendar.selected_view.views.day) {
                 new_task_widget_element.addEventListener('click', () => {
