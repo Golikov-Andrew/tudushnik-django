@@ -5,7 +5,7 @@ DQM.load_query()
 DQM.init_GUI({
     search: [
         {
-            selector: '.inp_table_column_search',
+            selector: 'search-widget-component',
             listeners: [
                 ['change', () => {
                     DQM.apply_params()
@@ -20,10 +20,20 @@ DQM.init_GUI({
     ],
     sorting:[
         {
-            selector: '.table_column_sorting',
+            selector: 'sorting-widget',
             listeners: [
-                ['click', () => {
+                ['click', (evt) => {
                     DQM.apply_params()
+                }]
+            ],
+        }
+    ],
+    filters:[
+        {
+            selector: 'binary-filter-widget',
+            listeners: [
+                ['click', (evt) => {
+                    DQM.apply_params(evt)
                 }]
             ],
         }

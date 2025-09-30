@@ -131,19 +131,6 @@ body > .wrapper {
     min-width: 76px;
   }
 }
-.table_column_sorting {
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  background-color: #4A8FC1;
-  color: white;
-  border: none;
-  font-size: 16px;
-  font-weight: 700;
-}
-.table_column_sorting:hover {
-  background-color: #34729f;
-}
 .user_avatar {
   width: 100px;
   height: 100px;

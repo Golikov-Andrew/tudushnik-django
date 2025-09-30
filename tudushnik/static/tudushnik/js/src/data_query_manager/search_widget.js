@@ -27,6 +27,6 @@ class SearchWidget {
     }
 }
 
-export {
-    SearchWidget
-}
+// export {
+//     SearchWidget
+// }

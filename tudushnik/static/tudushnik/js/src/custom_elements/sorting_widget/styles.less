@@ -1,0 +1,21 @@
+@import '../../../../less/components/utils/_mixins.less';
+@import '../../../../less/components/utils/_variables.less';
+
+:host {
+  display: flex;
+  column-gap: 4px;
+  justify-content: center;
+}
+
+.table_column_sorting {
+  .var_submit();
+  width: max-content;
+
+  &.active {
+    background-color: #55bb55;
+  }
+}
+
+
+
+

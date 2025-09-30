@@ -51,6 +51,6 @@ class SortingWidget {
     }
 }
 
-export {
-    SortingWidget
-}
+// export {
+//     SortingWidget
+// }

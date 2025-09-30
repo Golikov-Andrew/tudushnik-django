@@ -23,52 +23,56 @@ class ProjectListView(ListView):
     template_name = 'tudushnik/projects_page.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(ProjectListView, self).get_context_data(**kwargs)
         context['title'] = 'Проекты'
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
         sorting_section = self.request.GET.get('sorting')
+
+        tags_section = self.request.GET.get('tags')
+        filter_section = self.request.GET.get('filter')
+
         per_page = manage_user_settings(self.request.user.id, per_page)
-        all_projects = Project.objects.filter(owner_id=self.request.user.id)
+
+        all_projects = Project.objects.filter(owner_id=self.request.user.id).all()
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
+
+        kw = dict()
         if search_section is not None:
             search_section_obj = json.loads(search_section)
-            kw = dict()
+            # kw = dict()
             for key, value in search_section_obj.items():
                 if key == 'owner':
                     key = 'owner__username'
                 kw[key + '__icontains'] = value
-            all_projects = all_projects.filter(**kw)
+            all_projects = all_projects.filter(**kw).all()
+
+
+        other_projects = Project.objects.filter(
+            Q(users_groups__users=self.request.user.id) & Q(
+                users_groups__is_active=True) & Q(
+                users_groups__permission_view_project=True)).all()
+
+        if search_section is not None:
+            other_projects = other_projects.filter(**kw).all()
+
+        union_projects = all_projects.union(other_projects)
+
         if sorting_section is not None:
             sorting_section_list = json.loads(sorting_section)
             ls = list()
             for item in sorting_section_list:
                 ls.append(item['v'] + item['n'])
-            all_projects = all_projects.order_by(*ls)
 
-        other_projects = Project.objects.filter(
-            Q(users_groups__users=self.request.user.id) & Q(
-                users_groups__is_active=True) & Q(
-                users_groups__permission_view_project=True))
+            union_projects = union_projects.order_by(*ls).all()
 
-        # if search_section is not None:
-        #     search_section_obj = json.loads(search_section)
-        #     kw = dict()
-        #
-        #     for key, value in search_section_obj.items():
-        #         if key == 'owner':
-        #             key = 'users_groups__users__username'
-        #         kw[key + '__icontains'] = value
-        #     other_projects = other_projects.filter(**kw)
+        print('union', union_projects.query)
 
-        all_projects = all_projects.union(other_projects)
-        print('union', all_projects.query)
-
-        paginator = Paginator(all_projects, int(per_page))
+        paginator = Paginator(union_projects, int(per_page))
         page_number = self.request.GET.get('page')
         context['page_obj'] = paginator.get_page(page_number)
         context['limit'] = per_page
-        context['len_records'] = len(all_projects)
+        context['len_records'] = len(union_projects)
         context['all_tags'] = all_tags
         context['page_title_eng'] = 'projects_page'
         set_client_timezone(self.request, context)
