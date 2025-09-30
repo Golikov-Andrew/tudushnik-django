@@ -3,7 +3,7 @@ import json
 from django.contrib.auth import get_user
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, UpdateView
@@ -108,14 +108,18 @@ class ProjectDetailView(DetailView):
         context['title'] = context["project"]
         context['project_color'] = context["project"].color
         project_id = context["project"].id
+
         all_tasks = Task.objects.filter(
             project=context['project']).select_related().prefetch_related(
             'tags')
+
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
         sorting_section = self.request.GET.get('sorting')
         tags_section = self.request.GET.get('tags')
+        filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
+
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
         all_projects = Project.objects.filter(
             owner_id=self.request.user.id).all()
@@ -148,6 +152,22 @@ class ProjectDetailView(DetailView):
                 ls.append(item['v'] + item['n'])
             print(ls)
             all_tasks = all_tasks.order_by(*ls)
+
+        if filter_section is not None:
+            filter_section_obj = json.loads(filter_section)
+
+            kw = dict()
+            for key, value in filter_section_obj.items():
+                if key == 'is_done':
+                    kw[key] = True if value == 'yes' else False
+                else:
+                    k = key + '__in'
+                    if k not in kw:
+                        kw[k] = list()
+                    for v in value:
+                        kw[k].append(v)
+
+            all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
 
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
