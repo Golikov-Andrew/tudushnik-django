@@ -12,13 +12,24 @@
     "app": "webpack --mode production"
   },
   "dependencies": {
+    "html-loader": "^5.1.0",
     "jquery": "^3.7.0",
     "moment": "^2.29.4",
     "moment-duration-format": "^2.3.2",
     "moment-range": "^4.0.2"
   },
   "devDependencies": {
+    "css-loader": "^7.1.2",
+    "less": "^4.4.1",
+    "less-loader": "^12.3.0",
+    "mini-css-extract-plugin": "^2.9.4",
+    "node-sass": "^9.0.0",
+    "raw-loader": "^4.0.2",
+    "sass": "^1.93.2",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
     "webpack": "^5.88.2",
+    "webpack-bundle-tracker": "^3.2.1",
     "webpack-cli": "^5.1.4"
   }
 }

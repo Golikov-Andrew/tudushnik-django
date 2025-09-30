@@ -27,6 +27,28 @@ function send_post_formdata(e, csrftoken, url, formdata, func_on_success, func_o
     if (e !== undefined) e.preventDefault();
 }
 
+function get_dict_from_list_by_key_val(list, key, val, def = false) {
+    for (let i = 0, c; i < list.length; i++) {
+        c = list[i]
+        if (c[key] === val) {
+            return c
+        }
+    }
+    return def
+}
+function get_dict_n_index_from_list_by_key_val(list, key, val, def = false) {
+    for (let i = 0, c; i < list.length; i++) {
+        c = list[i]
+        if (c[key] === val) {
+            return {
+                obj: c,
+                index: i
+            }
+        }
+    }
+    return def
+}
+
 export {
-    pop_from_list, send_post_formdata
+    pop_from_list, send_post_formdata, get_dict_from_list_by_key_val, get_dict_n_index_from_list_by_key_val
 }

@@ -36,55 +36,61 @@ class UsersGroupListView(ListView):
         filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
 
-        all_projects = Project.objects.filter(
-            owner_id=self.request.user.id).all()
-        all_tasks = Task.objects.filter(project__in=all_projects).all()
+
+        all_users_groups = UsersGroup.objects.filter(
+            creator_id=self.request.user.id).all()
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
-        all_users_groups = UsersGroup.objects.filter(creator_id=self.request.user.id).all()
 
-        # if search_section is not None:
-        #     search_section_obj = json.loads(search_section)
-        #     kw = dict()
-        #     for key, value in search_section_obj.items():
-        #         kw[key + '__icontains'] = value
-        #     all_tasks = all_tasks.filter(**kw)
-        #
-        # if tags_section is not None:
-        #     tags_section_obj = [int(i) for i in tags_section.split(',')]
-        #     query = Q()
-        #     for t in tags_section_obj:
-        #         query |= Q(tags=t)
-        #     all_tasks = all_tasks.filter(query).distinct()
-        # if sorting_section is not None:
-        #     sorting_section_list = json.loads(sorting_section)
-        #     ls = list()
-        #     for item in sorting_section_list:
-        #         ls.append(item['v'] + item['n'])
-        #     print(ls)
-        #     all_tasks = all_tasks.order_by(*ls)
-        # if filter_section is not None:
-        #     filter_section_obj = json.loads(filter_section)
-        #
-        #     kw = dict()
-        #     for key, value in filter_section_obj.items():
-        #         k = key + '__in'
-        #         if k not in kw:
-        #             kw[k] = list()
-        #         for v in value:
-        #             kw[k].append(v)
-        #
-        #     all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
+        kw = dict()
+        if search_section is not None:
+            search_section_obj = json.loads(search_section)
+            for key, value in search_section_obj.items():
+                if key == 'owner':
+                    key = 'owner__username'
+                kw[key + '__icontains'] = value
+            # all_users_groups = all_users_groups.filter(**kw).all()
 
-        paginator = Paginator(all_users_groups, int(per_page))
+        if filter_section is not None:
+            filter_section_obj = json.loads(filter_section)
+
+            # kw = dict()
+            for key, value in filter_section_obj.items():
+                if key == 'is_active':
+                    kw[key] = True if value == 'yes' else False
+                else:
+                    k = key + '__in'
+                    if k not in kw:
+                        kw[k] = list()
+                    for v in value:
+                        kw[k].append(v)
+
+            all_users_groups = all_users_groups.filter(**kw).all()
+
+        other_user_groups = UsersGroup.objects.filter(
+            Q(users=self.request.user.id) & Q(
+                is_active=True)).all()
+
+        if search_section is not None or filter_section is not None:
+            other_user_groups = other_user_groups.filter(**kw).all()
+
+        union_user_groups = all_users_groups.union(other_user_groups)
+
+        if sorting_section is not None:
+            sorting_section_list = json.loads(sorting_section)
+            ls = list()
+            for item in sorting_section_list:
+                ls.append(item['v'] + item['n'])
+
+            union_user_groups = union_user_groups.order_by(*ls).all()
+
+        print('union', union_user_groups.query)
+
+        paginator = Paginator(union_user_groups, int(per_page))
         page_number = self.request.GET.get('page')
         context['page_obj'] = paginator.get_page(page_number)
         context['limit'] = per_page
-        context['len_records'] = len(all_users_groups)
+        context['len_records'] = len(union_user_groups)
         context['all_tags'] = all_tags
-        # context['json_data'] = {
-        #     'tags': [t.to_json() for t in all_tags]
-        # }
-        # context['page_title_eng'] = 'tasks_page'
         set_client_timezone(self.request, context)
 
         return context
@@ -140,7 +146,8 @@ def add_users_group(request, *args, **kwargs):
 
         if form.is_valid():
             form.save()
-            if request.POST.get('referer') is not None and request.POST.get('referer') != '':
+            if request.POST.get('referer') is not None and request.POST.get(
+                    'referer') != '':
                 return redirect(request.POST.get('referer'))
             return redirect('users_groups_page')
     else:
@@ -163,6 +170,6 @@ def add_users_group(request, *args, **kwargs):
 def users_group_delete(request, pk: int, *args, **kwargs):
     if request.method == 'POST':
         target_object = UsersGroup.objects.filter(creator_id=request.user.id,
-                                            pk=pk).first()
+                                                  pk=pk).first()
         target_object.delete()
         return JsonResponse({"success": True})

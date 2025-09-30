@@ -1,0 +1,55 @@
+@import '../../../../less/components/utils/_mixins.less';
+@import '../../../../less/components/utils/_variables.less';
+
+.path {
+  position: relative;
+  display: inline-block;
+  width: 64px;
+  height: 32px;
+  background-color: @cold-dark;
+  border-radius: 16px;
+  margin: 4px;
+  cursor: pointer;
+
+  .hand {
+    position: absolute;
+    background-color: @cold-medium;
+    border-radius: 14px;
+    width: 28px;
+    height: 28px;
+    top: 2px;
+    left: 18px;
+    transition: left .4s ease-out;
+  }
+  .place{
+    position: absolute;
+    border-radius: 14px;
+    width: 28px;
+    height: 28px;
+    //outline: 1px solid black;
+    cursor: pointer;
+    top: 2px;
+    &.no{
+      left: 2px;
+    }
+    &.yes{
+      left: 34px;
+    }
+  }
+
+  &.no{
+    .hand{
+      left: 2px;
+    }
+  }
+  &.yes{
+    .hand{
+      left: 34px;
+    }
+  }
+
+}
+
+
+
+

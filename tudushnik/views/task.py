@@ -66,11 +66,14 @@ class TaskListView(ListView):
 
             kw = dict()
             for key, value in filter_section_obj.items():
-                k = key + '__in'
-                if k not in kw:
-                    kw[k] = list()
-                for v in value:
-                    kw[k].append(v)
+                if key == 'is_done':
+                    kw[key] = True if value == 'yes' else False
+                else:
+                    k = key + '__in'
+                    if k not in kw:
+                        kw[k] = list()
+                    for v in value:
+                        kw[k].append(v)
 
             all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
 

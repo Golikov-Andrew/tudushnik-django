@@ -20,10 +20,14 @@
 
 {% block local_scripts %}
     {{ json_data|json_script:"my-json-data" }}
-    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/dist/tasks_page.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
-{#    <script type="text/javascript" src="{% static 'tudushnik/js/filtering.js' %}"></script>#}
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/tasks_page.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/data_query_manager.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/custom_elements.js' %}"></script>
 {% endblock local_scripts %}

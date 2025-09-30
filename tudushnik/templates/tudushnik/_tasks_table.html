@@ -31,8 +31,8 @@
         </th>
 
         <th>
-            <div>Done?</div>
-            {{ 'is_done'|create_table_column_search_and_sorting_widget:3 }}
+            <div>Готово?</div>
+            <binary-filter-widget data-field-name="is_done"></binary-filter-widget>
         </th>
         {#        <th>#}
         {#            <div>Проект</div>#}
@@ -40,27 +40,33 @@
         {#        </th>#}
         <th>
             <div>Название</div>
-            {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="title" size="3"></search-widget-component>
+            <sorting-widget data-field-name="title"></sorting-widget>
         </th>
         <th>
             <div>Описание</div>
-            {{ 'content'|safe|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="content" size="3"></search-widget-component>
+            <sorting-widget data-field-name="content"></sorting-widget>
         </th>
         <th>
             <div>Создана</div>
-            {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="created_at" size="3"></search-widget-component>
+            <sorting-widget data-field-name="created_at"></sorting-widget>
         </th>
         <th>
             <div>Обновлена</div>
-            {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="updated_at" size="3"></search-widget-component>
+            <sorting-widget data-field-name="updated_at"></sorting-widget>
         </th>
         <th>
             <div>Начало</div>
-            {{ 'begin_at'|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="begin_at" size="3"></search-widget-component>
+            <sorting-widget data-field-name="begin_at"></sorting-widget>
         </th>
         <th>
             <div title="Продолжительность">Продолж.</div>
-            {{ 'duration'|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="duration" size="3"></search-widget-component>
+            <sorting-widget data-field-name="duration"></sorting-widget>
         </th>
         <th>
             <div>Тэги</div>

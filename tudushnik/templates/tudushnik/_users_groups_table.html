@@ -6,38 +6,46 @@
     <tr>
         <th>
             <div>Создатель</div>
-            {{ 'creator'|create_table_column_search_and_sorting_widget:3 }}
+{#            <search-widget-component data-field-name="creator" size="3"></search-widget-component>#}
+            <sorting-widget data-field-name="creator"></sorting-widget>
         </th>
         <th>
             <div>Активна?</div>
+            <binary-filter-widget data-field-name="is_active"></binary-filter-widget>
         </th>
         <th>
             <div>Название</div>
-            {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="title" size="3"></search-widget-component>
+            <sorting-widget data-field-name="title"></sorting-widget>
         </th>
         <th>
             <div>Описание</div>
-            {{ 'description'|safe|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="description" size="3"></search-widget-component>
+            <sorting-widget data-field-name="description"></sorting-widget>
         </th>
         <th>
             <div>Создана</div>
-            {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="created_at" size="3"></search-widget-component>
+            <sorting-widget data-field-name="created_at"></sorting-widget>
         </th>
         <th>
             <div>Обновлена</div>
-            {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
+            <search-widget-component data-field-name="updated_at" size="3"></search-widget-component>
+            <sorting-widget data-field-name="updated_at"></sorting-widget>
         </th>
         <th>
             <div>Проекты</div>
-            {{ 'projects'|create_table_column_search_and_sorting_widget:3 }}
+{#            <search-widget-component data-field-name="projects" size="3"></search-widget-component>#}
+{#            <sorting-widget data-field-name="projects"></sorting-widget>#}
         </th>
         <th>
             <div>Пользователи</div>
-            {{ 'users'|create_table_column_search_and_sorting_widget:3 }}
+{#            <search-widget-component data-field-name="users" size="3"></search-widget-component>#}
+{#            <sorting-widget data-field-name="users"></sorting-widget>#}
         </th>
         <th>
             <div>Тэги</div>
-            {{ 'tags'|create_table_column_multi_filter_widget:all_tags }}
+{#            {{ 'tags'|create_table_column_multi_filter_widget:all_tags }}#}
 
         </th>
     </tr>

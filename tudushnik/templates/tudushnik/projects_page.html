@@ -21,22 +21,34 @@
                 </th>
                 <th>
                     <div>Название</div>
-                    {{ 'title'|create_table_column_search_and_sorting_widget:3 }}
+                    <search-widget-component data-field-name="title"
+                                             size="3"></search-widget-component>
+                    <sorting-widget data-field-name="title"></sorting-widget>
                 </th>
                 <th>
                     <div>Описание</div>
 
-                    {{ 'description'|create_table_column_search_and_sorting_widget:3 }}
+
+                    <search-widget-component data-field-name="description"
+                                             size="3"></search-widget-component>
+                    <sorting-widget
+                            data-field-name="description"></sorting-widget>
                 </th>
                 <th>
                     <div>Создан</div>
 
-                    {{ 'created_at'|create_table_column_search_and_sorting_widget:3 }}
+                    <search-widget-component data-field-name="created_at"
+                                             size="3"></search-widget-component>
+                    <sorting-widget
+                            data-field-name="created_at"></sorting-widget>
                 </th>
                 <th>
                     <div>Обновлён</div>
 
-                    {{ 'updated_at'|create_table_column_search_and_sorting_widget:3 }}
+                    <search-widget-component data-field-name="updated_at"
+                                             size="3"></search-widget-component>
+                    <sorting-widget
+                            data-field-name="updated_at"></sorting-widget>
                 </th>
             </tr>
             {% for item in page_obj %}
@@ -98,8 +110,10 @@
             src="{% static 'tudushnik/js/crud.js' %}"></script>
     <script type="text/javascript"
             src="{% static 'tudushnik/js/projects_page.js' %}"></script>
+    {#    <script type="text/javascript"#}
+    {#            src="{% static 'tudushnik/js/searching.js' %}"></script>#}
+    {#    <script type="text/javascript"#}
+    {#            src="{% static 'tudushnik/js/sorting.js' %}"></script>#}
     <script type="text/javascript"
-            src="{% static 'tudushnik/js/searching.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static 'tudushnik/js/sorting.js' %}"></script>
+            src="{% static 'tudushnik/js/dist/data_query_manager.js' %}"></script>
 {% endblock local_scripts %}

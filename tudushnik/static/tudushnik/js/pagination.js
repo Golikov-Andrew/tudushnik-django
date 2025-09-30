@@ -19,8 +19,11 @@ pagination_limit.addEventListener('change', (ev) => {
 })
 
 for (let i = 0, cur_btn; i < btns_pagination_ctrl.length; i++) {
+    let urlSearchParams = new URLSearchParams(window.location.search);
     cur_btn = btns_pagination_ctrl[i]
     cur_btn.addEventListener('click', (ev) => {
-        window.location.href = cur_btn.getAttribute('data-href') + '&limit=' + pagination_limit.value
+        const data_href = cur_btn.getAttribute('data-href')
+        urlSearchParams.set('page', data_href)
+        window.location.href = '?' + urlSearchParams.toString()
     })
 }
