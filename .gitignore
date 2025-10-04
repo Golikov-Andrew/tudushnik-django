@@ -17,3 +17,5 @@ static/
 media/user_avatars/*
 !media/user_avatars/default_user_avatar.jpg
 
+tudushnik/static/tudushnik/js/dist/webpack-stats.json
+

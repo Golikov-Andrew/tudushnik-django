@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timedelta
 
 import pytz
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from django.core.paginator import Paginator
@@ -12,6 +13,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, UpdateView
 from rest_framework import generics
+from rest_framework.response import Response
 
 from tudushnik.forms.task import AddTaskForm, TaskUpdateForm
 from tudushnik.middleware import set_client_timezone
@@ -36,9 +38,21 @@ class TaskListView(ListView):
         filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
 
-        all_projects = Project.objects.filter(
-            owner_id=self.request.user.id).all()
-        all_tasks = Task.objects.filter(project__in=all_projects).all()
+        # all_projects = Project.objects.filter(
+        #     owner_id=self.request.user.id).all()
+        # all_tasks = Task.objects.filter(project__in=all_projects).all()
+        all_tasks = Task.objects.filter(
+            project__owner_id=self.request.user.id
+        ).select_related(
+            'owner', 'project', 'accountable__profile_settings'
+        ).prefetch_related(
+            'tags', 'informed', 'consultant', 'responsible'
+        ).prefetch_related(
+            'informed__profile_settings',
+            'consultant__profile_settings',
+            'responsible__profile_settings'
+        )
+
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
 
         if search_section is not None:
@@ -54,6 +68,7 @@ class TaskListView(ListView):
             for t in tags_section_obj:
                 query |= Q(tags=t)
             all_tasks = all_tasks.filter(query).distinct()
+
         if sorting_section is not None:
             sorting_section_list = json.loads(sorting_section)
             ls = list()
@@ -61,6 +76,7 @@ class TaskListView(ListView):
                 ls.append(item['v'] + item['n'])
             print(ls)
             all_tasks = all_tasks.order_by(*ls)
+
         if filter_section is not None:
             filter_section_obj = json.loads(filter_section)
 
@@ -75,7 +91,8 @@ class TaskListView(ListView):
                     for v in value:
                         kw[k].append(v)
 
-            all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
+            # all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
+            all_tasks = all_tasks.filter(**kw)
 
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
@@ -129,7 +146,8 @@ class TaskUpdateView(UpdateView):
     form_class = TaskUpdateForm
 
     def get_success_url(self):
-        if self.request.POST.get('referer') is not None and self.request.POST.get(
+        if self.request.POST.get(
+                'referer') is not None and self.request.POST.get(
                 'referer') != '':
             return self.request.POST.get('referer')
         return reverse('task_detail', kwargs={'pk': self.object.pk})
@@ -153,7 +171,8 @@ class TaskUpdateView(UpdateView):
 
         task_pk = current_task.pk
         owner_id = self.request.user.id
-        context['form'].initial['begin_at'] = context['form'].initial['begin_at'].replace(microsecond=0)
+        context['form'].initial['begin_at'] = context['form'].initial[
+            'begin_at'].replace(microsecond=0)
         if owner_editor:
             context['form'].fields['project'].queryset = Project.objects.filter(
                 owner_id=owner_id).all()
@@ -166,6 +185,8 @@ class TaskUpdateView(UpdateView):
             context['form'].fields['tags'].queryset = Tag.objects.filter(
                 owner_id=target_project.first().owner.id).filter(
                 projects=current_task.project.pk).all()
+
+        # context['form'].fields['accountable'].queryset = User.objects.filter(pk=1).all()
 
         all_other_tasks = Task.objects.filter(
             project=target_project.first()).exclude(
@@ -253,6 +274,7 @@ def add_task(request, *args, **kwargs):
     if request.method == 'POST':
         form = AddTaskForm(request.POST, request.FILES)
         form.instance.owner = request.user
+        form.instance.accountable = request.user
 
         if form.is_valid():
             offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
@@ -311,6 +333,7 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
     if request.method == 'POST':
         form = AddTaskForm(request.POST, request.FILES)
         form.instance.owner = request.user
+        form.instance.accountable = request.user
 
         if form.is_valid():
             offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
@@ -500,3 +523,11 @@ class TaskList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Task.objects.filter(owner_id=self.request.user.id).all()
+
+    def list(self, request, *args, **kwargs):
+        # Все задачи без пагинации
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return JsonResponse({
+            'results': serializer.data
+        })
