@@ -29,6 +29,16 @@ class Task(models.Model):
         symmetrical=False,
         through='TaskParentChild'
     )
+    # RACI matrix
+    responsible = models.ManyToManyField(User,
+                                         related_name='tasks_responsible',
+                                         blank=True)
+    accountable = models.ForeignKey(User, on_delete=models.SET_NULL,
+                                    related_name='tasks_accountable', null=True)
+    consultant = models.ManyToManyField(User, related_name='tasks_consultant',
+                                        blank=True)
+    informed = models.ManyToManyField(User, related_name='tasks_informed',
+                                      blank=True)
 
     # views = models.IntegerField(default=0)
     # slug = models.SlugField(max_length=255, unique=True,

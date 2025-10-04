@@ -3,12 +3,16 @@
 
 {% block content %}
 
-    <div><a href="{% url 'users_groups_page' %}">Группы</a>&nbsp;-&gt;&nbsp;<span>{{ object.title }}</span></div>
+    <div>
+        <a href="{% url 'users_groups_page' %}">Группы</a>&nbsp;-&gt;&nbsp;<span>{{ object.title }}</span>
+    </div>
     <br>
     <div>
-        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="группу"
+        <button class="btn_item_delete" data-item-title="{{ object.title }}"
+                data-entity-name="группу"
                 data-redirect-url="{% url 'users_groups_page' %}"
-                data-post-url="{% url 'users_group_delete' pk=object.pk %}">&#x2613;
+                data-post-url="{% url 'users_group_delete' pk=object.pk %}">
+            &#x2613;
         </button>
         <a href="{% url 'users_group_edit' pk=object.pk %}">&#9998;</a>
     </div>
@@ -44,10 +48,33 @@
         </ul>
     </div>
     <div>
+        <h4>Права</h4>
+        <ul>
+            {% if object.permission_view_project is True %}
+                <li>Просмотр проекта</li>
+            {% endif %}
+            {% if object.permission_view_tasks_list is True %}
+                <li>Просмотр листинга задач проекта</li>
+            {% endif %}
+            {% if object.permission_view_project_tasks is True %}
+                <li>Просмотр задач проекта</li>
+            {% endif %}
+            {% if object.permission_create_task is True %}
+                <li>Создание задач в проекте</li>
+            {% endif %}
+            {% if object.permission_update_task is True %}
+                <li>Редактирование задач в проекте</li>
+            {% endif %}
+            {% if object.permission_delete_task is True %}
+                <li>Удаление задач в проекте</li>
+            {% endif %}
+        </ul>
+    </div>
+    <div>
         <h4>Участники</h4>
         <ul>
             {% for user in object.users.all %}
-{#                TODO: сделать страничку просмотра пользователя #}
+                {#                TODO: сделать страничку просмотра пользователя #}
                 <li><a href="#">
                     {{ user }}</a></li>
             {% endfor %}
@@ -58,8 +85,12 @@
 
 {% block local_scripts %}
     {#    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>#}
-    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/users_group_detail.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/users_group_detail.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/searching.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/sorting.js' %}"></script>
 {% endblock local_scripts %}
