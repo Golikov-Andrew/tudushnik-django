@@ -2,22 +2,183 @@
 {% load static %}
 
 
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/form.css' %}">
+{% endblock local_styles %}
+
+
+
 {% block content %}
     <h2>Редактирование задачи</h2>
-    <form method="post">{% csrf_token %}
-        {{ form.as_p }}
+    <form class="form" method="post">{% csrf_token %}
         <input type="hidden" name="referer" value="{{ referer }}">
-        <label for="id_parents">Родительские задачи:</label>
-        <select name="parents[]" id="id_parents" multiple>
-            {% for item in all_other_tasks_and_not_children %}
-                <option
-                        {% if item in parents %}
-                            selected
-                        {% endif %}
-                            value="{{ item.pk }}">
-                    {{ item.title }}</option>
-            {% endfor %}
-        </select>
+        <div>{{ form.non_field_errors }}</div>
+
+        <div class="row">
+            <div class="cell form-cell">
+                <div class="fieldset openable">
+                    <div class="label">Основное</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                {{ form.project.label_tag }}
+                            </div>
+                            <div class="field-content">
+                                {{ form.project }}
+                            </div>
+
+                        </div>
+                        <div class="content-row">
+                            <div class="field-label">
+                                {{ form.title.label_tag }}
+                            </div>
+                            <div class="field-content">
+                                {{ form.title }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="label">Статус</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                {{ form.is_done.label_tag }}
+                            </div>
+                            <div class="field-content">
+                                {{ form.is_done }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">{{ form.tags.label_tag }}</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                {{ form.tags }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">Время</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                {{ form.begin_at.label_tag }}
+                            </div>
+                            <div class="field-content">
+                                {{ form.begin_at }}
+                            </div>
+
+                        </div>
+                        <div class="content-row">
+                            <div class="field-label">
+                                {{ form.duration.label_tag }}
+                            </div>
+                            <div class="field-content">
+                                {{ form.duration }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="cell form-cell">
+                <div class="fieldset openable">
+                    <div class="label">{{ form.content.label_tag }}</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                {{ form.content }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="cell form-cell">
+                <div class="fieldset">
+                    <div class="label">{{ form.accountable.label_tag }}</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content one-widget">
+                                {{ form.accountable }}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">{{ form.responsible.label_tag }}</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                {{ form.responsible }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">{{ form.consultant.label_tag }}</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                {{ form.consultant }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">{{ form.informed.label_tag }}</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                {{ form.informed }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell form-cell">
+                <div class="fieldset openable">
+                    <div class="label">{{ form.children.label_tag }}</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                {{ form.children }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">Родительские задачи</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                <select name="parents[]" id="id_parents"
+                                        multiple>
+                                    {% for item in all_other_tasks_and_not_children %}
+                                        <option
+                                                {% if item in parents %}
+                                                    selected
+                                                {% endif %}
+                                                    value="{{ item.pk }}">
+                                            {{ item.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div>
             <div>Перемещать</div>
             <div>
@@ -37,6 +198,7 @@
                 <label for="inp_is_move_with_parents">с parents?</label>
             </div>
         </div>
+
         <input type="submit" value="OK">
     </form>
 
@@ -45,6 +207,6 @@
 
 {% block local_scripts %}
     <script type="text/javascript"
-            src="{% static 'tudushnik/js/duration_annotation.js' %}"></script>
+            src="{% static 'tudushnik/js/dist/task_update_form.js' %}"></script>
 {% endblock local_scripts %}
 

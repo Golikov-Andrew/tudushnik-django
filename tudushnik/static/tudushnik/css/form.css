@@ -1,0 +1,424 @@
+@media (min-width: 768px) {
+  .color-red {
+    color: red;
+  }
+}
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+.small_label {
+  font-size: 10px;
+  margin: 0;
+  color: #626262;
+}
+.hidden {
+  display: none;
+}
+.modal_wrapper .overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: black;
+  opacity: 0.5;
+}
+.modal_wrapper .modal_window {
+  display: inline-block;
+  position: absolute;
+  width: 100px;
+  height: 60px;
+  background-color: white;
+  font-size: 12px;
+}
+.modal_wrapper .modal_window .btn_close {
+  cursor: pointer;
+}
+.modal_wrapper .modal_window .btn_ok {
+  cursor: pointer;
+  background-color: darkgreen;
+  color: white;
+}
+.var_input {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  color: #4A8FC1;
+  font-size: 16px;
+  max-width: 180px;
+}
+@media (min-width: 500px) {
+  .var_input {
+    max-width: unset;
+  }
+}
+.var_input:focus-visible,
+.var_input:focus {
+  outline: 2px solid #4A8FC1;
+}
+.var_submit {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.var_submit:hover {
+  background-color: #34729f;
+}
+.var_btn_del {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 4px 8px;
+  font-size: 10px;
+  background-color: #e56c6c;
+}
+.var_btn_del:hover {
+  background-color: #34729f;
+}
+.var_btn_del:hover {
+  background-color: #9d3c3c;
+}
+.search_and_sorting_widget input[type="text"] {
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  color: #4A8FC1;
+  font-size: 16px;
+  max-width: 180px;
+  width: 100%;
+  margin: 4px;
+}
+@media (min-width: 500px) {
+  .search_and_sorting_widget input[type="text"] {
+    max-width: unset;
+  }
+}
+.search_and_sorting_widget input[type="text"]:focus-visible,
+.search_and_sorting_widget input[type="text"]:focus {
+  outline: 2px solid #4A8FC1;
+}
+@media (min-width: 768px) {
+  .search_and_sorting_widget {
+    min-width: 76px;
+  }
+}
+.var-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px;
+  height: 50px;
+  border-radius: 8px;
+}
+@media (max-width: 499px) {
+  .var-label {
+    width: 50%;
+  }
+}
+@media (min-width: 500px) {
+  .var-label {
+    width: 396px;
+  }
+}
+@media (min-width: 1200px) {
+  .var-label {
+    width: 316px;
+  }
+}
+.var-flex {
+  display: flex;
+  gap: 4px;
+}
+@media (min-width: 1200px) {
+  .var-flex {
+    gap: 8px;
+  }
+}
+#content-container .page-content {
+  width: 100%;
+  max-width: 1024px;
+}
+@media (min-width: 1200px) {
+  #content-container .page-content {
+    max-width: 1200px;
+  }
+}
+.duration_widget {
+  display: flex;
+  gap: 4px;
+}
+@media (min-width: 1200px) {
+  .duration_widget {
+    gap: 8px;
+  }
+}
+.duration_widget > div {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  width: 50%;
+}
+@media (min-width: 1200px) {
+  .duration_widget > div {
+    gap: 8px;
+  }
+}
+.duration_widget > div label {
+  font-size: 12px;
+}
+.duration_widget > div .duration_controller {
+  min-width: 50px;
+}
+.form {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+@media (min-width: 1200px) {
+  .form {
+    gap: 8px;
+  }
+}
+.form .row {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+@media (min-width: 1200px) {
+  .form .row {
+    gap: 8px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait), (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  .form .row {
+    flex-direction: row;
+  }
+}
+@media (max-width: 953px) and (orientation: landscape) {
+  .form .row {
+    flex-direction: row;
+  }
+}
+@media (min-width: 1200px) {
+  .form .row {
+    flex-direction: row;
+  }
+}
+.form .row .cell.form-cell {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+@media (min-width: 1200px) {
+  .form .row .cell.form-cell {
+    gap: 8px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait), (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  .form .row .cell.form-cell {
+    width: 50%;
+  }
+}
+@media (max-width: 953px) and (orientation: landscape) {
+  .form .row .cell.form-cell {
+    width: 50%;
+  }
+}
+@media (min-width: 1200px) {
+  .form .row .cell.form-cell {
+    width: 50%;
+  }
+}
+.form .row .cell .fieldset {
+  display: flex;
+  gap: 4px;
+}
+@media (min-width: 1200px) {
+  .form .row .cell .fieldset {
+    gap: 8px;
+  }
+}
+.form .row .cell .fieldset .label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px;
+  height: 50px;
+  border-radius: 8px;
+  background-color: #F5FBFF;
+  transition: width 0.5s ease-out;
+  position: relative;
+}
+@media (max-width: 499px) {
+  .form .row .cell .fieldset .label {
+    width: 50%;
+  }
+}
+@media (min-width: 500px) {
+  .form .row .cell .fieldset .label {
+    width: 396px;
+  }
+}
+@media (min-width: 1200px) {
+  .form .row .cell .fieldset .label {
+    width: 316px;
+  }
+}
+.form .row .cell .fieldset.openable .label:after {
+  position: absolute;
+  content: "";
+  top: 15px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  background-image: url('../img/svg_sprite_form.svg#chevron');
+  filter: brightness(0) saturate(100%) invert(48%) sepia(58%) saturate(416%) hue-rotate(163deg) brightness(96%) contrast(97%);
+  transition: rotate 0.3s;
+}
+.form .row .cell .fieldset .content {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  width: 50%;
+  justify-content: center;
+}
+@media (min-width: 1200px) {
+  .form .row .cell .fieldset .content {
+    gap: 8px;
+  }
+}
+@media (min-width: 500px) {
+  .form .row .cell .fieldset .content {
+    width: 100%;
+  }
+}
+.form .row .cell .fieldset .content .content-row {
+  display: flex;
+}
+.form .row .cell .fieldset .content .content-row .field-label {
+  display: none;
+}
+.form .row .cell .fieldset .content .content-row .field-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.form .row .cell .fieldset .content .content-row .field-content textarea,
+.form .row .cell .fieldset .content .content-row .field-content input,
+.form .row .cell .fieldset .content .content-row .field-content select {
+  font-size: 12px;
+  padding: 4px 12px;
+  width: 100%;
+  margin: 0;
+  max-height: 50px;
+}
+.form .row .cell .fieldset .content .content-row .field-content textarea {
+  resize: none;
+}
+.form .row .cell .fieldset .content .content-row .field-content input[type="checkbox"] {
+  height: 36px;
+}
+.form .row .cell .fieldset .content .content-row .field-content.one-widget select {
+  height: 50px;
+  font-size: 16px;
+}
+.form .row .cell .fieldset.openable.opened {
+  flex-direction: column;
+}
+.form .row .cell .fieldset.openable.opened .label {
+  width: 100%;
+}
+.form .row .cell .fieldset.openable.opened .label:after {
+  rotate: 180deg;
+  top: 14px;
+}
+.form .row .cell .fieldset.openable.opened .content {
+  width: 100%;
+}
+.form .row .cell .fieldset.openable.opened .content .content-row .field-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px;
+  height: 50px;
+  border-radius: 8px;
+}
+@media (max-width: 499px) {
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-label {
+    width: 50%;
+  }
+}
+@media (min-width: 500px) {
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-label {
+    width: 396px;
+  }
+}
+@media (min-width: 1200px) {
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-label {
+    width: 316px;
+  }
+}
+.form .row .cell .fieldset.openable.opened .content .content-row .field-content {
+  cursor: pointer;
+  width: 100%;
+}
+.form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea,
+.form .row .cell .fieldset.openable.opened .content .content-row .field-content input,
+.form .row .cell .fieldset.openable.opened .content .content-row .field-content select {
+  font-size: 16px;
+  padding: 16px 12px;
+  max-width: unset;
+  max-height: unset;
+}
+.form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea[name="begin_at"],
+.form .row .cell .fieldset.openable.opened .content .content-row .field-content input[name="begin_at"],
+.form .row .cell .fieldset.openable.opened .content .content-row .field-content select[name="begin_at"] {
+  font-size: 12px;
+  padding: 16px 8px;
+}
+@media (min-width: 1200px) {
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea[name="begin_at"],
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-content input[name="begin_at"],
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-content select[name="begin_at"] {
+    font-size: 16px;
+    padding: 16px 12px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait), (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea {
+    height: 266px;
+    resize: vertical;
+  }
+}
+@media (max-width: 953px) and (orientation: landscape) {
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea {
+    height: 266px;
+    resize: vertical;
+  }
+}
+@media (min-width: 1200px) {
+  .form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea {
+    height: 289px;
+    resize: vertical;
+  }
+}
+.form .row .cell .fieldset.openable.opened .duration_widget > div label {
+  font-size: 16px;
+  padding: 12px;
+}
+.form input[type="submit"] {
+  width: 100px;
+}

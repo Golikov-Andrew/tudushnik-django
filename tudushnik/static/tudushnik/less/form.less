@@ -1,0 +1,262 @@
+@import "components/utils/_variables";
+@import "components/utils/_mixins";
+
+@var-gray: #777777;
+@var-svg-sprite-form: "../img/svg_sprite_form.svg";
+
+.var-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px;
+
+  height: 50px;
+  border-radius: 8px;
+  .max_499({
+    width: 50%;
+  });
+  .min_500({
+    width: 396px;
+  });
+  .min_1200({
+    width: 316px;
+  });
+}
+
+.var-flex{
+  display: flex;
+  gap: 4px;
+  .min_1200({
+    gap: 8px;
+  });
+}
+
+#content-container .page-content {
+  width: 100%;
+  max-width: 1024px;
+  .min_1200({
+    max-width: 1200px;
+  });
+}
+
+.duration_widget {
+  .var-flex();
+
+  > div {
+    .var-flex();
+    align-items: center;
+    width: 50%;
+
+    label {
+      font-size: 12px;
+
+    }
+
+    .duration_controller {
+      min-width: 50px;
+    }
+  }
+}
+
+.form {
+  .var-flex();
+  flex-direction: column;
+
+  .row {
+    .var-flex();
+    flex-direction: column;
+
+    .tablet({
+      flex-direction: row;
+    });
+    .mobile-landscape({
+      flex-direction: row;
+    });
+    .min_1200({
+      flex-direction: row;
+    });
+
+    .cell {
+
+      &.form-cell {
+        .var-flex();
+        flex-direction: column;
+
+        .tablet({
+          width: 50%;
+        });
+        .mobile-landscape({
+          width: 50%;
+        });
+        .min_1200({
+          width: 50%;
+        });
+      }
+
+      .fieldset {
+        .var-flex();
+
+        .label {
+          .var-label();
+          background-color: @cold-light;
+          transition: width 0.5s ease-out;
+          position: relative;
+
+        }
+
+        &.openable {
+          .label {
+            &:after {
+              position: absolute;
+              content: "";
+              top: 15px;
+              right: 12px;
+              width: 20px;
+              height: 20px;
+              background-image: url('@{var-svg-sprite-form}#chevron');
+              filter: @cold-dark-filter;
+              transition: rotate 0.3s;
+            }
+          }
+        }
+
+        .content {
+          .var-flex();
+          flex-direction: column;
+          width: 50%;
+          justify-content: center;
+
+          .min_500({
+            width: 100%;
+          });
+
+
+          .content-row {
+            display: flex;
+
+            .field-label {
+              display: none;
+            }
+
+            .field-content {
+              display: flex;
+              align-items: center;
+              width: 100%;
+
+              textarea,
+              input,
+              select {
+                font-size: 12px;
+                padding: 4px 12px;
+                width: 100%;
+                margin: 0;
+                max-height: 50px;
+              }
+
+              textarea {
+                resize: none;
+              }
+
+              input[type="checkbox"] {
+                height: 36px;
+              }
+
+              &.one-widget {
+                select {
+                  height: 50px;
+                  font-size: 16px;
+                }
+              }
+            }
+          }
+        }
+
+        &.openable {
+          &.opened {
+            flex-direction: column;
+
+            .label {
+              width: 100%;
+
+              &:after {
+                rotate: 180deg;
+                top: 14px;
+              }
+            }
+
+            .content {
+              width: 100%;
+
+              //flex-direction: row;
+
+              .content-row {
+
+                .field-label {
+                  display: flex;
+                  .var-label();
+                }
+
+                .field-content {
+                  cursor: pointer;
+                  //width: 50%;
+                  width: 100%;
+
+
+                  textarea,
+                  input,
+                  select {
+                    font-size: 16px;
+                    padding: 16px 12px;
+                    max-width: unset;
+                    max-height: unset;
+
+                    &[name="begin_at"] {
+                      font-size: 12px;
+                      padding: 16px 8px;
+
+                      .min_1200({
+                        font-size: 16px;
+                        padding: 16px 12px;
+                      });
+                    }
+                  }
+
+                  textarea {
+                    .tablet({
+                      height: 266px;
+                      resize: vertical;
+                    });
+                    .mobile-landscape({
+                      height: 266px;
+                      resize: vertical;
+                    });
+                    .min_1200({
+                      height: 289px;
+                      resize: vertical;
+                    });
+                  }
+                }
+              }
+            }
+
+            .duration_widget {
+              > div {
+                label {
+                  font-size: 16px;
+                  padding: 12px;
+
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+  input[type="submit"] {
+    width: 100px;
+  }
+}
+
