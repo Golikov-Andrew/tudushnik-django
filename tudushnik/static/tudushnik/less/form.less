@@ -23,7 +23,7 @@
   });
 }
 
-.var-flex{
+.var-flex {
   display: flex;
   gap: 4px;
   .min_1200({
@@ -162,6 +162,7 @@
               }
 
               &.one-widget {
+                input,
                 select {
                   height: 50px;
                   font-size: 16px;
@@ -171,92 +172,123 @@
           }
         }
 
-        &.openable {
-          &.opened {
-            flex-direction: column;
+        //&.openable {
+        &.opened {
+          flex-direction: column;
 
-            .label {
-              width: 100%;
+          .label {
+            width: 100%;
 
-              &:after {
-                rotate: 180deg;
-                top: 14px;
-              }
+            &:after {
+              rotate: 180deg;
+              top: 14px;
             }
+          }
 
-            .content {
-              width: 100%;
+          .content {
+            width: 100%;
 
-              //flex-direction: row;
+            //flex-direction: row;
 
-              .content-row {
+            .content-row {
 
-                .field-label {
-                  display: flex;
-                  .var-label();
-                }
-
-                .field-content {
-                  cursor: pointer;
-                  //width: 50%;
-                  width: 100%;
-
-
-                  textarea,
-                  input,
-                  select {
-                    font-size: 16px;
-                    padding: 16px 12px;
-                    max-width: unset;
-                    max-height: unset;
-
-                    &[name="begin_at"] {
-                      font-size: 12px;
-                      padding: 16px 8px;
-
-                      .min_1200({
-                        font-size: 16px;
-                        padding: 16px 12px;
-                      });
-                    }
-                  }
-
-                  textarea {
-                    .tablet({
-                      height: 266px;
-                      resize: vertical;
-                    });
-                    .mobile-landscape({
-                      height: 266px;
-                      resize: vertical;
-                    });
-                    .min_1200({
-                      height: 289px;
-                      resize: vertical;
-                    });
-                  }
-                }
+              .field-label {
+                display: flex;
+                .var-label();
               }
-            }
 
-            .duration_widget {
-              > div {
-                label {
+              .field-content {
+                cursor: pointer;
+                //width: 50%;
+                width: 100%;
+
+
+                textarea,
+                input,
+                select {
                   font-size: 16px;
-                  padding: 12px;
+                  padding: 16px 12px;
+                  max-width: unset;
+                  max-height: unset;
 
+                  &[name="begin_at"] {
+                    font-size: 12px;
+                    padding: 16px 8px;
+
+                    .min_1200({
+                      font-size: 16px;
+                      padding: 16px 12px;
+                    });
+                  }
+                }
+
+                textarea {
+                  .tablet({
+                    height: 266px;
+                    resize: vertical;
+                  });
+                  .mobile-landscape({
+                    height: 266px;
+                    resize: vertical;
+                  });
+                  .min_1200({
+                    height: 289px;
+                    resize: vertical;
+                  });
                 }
               }
             }
           }
+
+          .duration_widget {
+            > div {
+              label {
+                .tablet({
+                  font-size: 16px;
+                  padding: 12px;
+                });
+                .min_1200({
+                  font-size: 16px;
+                  padding: 12px;
+                });
+              }
+            }
+          }
         }
+        //}
 
       }
     }
   }
 
   input[type="submit"] {
-    width: 100px;
+    width: 120px;
+  }
+
+  .form_bottom_buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
   }
 }
 
+.btn_item_delete {
+  .var_btn_del_big();
+}
+
+.btn_back,
+.btn_edit {
+  .var_submit();
+  text-decoration: none;
+  color: white !important;
+
+  &:visited {
+    color: white !important;
+  }
+}
+
+
+input[type="color"] {
+  padding: 0 !important;
+}

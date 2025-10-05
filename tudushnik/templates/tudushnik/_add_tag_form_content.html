@@ -1,0 +1,33 @@
+{% csrf_token %}
+<input type="hidden" name="referer" value="{{ referer }}">
+<div class="form-error">{{ form.non_field_errors }}</div>
+
+<div class="row">
+    <div class="cell form-cell">
+        <div class="fieldset openable opened">
+            <div class="label hidden">Основное</div>
+            <div class="content">
+
+                <div class="content-row">
+                    <div class="field-label">
+                        {{ form.title.label_tag }}
+                    </div>
+                    <div class="field-content">
+                        {{ form.title }}
+                    </div>
+                </div>
+                <div class="content-row">
+                    <div class="field-label">
+                        {{ form.color.label_tag }}
+                    </div>
+                    <div class="field-content">
+                        {{ form.color }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="submit" value="Создать">

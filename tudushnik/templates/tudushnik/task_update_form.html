@@ -1,18 +1,16 @@
 {% extends 'tudushnik/base.html' %}
 {% load static %}
 
-
 {% block local_styles %}
     <link rel="stylesheet" href="{% static 'tudushnik/css/form.css' %}">
 {% endblock local_styles %}
 
-
-
 {% block content %}
     <h2>Редактирование задачи</h2>
-    <form class="form" method="post">{% csrf_token %}
+    <form class="form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="referer" value="{{ referer }}">
-        <div>{{ form.non_field_errors }}</div>
+        <div class="form-error">{{ form.non_field_errors }}</div>
 
         <div class="row">
             <div class="cell form-cell">
@@ -79,6 +77,19 @@
                             </div>
                             <div class="field-content">
                                 {{ form.duration }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable opened hidden">
+                    <div class="label">Дополнительно</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                {{ form.diagram_offset_x.label_tag }}
+                            </div>
+                            <div class="field-content one-widget">
+                                {{ form.diagram_offset_x }}
                             </div>
                         </div>
                     </div>
@@ -178,7 +189,6 @@
             </div>
         </div>
 
-
         <div>
             <div>Перемещать</div>
             <div>
@@ -199,7 +209,11 @@
             </div>
         </div>
 
-        <input type="submit" value="OK">
+    <div class="form_bottom_buttons">
+        <a class="btn_back" href="{{ referer }}">Отмена</a>
+        <input type="submit" value="Сохранить">
+    </div>
+
     </form>
 
 {% endblock content %}

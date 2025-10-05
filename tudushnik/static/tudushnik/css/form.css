@@ -15,7 +15,7 @@
   color: #626262;
 }
 .hidden {
-  display: none;
+  display: none !important;
 }
 .modal_wrapper .overlay {
   position: absolute;
@@ -71,6 +71,19 @@
 }
 .var_submit:hover {
   background-color: #34729f;
+}
+.var_btn_del_big {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #e56c6c;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.var_btn_del_big:hover {
+  background-color: #9d3c3c;
 }
 .var_btn_del {
   border-radius: 8px;
@@ -331,24 +344,25 @@
 .form .row .cell .fieldset .content .content-row .field-content input[type="checkbox"] {
   height: 36px;
 }
+.form .row .cell .fieldset .content .content-row .field-content.one-widget input,
 .form .row .cell .fieldset .content .content-row .field-content.one-widget select {
   height: 50px;
   font-size: 16px;
 }
-.form .row .cell .fieldset.openable.opened {
+.form .row .cell .fieldset.opened {
   flex-direction: column;
 }
-.form .row .cell .fieldset.openable.opened .label {
+.form .row .cell .fieldset.opened .label {
   width: 100%;
 }
-.form .row .cell .fieldset.openable.opened .label:after {
+.form .row .cell .fieldset.opened .label:after {
   rotate: 180deg;
   top: 14px;
 }
-.form .row .cell .fieldset.openable.opened .content {
+.form .row .cell .fieldset.opened .content {
   width: 100%;
 }
-.form .row .cell .fieldset.openable.opened .content .content-row .field-label {
+.form .row .cell .fieldset.opened .content .content-row .field-label {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -357,68 +371,119 @@
   border-radius: 8px;
 }
 @media (max-width: 499px) {
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-label {
+  .form .row .cell .fieldset.opened .content .content-row .field-label {
     width: 50%;
   }
 }
 @media (min-width: 500px) {
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-label {
+  .form .row .cell .fieldset.opened .content .content-row .field-label {
     width: 396px;
   }
 }
 @media (min-width: 1200px) {
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-label {
+  .form .row .cell .fieldset.opened .content .content-row .field-label {
     width: 316px;
   }
 }
-.form .row .cell .fieldset.openable.opened .content .content-row .field-content {
+.form .row .cell .fieldset.opened .content .content-row .field-content {
   cursor: pointer;
   width: 100%;
 }
-.form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea,
-.form .row .cell .fieldset.openable.opened .content .content-row .field-content input,
-.form .row .cell .fieldset.openable.opened .content .content-row .field-content select {
+.form .row .cell .fieldset.opened .content .content-row .field-content textarea,
+.form .row .cell .fieldset.opened .content .content-row .field-content input,
+.form .row .cell .fieldset.opened .content .content-row .field-content select {
   font-size: 16px;
   padding: 16px 12px;
   max-width: unset;
   max-height: unset;
 }
-.form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea[name="begin_at"],
-.form .row .cell .fieldset.openable.opened .content .content-row .field-content input[name="begin_at"],
-.form .row .cell .fieldset.openable.opened .content .content-row .field-content select[name="begin_at"] {
+.form .row .cell .fieldset.opened .content .content-row .field-content textarea[name="begin_at"],
+.form .row .cell .fieldset.opened .content .content-row .field-content input[name="begin_at"],
+.form .row .cell .fieldset.opened .content .content-row .field-content select[name="begin_at"] {
   font-size: 12px;
   padding: 16px 8px;
 }
 @media (min-width: 1200px) {
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea[name="begin_at"],
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-content input[name="begin_at"],
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-content select[name="begin_at"] {
+  .form .row .cell .fieldset.opened .content .content-row .field-content textarea[name="begin_at"],
+  .form .row .cell .fieldset.opened .content .content-row .field-content input[name="begin_at"],
+  .form .row .cell .fieldset.opened .content .content-row .field-content select[name="begin_at"] {
     font-size: 16px;
     padding: 16px 12px;
   }
 }
 @media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait), (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea {
+  .form .row .cell .fieldset.opened .content .content-row .field-content textarea {
     height: 266px;
     resize: vertical;
   }
 }
 @media (max-width: 953px) and (orientation: landscape) {
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea {
+  .form .row .cell .fieldset.opened .content .content-row .field-content textarea {
     height: 266px;
     resize: vertical;
   }
 }
 @media (min-width: 1200px) {
-  .form .row .cell .fieldset.openable.opened .content .content-row .field-content textarea {
+  .form .row .cell .fieldset.opened .content .content-row .field-content textarea {
     height: 289px;
     resize: vertical;
   }
 }
-.form .row .cell .fieldset.openable.opened .duration_widget > div label {
-  font-size: 16px;
-  padding: 12px;
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait), (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  .form .row .cell .fieldset.opened .duration_widget > div label {
+    font-size: 16px;
+    padding: 12px;
+  }
+}
+@media (min-width: 1200px) {
+  .form .row .cell .fieldset.opened .duration_widget > div label {
+    font-size: 16px;
+    padding: 12px;
+  }
 }
 .form input[type="submit"] {
-  width: 100px;
+  width: 120px;
+}
+.form .form_bottom_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.btn_item_delete {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #e56c6c;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+.btn_item_delete:hover {
+  background-color: #9d3c3c;
+}
+.btn_back,
+.btn_edit {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #4A8FC1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  color: white !important;
+}
+.btn_back:hover,
+.btn_edit:hover {
+  background-color: #34729f;
+}
+.btn_back:visited,
+.btn_edit:visited {
+  color: white !important;
+}
+input[type="color"] {
+  padding: 0 !important;
 }

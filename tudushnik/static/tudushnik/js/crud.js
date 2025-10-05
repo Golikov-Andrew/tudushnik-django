@@ -17,6 +17,7 @@ function init_btns_item_delete() {
         entity_name = cur_btn.getAttribute('data-entity-name')
         redirect_url = cur_btn.getAttribute('data-redirect-url')
         cur_btn.addEventListener('click', (ev) => {
+            ev.preventDefault()
             let ans = confirm(`Вы действительно хотите удалить ${entity_name} ${cur_btn.getAttribute('data-item-title')}`)
             if (ans === true) {
                 send_post_json(ev, cur_btn.getAttribute('data-post-url'), {}, (resp) => {

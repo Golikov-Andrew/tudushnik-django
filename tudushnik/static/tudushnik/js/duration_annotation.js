@@ -2,15 +2,25 @@ class DurationWidget {
     #src_input_element;
     #parent_element;
     #container;
+    #is_disabled;
     #input_duration_controllers = {}
 
-    constructor(src_input_element_selector) {
+    constructor(src_input_element_selector, options) {
         this.#src_input_element = document.querySelector(src_input_element_selector)
         this.#parent_element = this.#src_input_element.parentElement
 
         this.#container = document.createElement('div')
         this.#container.classList.add('duration_widget')
         this.#parent_element.appendChild(this.#container)
+
+        this.#is_disabled = false;
+        if (options !== undefined){
+            if(options.hasOwnProperty('disabled')){
+                if(options.disabled === true){
+                    this.#is_disabled = true;
+                }
+            }
+        }
 
         this.#input_duration_controllers = {
             hours: this.#create_input_number_element('Час.', 60 * 60),
@@ -27,6 +37,7 @@ class DurationWidget {
         container.appendChild(label)
 
         let elem = document.createElement('input')
+        if(this.#is_disabled) elem.disabled = true;
         elem.classList.add('duration_controller')
         elem.setAttribute('type', 'number')
         elem.setAttribute('min', '0')

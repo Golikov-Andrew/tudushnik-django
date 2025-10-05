@@ -122,20 +122,24 @@ class TaskDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        project_pk = context["task"].project.pk
+        owner_id = self.request.user.id
+
         target_project = Project.objects.filter(
-            Q(owner_id=self.request.user.id) & Q(pk=context["task"].project.pk)
+            Q(owner_id=owner_id) & Q(pk=project_pk)
         ).first()
         if target_project is None:
             target_project = Project.objects.filter(
-                Q(users_groups__users=self.request.user.id) & Q(
+                Q(users_groups__users=owner_id) & Q(
                     users_groups__is_active=True) & Q(
                     users_groups__permission_view_project_tasks=True) & Q(
-                    pk=context["task"].project.pk)).first()
+                    pk=project_pk)).first()
             if target_project is None:
                 raise PermissionDenied(
                     "You do not have permission to view this object.")
 
-        context['title'] = context["task"]
+        context['title'] = context["task"].title
+        context['referer'] = str(self.request.META['HTTP_REFERER'])
         set_client_timezone(self.request, context)
         return context
 
@@ -208,7 +212,10 @@ class TaskUpdateView(UpdateView):
             'all_other_tasks_and_not_children'] = other_tasks_without_children
         context['parents'] = all_parents_task
         context['page_title_eng'] = 'tasks_edit'
-        context['referer'] = str(self.request.META['HTTP_REFERER'])
+        if self.request.GET.get('referer') is not None:
+            context['referer'] = self.request.GET.get('referer')
+        else:
+            context['referer'] = str(self.request.META['HTTP_REFERER'])
         set_client_timezone(self.request, context)
         return context
 
@@ -279,10 +286,8 @@ def add_task(request, *args, **kwargs):
         if form.is_valid():
             offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
             if str(offset) != '0:00:00':
-                print(form.instance.begin_at, flush=True)
-                print(offset, flush=True)
-                temp = form.instance.begin_at - offset
-                form.instance.begin_at = temp
+                begin = form.instance.begin_at
+                form.instance.begin_at = begin - offset
 
             form.save()
             if request.POST.get('referer') is not None and request.POST.get(
@@ -294,6 +299,8 @@ def add_task(request, *args, **kwargs):
         diagram_offset_x = request.GET.get('diagram_offset_x')
         if diagram_offset_x is not None:
             task.diagram_offset_x = int(diagram_offset_x)
+        else:
+            task.diagram_offset_x = 100
 
         begin_at = request.GET.get('begin_at')
         if begin_at is not None:
@@ -309,7 +316,7 @@ def add_task(request, *args, **kwargs):
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=request.user.id).all()
     kwargs.update({
-        'form': form, 'title': 'Добавление задачи',
+        'form': form, 'title': 'Создание задачи',
         'referer': request.META['HTTP_REFERER'],
         'page_title_eng': 'tasks_create'
     })
@@ -338,35 +345,27 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
         if form.is_valid():
             offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
             if str(offset) != '0:00:00':
-                # time.sleep(3)
                 begin = form.instance.begin_at
-                print('debug', begin)
-
                 form.instance.begin_at = begin - offset
             form.save()
             return redirect('project_detail', pk=project_pk)
     else:
+        task = Task(owner=request.user, project=target_project.first())
         diagram_offset_x = request.GET.get('diagram_offset_x')
-        begin_at = request.GET.get('begin_at')
-        if diagram_offset_x is not None and begin_at is not None:
-            form = AddTaskForm(
-                instance=Task(
-                    project=target_project.first(),
-                    owner=request.user,
-                    begin_at=begin_at,
-                    diagram_offset_x=int(diagram_offset_x)
-                )
-            )
+        if diagram_offset_x is not None:
+            task.diagram_offset_x = int(diagram_offset_x)
         else:
-            form = AddTaskForm(
-                instance=Task(
-                    project=target_project.first(),
-                    owner=request.user,
-                    begin_at=timezone.localtime(
-                        timezone.now(), pytz.timezone(cur_tz)
-                    ).strftime('%Y-%m-%dT%H:%M')
-                )
-            )
+            task.diagram_offset_x = 100
+
+        begin_at = request.GET.get('begin_at')
+        if begin_at is not None:
+            task.begin_at = begin_at
+        else:
+            task.begin_at = timezone.localtime(
+                timezone.now(), pytz.timezone(cur_tz)
+            ).strftime('%Y-%m-%dT%H:%M')
+
+        form = AddTaskForm(instance=task)
         form.fields['project'].queryset = target_project.all()
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=target_project.first().owner.id).filter(

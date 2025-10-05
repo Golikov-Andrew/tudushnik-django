@@ -1,36 +1,67 @@
 {% extends 'tudushnik/base.html' %}
 {% load static %}
 
-{% block content %}
-    <div>
-        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="тэг"
-                data-redirect-url="{% url 'tags_page' %}"
-                data-post-url="{% url 'tag_delete' pk=object.pk %}">&#x2613;
-        </button>
-        <a href="{% url 'tag_edit' pk=object.pk %}">&#9998;</a>
-    </div>
-    <br>
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/form.css' %}">
+{% endblock local_styles %}
 
-    <div>
-        Создан: {{ object.created_at|date:'Y-m-d H:i' }}
-    </div>
-    <div>
-        Обновлён: {{ object.updated_at|date:'Y-m-d H:i' }}
-    </div>
-    <br>
-    <div>
-        Текст: {{ object.title }}
-    </div>
-    <div>
-        Цвет: <input type="color" value="{{ object.color }}" disabled>
-    </div>
+{% block content %}
+    <h2>Просмотр тега -&gt; {{ object.title }}</h2>
+    <form class="form">
+        <input type="hidden" name="referer" value="{{ referer }}">
+        <div class="form-error">{{ form.non_field_errors }}</div>
+
+        <div class="row">
+            <div class="cell form-cell">
+                <div class="fieldset opened">
+                    {#                    <div class="label">Основное</div>#}
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                Название
+                            </div>
+                            <div class="field-content">
+                                {{ object.title }}
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="field-label">
+                                Цвет
+                            </div>
+                            <div class="field-content">
+                                <input type="color" value="{{ object.color }}" disabled="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="cell form-cell">
+
+            </div>
+        </div>
+
+        <div class="form_bottom_buttons">
+            <button class="btn_item_delete" data-item-title="{{ object.title }}"
+                    data-entity-name="тег"
+                    data-redirect-url="{% url 'tags_page' %}"
+                    data-post-url="{% url 'tag_delete' pk=object.pk %}">
+                Удалить
+            </button>
+            <a class="btn_back" href="{% url 'tags_page' %}">Назад</a>
+            <a class="btn_edit" href="{% url 'tag_edit' pk=object.pk %}?referer={{ referer }}">Редактировать</a>
+
+        </div>
+        {#    &#x2613;  &#9998;  <input type="submit" value="Сохранить">#}
+    </form>
 
 {% endblock content %}
 
+
 {% block local_scripts %}
-    {#    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>#}
-    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/tag_detail.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/task_detail.js' %}"></script>
 {% endblock local_scripts %}
