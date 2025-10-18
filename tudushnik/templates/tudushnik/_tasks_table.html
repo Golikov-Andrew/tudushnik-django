@@ -77,7 +77,20 @@
         </th>
         <th>
             <div>Тэги</div>
-            {{ 'tags'|create_table_column_multi_filter_widget:all_tags }}
+            <button id="button_open_filter_modal_tags"
+                    class="button_open_modal" data-field-name="tags">
+                Настроить фильтр
+            </button>
+            <div class="modal hidden">
+                <select-multiple-widget>
+                    {% for tag in all_tags %}
+                        <chips-widget slot="item" data-value="{{ tag.title }}" data-color="{{ tag.color }}"
+                               data-id="{{ tag.pk }}" data-field-name="tags"></chips-widget>
+                    {% endfor %}
+                </select-multiple-widget>
+            </div>
+
+            {#            {{ 'tags'|create_table_column_multi_filter_widget:all_tags }}#}
 
         </th>
     </tr>
@@ -173,7 +186,11 @@
                     <input type="text" value="{{ item.title }}">
                 </div>
                 <div>
-                    <span class="project_chips" style="background-color: {{ item.project.color }}">{{ item.project.title }}</span>
+                    <span class="project_chips"
+                          style="background-color: {{ item.project.color }}">{{ item.project.title }}</span>
+                </div>
+                <div>
+                    <span class="status_chips">{{ item.status.title }}</span>
                 </div>
             </td>
             <td class="task_item_description">

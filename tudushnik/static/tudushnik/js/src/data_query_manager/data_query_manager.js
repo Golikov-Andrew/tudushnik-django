@@ -1,6 +1,8 @@
 import {SearchWidgetComponent} from "../custom_elements/search_widget";
 import {SortingWidgetComponent} from "../custom_elements/sorting_widget";
 import {BinaryFilterWidgetComponent} from "../custom_elements/binary_filter_widget";
+import {SelectMultipleWidgetComponent} from "../custom_elements/select_multiple_filter_widget";
+import {ChipsWidgetComponent} from "../custom_elements/chips_widget";
 
 class DataQueryManager {
 
@@ -71,9 +73,13 @@ class DataQueryManager {
                 }
             })
         })
+
         options.filters?.forEach((item) => {
             document.querySelectorAll(item.selector).forEach((widget) => {
                 if (widget instanceof BinaryFilterWidgetComponent) {
+                    this.attach_widget(widget).init().add_listeners(item.listeners)
+                }
+                if (widget instanceof SelectMultipleWidgetComponent) {
                     this.attach_widget(widget).init().add_listeners(item.listeners)
                 }
             })

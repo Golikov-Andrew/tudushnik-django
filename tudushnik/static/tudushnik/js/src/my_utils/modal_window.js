@@ -102,6 +102,10 @@ class ModalWindow {
         this.content.element.innerHTML = html
     }
 
+    append_content(element) {
+        this.content.element.appendChild(element)
+    }
+
     perform_ok() {
 
     }

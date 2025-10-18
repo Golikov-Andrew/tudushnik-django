@@ -12,6 +12,11 @@
         {% include 'tudushnik/_pagination.html' %}
 
         <a class="add_item" href="{% url 'add_task' %}">+ Добавить</a>
+
+        <button id="button_open_filter_modal_status"
+                class="button_open_modal" data-field-name="status">
+            Фильтр по статусу
+        </button>
         <br>
         {% include 'tudushnik/_tasks_table.html' %}
     </div>

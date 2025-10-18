@@ -26,7 +26,8 @@ let app = new App(
         data.project.description,
         data.project.color,
         data.project.tags,
-    ), data.tags
+    ), data.tags, data.statuses,
+    DQM
 )
 app.init()
 

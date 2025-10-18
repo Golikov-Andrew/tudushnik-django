@@ -1,42 +1,47 @@
 import {ModalWindow} from "../my_utils/modal_window";
 import {pop_from_list} from "../utils/utils";
 
-class TasksTagsModalWindow extends ModalWindow {
+class SelectMultipleModalWindow extends ModalWindow {
+    #field_name;
+
     constructor(options) {
         super(options);
+        if(options.hasOwnProperty('field_name')){
+            this.#field_name = options.field_name
+        }
     }
 
     perform_ok() {
         console.log('OK')
 
         let urlSearchParams = new URLSearchParams(window.location.search);
-        let tags_values = urlSearchParams.get('tags')
-        if (tags_values !== null) tags_values = tags_values.split(',')
+        let query_values = urlSearchParams.get(this.#field_name)
+        if (query_values !== null) query_values = query_values.split(',')
         let changes = 0;
 
-        for (let i = 0, tag, input_new, input_current, pk_str; i < this.app.tags.length; i++) {
-            tag = this.app.tags[i]
-            pk_str = '' + tag.pk
-            input_current = this.app.tasks_tags_current_elements.querySelector(`.object_pk_${pk_str}`)
+        for (let i = 0, item, input_new, input_current, pk_str; i < this.app[this.#field_name].length; i++) {
+            item = this.app[this.#field_name][i]
+            pk_str = '' + item.pk
+            input_current = this.element.querySelector(`chips_widget[data-id="${pk_str}"`)
             input_new = this.element.querySelector(`.object_pk_${pk_str}`)
             if (input_new.checked === input_current.checked) {
                 continue;
             } else {
                 changes++;
-                if (tags_values !== null) {
+                if (query_values !== null) {
                     if (input_new.checked) {
-                        tags_values.push(pk_str)
+                        query_values.push(pk_str)
                     } else {
-                        pop_from_list(tags_values, pk_str)
+                        pop_from_list(query_values, pk_str)
                     }
                 } else {
-                    tags_values = []
-                    tags_values.push(tag.pk)
+                    query_values = []
+                    query_values.push(tag.pk)
                 }
             }
             if (changes > 0) {
-                if (tags_values !== null && tags_values.length > 0) {
-                    urlSearchParams.set('tags', tags_values.join(','))
+                if (query_values !== null && query_values.length > 0) {
+                    urlSearchParams.set('tags', query_values.join(','))
                 } else {
                     urlSearchParams.delete('tags')
                 }
@@ -61,5 +66,5 @@ class TasksTagsModalWindow extends ModalWindow {
 }
 
 export {
-    TasksTagsModalWindow
+    SelectMultipleModalWindow
 }

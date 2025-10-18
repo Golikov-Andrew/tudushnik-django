@@ -1,5 +1,6 @@
 {% extends 'tudushnik/base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block local_styles %}
     <link rel="stylesheet"
@@ -31,7 +32,8 @@
         </div>
         <div class="flex-row">
             <div class="entity_tools">
-                <button class="btn_item_delete" data-item-title="{{ object.title }}"
+                <button class="btn_item_delete"
+                        data-item-title="{{ object.title }}"
                         data-entity-name="проект"
                         data-redirect-url="{% url 'projects_page' %}"
                         data-post-url="{% url 'project_delete' pk=object.pk %}">
@@ -57,8 +59,11 @@
         </div>
         <div class="object-tags">
             {% for tag in object.tags.all %}
-                <div class="object_item_tag" style="background-color: {{ tag.color }}">
-                    <label><input type="checkbox" class="object_pk_{{ tag.pk }}">{{ tag.title }}</label>
+                <div class="object_item_tag"
+                     style="background-color: {{ tag.color }}">
+                    <label><input type="checkbox"
+                                  class="object_pk_{{ tag.pk }}">{{ tag.title }}
+                    </label>
                 </div>
             {% endfor %}
         </div>
@@ -78,10 +83,28 @@
             <a class="btn_rounded add_item"
                href="{% url 'add_task_to_project' project_pk=object.pk %}">+
                 Добавить</a>
-            <a class="btn_rounded del_item" href="#">- Удалить</a>
-            <a class="btn_rounded btn_table_filter" href="#">Фильтр</a>
-            <a class="btn_rounded btn_table_order" href="#">Упорядочить</a>
-            <a class="btn_rounded btn_table_search" href="#">Поиск</a>
+            <div class="multiselect_container">
+                <div>Статус:</div>
+                <button id="button_open_filter_modal_status"
+                        class="button_open_modal" data-field-name="status">
+                    Настроить фильтр
+                </button>
+                <div class="modal hidden">
+                    <select-multiple-widget data-field-name="status">
+                        {% for status in all_statuses %}
+                            <chips-widget slot="item"
+                                          data-value="{{ status.title }}"
+                                          data-color="#aaaaaa"
+                                          data-id="{{ status.pk }}"
+                                          data-field-name="status"></chips-widget>
+                        {% endfor %}
+                    </select-multiple-widget>
+                </div>
+            </div>
+            {#            <a class="btn_rounded del_item" href="#">- Удалить</a>#}
+            {#            <a class="btn_rounded btn_table_filter" href="#">Фильтр</a>#}
+            {#            <a class="btn_rounded btn_table_order" href="#">Упорядочить</a>#}
+            {#            <a class="btn_rounded btn_table_search" href="#">Поиск</a>#}
             <label class="select_dt_scale_label hidden"
                    for="viewport_dt_line_scale">Scale Y: <select
                     name="viewport_dt_line_scale"
@@ -93,7 +116,8 @@
                 <div>
                     <input type="checkbox" id="inp_is_move_with_children">
                     <label for="inp_is_move_with_children">с children?</label>
-                    <input type="checkbox" id="inp_is_move_with_children_recursive">
+                    <input type="checkbox"
+                           id="inp_is_move_with_children_recursive">
                     <label for="inp_is_move_with_children_recursive">рекурсивно?</label>
                 </div>
                 <div>
@@ -114,13 +138,16 @@
     <script type="text/javascript"
             src="{% static 'tudushnik/js/dist/task.js' %}"></script>
     <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/data_query_manager.js' %}"></script>
+    <script type="text/javascript"
             src="{% static 'tudushnik/js/dist/viewport.js' %}"></script>
     <script type="text/javascript"
             src="{% static 'tudushnik/js/pagination.js' %}"></script>
     <script type="text/javascript"
             src="{% static 'tudushnik/js/crud.js' %}"></script>
+
     <script type="text/javascript"
             src="{% static 'tudushnik/js/dist/projects_detail.js' %}"></script>
-     <script type="text/javascript"
-            src="{% static 'tudushnik/js/dist/data_query_manager.js' %}"></script>
+
+
 {% endblock local_scripts %}

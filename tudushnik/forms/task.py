@@ -50,7 +50,7 @@ class TaskUpdateForm(AddTaskForm):
     class Meta(AddTaskForm.Meta):
         fields = AddTaskForm.Meta.fields + ['is_done', 'children',
                                             'accountable', 'responsible',
-                                            'consultant', 'informed']
+                                            'consultant', 'informed', 'status']
         widgets = {
             **AddTaskForm.Meta.widgets,
             'is_done': forms.CheckboxInput(attrs={
@@ -63,6 +63,7 @@ class TaskUpdateForm(AddTaskForm):
             'responsible': forms.SelectMultiple(),
             'consultant': forms.SelectMultiple(),
             'informed': forms.SelectMultiple(),
+            'status': forms.Select(),
         }
         labels = {
             **AddTaskForm.Meta.labels,
@@ -72,6 +73,7 @@ class TaskUpdateForm(AddTaskForm):
             'responsible': 'Исполнители',
             'consultant': 'Консультирующие',
             'informed': 'Информируемые',
+            'status': 'Статус',
         }
 
     def __init__(self, *args, **kwargs):

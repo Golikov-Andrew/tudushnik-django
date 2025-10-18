@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="fieldset">
-                    <div class="label">Статус</div>
+                    <div class="label">Готово ?</div>
                     <div class="content">
                         <div class="content-row">
                             <div class="field-label">
@@ -45,6 +45,19 @@
                             </div>
                             <div class="field-content">
                                 {{ form.is_done }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="label">Статус</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                {{ form.status.label_tag }}
+                            </div>
+                            <div class="field-content one-widget">
+                                {{ form.status }}
                             </div>
                         </div>
                     </div>

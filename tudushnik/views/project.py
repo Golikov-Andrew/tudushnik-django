@@ -11,6 +11,7 @@ from rest_framework import generics
 
 from tudushnik.forms.project import AddProjectForm, ProjectUpdateForm
 from tudushnik.middleware import set_client_timezone
+from tudushnik.models import TaskStatus
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
@@ -140,6 +141,7 @@ class ProjectDetailView(DetailView):
                 users_groups__permission_view_project=True))
 
         all_projects = all_projects.union(other_projects)
+        all_statuses = TaskStatus.objects.all()
 
         if search_section is not None:
             search_section_obj = json.loads(search_section)
@@ -188,10 +190,12 @@ class ProjectDetailView(DetailView):
         context['len_records'] = paginator.count
         context['all_tags'] = all_tags
         context['all_projects'] = all_projects
+        context['all_statuses'] = all_statuses
         context['project_id'] = project_id
         context['json_data'] = {
             'tags': [t.to_json() for t in all_tags],
-            'project': target_project.to_json()
+            'statuses': [t.to_json() for t in all_statuses],
+            'project': target_project.to_json(),
         }
         context['entity_type'] = 'Проект'
         context['page_title_eng'] = 'projects_detail'

@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="fieldset">
-                    <div class="label">Статус</div>
+                    <div class="label">Готова ?</div>
                     <div class="content">
                         <div class="content-row">
                             <div class="field-label">
@@ -50,6 +50,19 @@
                                        checked
                                         {% endif %}
                                 >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="label">Статус</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                Статус
+                            </div>
+                            <div class="field-content">
+                                {{ object.status }}
                             </div>
                         </div>
                     </div>

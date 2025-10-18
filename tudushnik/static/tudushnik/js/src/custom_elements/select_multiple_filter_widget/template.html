@@ -1,0 +1,26 @@
+<template>
+    <div class="wrapper">
+        <div class="options">
+            <div class="item">
+                <input type="checkbox" name="not" id="id_not">
+                <label for="id_not">not</label>
+            </div>
+            <div class="item">
+                <div class="sub-item">
+                    <input type="radio" name="operand" id="id_and" value="and" checked>
+                    <label for="id_and">and</label>
+                </div>
+                <div class="sub-item">
+                    <input type="radio" name="operand" id="id_or" value="or">
+                    <label for="id_or">or</label>
+                </div>
+            </div>
+        </div>
+        <div id="search-wrapper">
+            <slot name="search-widget-slot"></slot>
+        </div>
+        <div class="chips">
+            <slot name="item"></slot>
+        </div>
+    </div>
+</template>

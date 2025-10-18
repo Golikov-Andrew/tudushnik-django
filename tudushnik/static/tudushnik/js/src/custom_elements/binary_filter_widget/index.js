@@ -63,19 +63,6 @@ class BinaryFilterWidgetComponent extends HTMLElement {
             this.#current_value = this.#DQM.filters[this.field_name]
             this.#path_element.classList.add(this.#current_value)
         }
-        // let it = get_dict_n_index_from_list_by_key_val(this.#DQM.filters, 'n', this.field_name)
-        // if (it !== false) {
-        //     for (const key in this.#buttons) {
-        //         debugger;
-        //         if (it.obj.n === this.field_name && it.obj.v === key) {
-        //             // this.#buttons[key].innerHTML += it.index
-        //             this.classList.add(it.obj.v)
-        //             this.#current_value = it.obj.v
-        //             this.classList.add(it.obj.v)
-        //             break;
-        //         }
-        //     }
-        // }
 
         // default listener
         for (const key in this.#buttons) {
