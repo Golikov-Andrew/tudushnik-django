@@ -1,6 +1,6 @@
 import {pop_from_list} from "../utils/utils";
 import {ModalWindow} from "../my_utils/modal_window";
-import {SelectMultipleModalWindow} from "./modal_tasks_tags";
+import {SelectMultipleModalWindow} from "./select_multiple_modal_window";
 
 class App {
     #element;
@@ -19,6 +19,10 @@ class App {
             button: null,
             modal: null,
         },
+        project: {
+            button: null,
+            modal: null,
+        },
     };
 
     constructor(root_element_selector, project, tags, status, data_query_manager) {
@@ -34,7 +38,6 @@ class App {
             button = this.#btns_show_modal[i]
             field_name = button.getAttribute('data-field-name')
             this.#filter_modals[field_name].button = button
-            //TODO: сделать универсальным, не только для тегов
             this.#filter_modals[field_name].modal = new SelectMultipleModalWindow({
                 app: this,
                 unique_id: `tasks_${field_name}_modal_buffer`,
@@ -62,6 +65,10 @@ class App {
 
     get status() {
         return this.#query_params.status
+    }
+
+    get DQM() {
+        return this.#DQM;
     }
 
     get tasks_tags_current_elements() {
@@ -113,19 +120,13 @@ class App {
     }
 
     init() {
-        let urlSearchParams = new URLSearchParams(window.location.search);
-        this.init_query_params(urlSearchParams, 'tags')
-        this.init_query_params(urlSearchParams, 'status')
-
         this.#btns_show_modal.forEach((item) => {
+            let content = item.nextElementSibling.firstElementChild
+            const field_name = item.getAttribute('data-field-name')
+            this.#filter_modals[field_name].modal.set_content_element(
+                content
+            )
             item.addEventListener('click', () => {
-                const field_name = item.getAttribute('data-field-name')
-
-                let cloned = item.nextElementSibling.firstElementChild.cloneNode(true)
-
-                this.#filter_modals[field_name].modal.append_content(
-                    cloned
-                )
                 this.#filter_modals[field_name].modal.show()
             })
         })

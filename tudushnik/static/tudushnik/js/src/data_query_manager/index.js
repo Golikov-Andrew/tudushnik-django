@@ -50,5 +50,4 @@ DQM.init_GUI({
 
     ]
 })
-debugger;
 console.log('DQM', DQM)

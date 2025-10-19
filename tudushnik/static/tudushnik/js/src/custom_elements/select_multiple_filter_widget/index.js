@@ -1,5 +1,6 @@
 import template from './template.html'
 import compiledCssString from './styles.less';
+import {get_dict_from_list_by_key_val} from "../../utils/utils";
 
 class SelectMultipleWidgetComponent extends HTMLElement {
     #DQM;
@@ -22,6 +23,9 @@ class SelectMultipleWidgetComponent extends HTMLElement {
     }
 
     connectedCallback() {
+        if (this.shadowRootMy) {
+            return
+        }
         this.shadowRootMy = this.attachShadow({mode: 'closed'});
         const templateContent = document.importNode(
             document.createRange().createContextualFragment(template).firstElementChild.content,
@@ -39,54 +43,63 @@ class SelectMultipleWidgetComponent extends HTMLElement {
             or: this.shadowRootMy.querySelector('#id_or'),
             not: this.shadowRootMy.querySelector('#id_not'),
         }
-        this.#chips = this.shadowRootMy.querySelectorAll('chips-widget')
+        this.#chips = this.shadowRootMy.querySelector('.chips')
     }
 
     add_listeners(listeners) {
-        // additional listeners TODO: ниже - чушь временная, переделать
-
-        listeners.forEach((item) => {
-            for (const key in this.#operands) {
-                debugger;
-                this.#operands[key].addEventListener(item[0], item[1])
-            }
-        })
+        // additional listeners
+        // тут слушателей лучше добавить на кнопку ОК модального окна (или переопределить perform_ok())
     }
 
     init() {
+        let filter_section = get_dict_from_list_by_key_val(this.#DQM.filters, 'n', this.#field_name)
+        if (filter_section !== false) {
+            const initial_values = filter_section['v'].split(',')
+            for (let i = 0, chips_widget; i < initial_values.length; i++) {
+                chips_widget = this.querySelector(`chips-widget[data-id="${initial_values[i]}"]`)
+                chips_widget.set_check(true)
+            }
+        }
 
-        // if (this.#DQM.filters.hasOwnProperty(this.field_name)) {
-        //     this.#current_value = this.#DQM.filters[this.field_name]
-        // }
+        if(filter_section.hasOwnProperty('o')){
+            let val = filter_section['o']
+            let operand = this.shadowRootMy.querySelector(`input[name='operand'][value='${val}']`)
+            operand.checked = true
+        }
+        if(filter_section.hasOwnProperty('e')){
+            let val = filter_section['e']
+            if(val === '1'){
+                this.#operands.not.checked = true
+            }
+        }
 
-        // default listener
-        // for (const key in this.#buttons) {
-        //     let current_button_value = this.#buttons[key].getAttribute('data-value')
-        //
-        //     this.#buttons[key].addEventListener('click', () => {
-        //         if (this.#current_value === '') {
-        //             this.#current_value = current_button_value
-        //             this.#path_element.classList.add(current_button_value)
-        //         } else if (this.#current_value === current_button_value) {
-        //             this.#current_value = ''
-        //             this.#path_element.classList.remove(current_button_value)
-        //         } else if (this.#current_value !== current_button_value) {
-        //             this.#current_value = current_button_value
-        //             this.#path_element.classList.value = `path ${current_button_value}`
-        //         }
-        //
-        //         if (this.#current_value !== '') {
-        //             this.#DQM.filters[this.field_name] = this.#current_value
-        //         } else {
-        //             delete this.#DQM.filters[this.field_name]
-        //         }
-        //
-        //         console.log(this.#DQM.filters)
-        //     })
-        //
-        // }
         return this
     }
+
+    create_filter_section() {
+        let checked_operand = this.shadowRootMy.querySelector(`input[name='operand']:checked`)
+        let is_to_exclude = this.#operands.not.checked
+        let chips = this.querySelectorAll("chips-widget[checked='true']")
+        let values = []
+        for (let i = 0; i < chips.length; i++) {
+            values.push(chips[i].id)
+        }
+
+        let result = {
+            'm': '1',
+            'n': this.#field_name,
+            'v': values.join(',')
+        }
+        if (checked_operand.value === 'a') {
+            result['o'] = 'a'
+        }
+        if (is_to_exclude) {
+            result['e'] = '1'
+        }
+        return result
+
+    }
+
 }
 
 if (!customElements.get('select-multiple-widget')) {

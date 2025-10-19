@@ -82,7 +82,7 @@
                 Настроить фильтр
             </button>
             <div class="modal hidden">
-                <select-multiple-widget>
+                <select-multiple-widget data-field-name="tags">
                     {% for tag in all_tags %}
                         <chips-widget slot="item" data-value="{{ tag.title }}" data-color="{{ tag.color }}"
                                data-id="{{ tag.pk }}" data-field-name="tags"></chips-widget>

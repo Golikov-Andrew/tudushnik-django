@@ -47,7 +47,7 @@ class DataQueryManager {
         if (this.#filters !== null) {
             this.#filters = JSON.parse(this.#filters)
         } else {
-            this.#filters = {}
+            this.#filters = []
         }
 
     }
@@ -101,7 +101,7 @@ class DataQueryManager {
             this.#query_params.delete('sorting')
         }
         let changed_filters = JSON.stringify(this.#filters)
-        if (changed_filters !== '{}') {
+        if (changed_filters !== '[]') {
             this.#query_params.set('filter', changed_filters)
         } else {
             this.#query_params.delete('filter')

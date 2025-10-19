@@ -49,7 +49,6 @@ class ProjectListView(ListView):
                 kw[key + '__icontains'] = value
             all_projects = all_projects.filter(**kw).all()
 
-
         other_projects = Project.objects.filter(
             Q(users_groups__users=self.request.user.id) & Q(
                 users_groups__is_active=True) & Q(
@@ -168,18 +167,43 @@ class ProjectDetailView(DetailView):
         if filter_section is not None:
             filter_section_obj = json.loads(filter_section)
 
-            kw = dict()
-            for key, value in filter_section_obj.items():
-                if key == 'is_done':
-                    kw[key] = True if value == 'yes' else False
-                else:
-                    k = key + '__in'
-                    if k not in kw:
-                        kw[k] = list()
-                    for v in value:
-                        kw[k].append(v)
+            q_main = Q()
 
-            all_tasks = all_tasks.filter(**kw)
+            for item in filter_section_obj:
+                key = item['n']
+                value = item['v']
+                is_many = item.get('m')
+                operand = item.get('o', 'o')
+                exclude = item.get('e', '0')
+
+                query = Q()
+
+                if is_many is None or is_many == '0':
+                    v = True if value == '1' else False
+                    query = Q(**{key: v})
+
+                else:
+                    values = value.split(',')
+                    if operand == 'o':
+                        for v in values:
+                            query |= Q(**{key: v})
+
+                        if exclude == '1':
+                            query = ~query
+
+                    elif operand == 'a':
+                        if exclude != '1':
+                            for v in values:
+                                all_tasks = all_tasks.filter(**{key: v})
+                        else:
+                            subquery = Q()
+                            for v in values:
+                                subquery &= Q(**{key: v})
+                            all_tasks = all_tasks.exclude(subquery)
+
+                q_main &= query
+
+            all_tasks = all_tasks.filter(q_main).distinct()
 
         all_tasks = all_tasks.prefetch_related('tags')
 
@@ -264,7 +288,6 @@ class ProjectList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Project.objects.filter(owner_id=self.request.user.id).all()
-
 
 # class ProjectAPI(generics.ListCreateAPIView):
 #     serializer_class = ProjectSerializer

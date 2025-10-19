@@ -13,11 +13,44 @@
 
         <a class="add_item" href="{% url 'add_task' %}">+ Добавить</a>
 
-        <button id="button_open_filter_modal_status"
-                class="button_open_modal" data-field-name="status">
-            Фильтр по статусу
-        </button>
-        <br>
+        <div class="multiselect_container">
+            <div>Статус:</div>
+            <button id="button_open_filter_modal_status"
+                    class="button_open_modal" data-field-name="status">
+                Настроить фильтр
+            </button>
+            <div class="modal hidden">
+                <select-multiple-widget data-field-name="status">
+                    {% for status in all_statuses %}
+                        <chips-widget slot="item"
+                                      data-value="{{ status.title }}"
+                                      data-color="#aaaaaa"
+                                      data-id="{{ status.pk }}"
+                                      data-field-name="status"></chips-widget>
+                    {% endfor %}
+                </select-multiple-widget>
+            </div>
+        </div>
+
+        <div class="multiselect_container">
+            <div>Проект:</div>
+            <button id="button_open_filter_modal_project"
+                    class="button_open_modal" data-field-name="project">
+                Настроить фильтр
+            </button>
+            <div class="modal hidden">
+                <select-multiple-widget data-field-name="project">
+                    {% for item in all_projects %}
+                        <chips-widget slot="item"
+                                      data-value="{{ item.title }}"
+                                      data-color="{{ item.color }}"
+                                      data-id="{{ item.pk }}"
+                                      data-field-name="project"></chips-widget>
+                    {% endfor %}
+                </select-multiple-widget>
+            </div>
+        </div>
+
         {% include 'tudushnik/_tasks_table.html' %}
     </div>
 
@@ -31,6 +64,4 @@
             src="{% static 'tudushnik/js/crud.js' %}"></script>
     <script type="text/javascript"
             src="{% static 'tudushnik/js/dist/tasks_page.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static 'tudushnik/js/dist/data_query_manager.js' %}"></script>
 {% endblock local_scripts %}

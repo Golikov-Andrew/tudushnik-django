@@ -17,6 +17,7 @@ from rest_framework.response import Response
 
 from tudushnik.forms.task import AddTaskForm, TaskUpdateForm
 from tudushnik.middleware import set_client_timezone
+from tudushnik.models import TaskStatus
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
@@ -37,10 +38,22 @@ class TaskListView(ListView):
         tags_section = self.request.GET.get('tags')
         filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
+        request_user_id = self.request.user.id
 
         # all_projects = Project.objects.filter(
         #     owner_id=self.request.user.id).all()
         # all_tasks = Task.objects.filter(project__in=all_projects).all()
+
+        all_projects = Project.objects.filter(
+            owner_id=request_user_id).all()
+
+        other_projects = Project.objects.filter(
+            Q(users_groups__users=request_user_id) & Q(
+                users_groups__is_active=True) & Q(
+                users_groups__permission_view_project=True))
+
+        all_projects = all_projects.union(other_projects)
+
         all_tasks = Task.objects.filter(
             project__owner_id=self.request.user.id
         ).select_related(
@@ -52,8 +65,8 @@ class TaskListView(ListView):
             'consultant__profile_settings',
             'responsible__profile_settings'
         )
-
-        all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
+        all_statuses = TaskStatus.objects.all()
+        all_tags = Tag.objects.filter(owner_id=request_user_id).all()
 
         if search_section is not None:
             search_section_obj = json.loads(search_section)
@@ -80,19 +93,45 @@ class TaskListView(ListView):
         if filter_section is not None:
             filter_section_obj = json.loads(filter_section)
 
-            kw = dict()
-            for key, value in filter_section_obj.items():
-                if key == 'is_done':
-                    kw[key] = True if value == 'yes' else False
-                else:
-                    k = key + '__in'
-                    if k not in kw:
-                        kw[k] = list()
-                    for v in value:
-                        kw[k].append(v)
+            q_main = Q()
 
-            # all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
-            all_tasks = all_tasks.filter(**kw)
+            for item in filter_section_obj:
+                key = item['n']
+                value = item['v']
+                is_many = item.get('m')
+                operand = item.get('o', 'o')
+                exclude = item.get('e', '0')
+
+                query = Q()
+
+                if is_many is None or is_many == '0':
+                    v = True if value == '1' else False
+                    query = Q(**{key: v})
+
+                else:
+                    values = value.split(',')
+                    if operand == 'o':
+                        for v in values:
+                            query |= Q(**{key: v})
+
+                        if exclude == '1':
+                            query = ~query
+
+                    elif operand == 'a':
+                        if exclude != '1':
+                            for v in values:
+                                all_tasks = all_tasks.filter(**{key: v})
+                        else:
+                            subquery = Q()
+                            for v in values:
+                                subquery &= Q(**{key: v})
+                            all_tasks = all_tasks.exclude(subquery)
+
+                q_main &= query
+
+            all_tasks = all_tasks.filter(q_main).distinct()
+
+        all_tasks = all_tasks.prefetch_related('tags')
 
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
@@ -100,8 +139,11 @@ class TaskListView(ListView):
         context['limit'] = per_page
         context['len_records'] = len(all_tasks)
         context['all_tags'] = all_tags
+        context['all_statuses'] = all_statuses
+        context['all_projects'] = all_projects
         context['json_data'] = {
-            'tags': [t.to_json() for t in all_tags]
+            'tags': [t.to_json() for t in all_tags],
+            'statuses':[t.to_json() for t in all_statuses],
         }
         context['page_title_eng'] = 'tasks_page'
         set_client_timezone(self.request, context)

@@ -11,9 +11,9 @@ function send_post_formdata(e, csrftoken, url, formdata, func_on_success, func_o
     xhr.open('POST', url, true);
 
     xhr.onerror = function () {
-        if(func_on_error !== undefined){
+        if (func_on_error !== undefined) {
             func_on_error(xhr.response);
-        }else{
+        } else {
             console.error(xhr.response)
         }
     }
@@ -36,6 +36,17 @@ function get_dict_from_list_by_key_val(list, key, val, def = false) {
     }
     return def
 }
+
+function remove_dict_from_list_by_key_val_if_exists(list, key, val, def = false) {
+    for (let i = 0, c; i < list.length; i++) {
+        c = list[i]
+        if (c[key] === val) {
+            return list.splice(i, 1)
+        }
+    }
+    return null
+}
+
 function get_dict_n_index_from_list_by_key_val(list, key, val, def = false) {
     for (let i = 0, c; i < list.length; i++) {
         c = list[i]
@@ -50,5 +61,9 @@ function get_dict_n_index_from_list_by_key_val(list, key, val, def = false) {
 }
 
 export {
-    pop_from_list, send_post_formdata, get_dict_from_list_by_key_val, get_dict_n_index_from_list_by_key_val
+    pop_from_list,
+    send_post_formdata,
+    get_dict_from_list_by_key_val,
+    get_dict_n_index_from_list_by_key_val,
+    remove_dict_from_list_by_key_val_if_exists
 }

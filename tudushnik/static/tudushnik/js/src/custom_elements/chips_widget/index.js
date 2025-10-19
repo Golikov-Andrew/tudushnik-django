@@ -13,6 +13,8 @@ class ChipsWidgetComponent extends HTMLElement {
     #label;
     #color;
     #wrapper;
+    #input_checkbox;
+    #is_checked;
 
     constructor() {
         super();
@@ -28,7 +30,26 @@ class ChipsWidgetComponent extends HTMLElement {
         this.#DQM = dqm
     }
 
+    get is_checked() {
+        return this.#is_checked;
+    }
+
+    get checked() {
+        return this.#input_checkbox.checked
+    }
+
+    get value() {
+        return this.#value;
+    }
+
+    get id() {
+        return this.#id;
+    }
+
     connectedCallback() {
+        if (this.shadowRootMy) {
+            return
+        }
         this.shadowRootMy = this.attachShadow({mode: 'closed'});
         const templateContent = document.importNode(
             document.createRange().createContextualFragment(template).firstElementChild.content,
@@ -46,9 +67,16 @@ class ChipsWidgetComponent extends HTMLElement {
         this.#color = this.getAttribute('data-color')
         this.#wrapper = this.shadowRootMy.querySelector('.wrapper')
         this.#label = this.shadowRootMy.querySelector('label')
+        this.#input_checkbox = this.shadowRootMy.querySelector('input')
         this.#label.innerHTML = this.#value
         this.#wrapper.style.backgroundColor = this.#color
 
+        let checked_val = this.getAttribute('checked')
+        this.set_check(checked_val === 'true');
+
+        this.#input_checkbox.addEventListener('change', ()=>{
+            this.set_check(this.#input_checkbox.checked)
+        })
 
     }
 
@@ -60,38 +88,20 @@ class ChipsWidgetComponent extends HTMLElement {
     }
 
     init() {
-        // // if (this.#DQM.filters.hasOwnProperty(this.field_name)) {
-        // //     this.#value = this.#DQM.filters[this.field_name]
-        // //     this.#path_element.classList.add(this.#current_value)
-        // // }
-        // //
-        // // // default listener
-        // // for (const key in this.#buttons) {
-        // //     let current_button_value = this.#buttons[key].getAttribute('data-value')
-        // //
-        // //     this.#buttons[key].addEventListener('click', () => {
-        // //         if (this.#current_value === '') {
-        // //             this.#current_value = current_button_value
-        // //             this.#path_element.classList.add(current_button_value)
-        // //         } else if (this.#current_value === current_button_value) {
-        // //             this.#current_value = ''
-        // //             this.#path_element.classList.remove(current_button_value)
-        // //         } else if (this.#current_value !== current_button_value) {
-        // //             this.#current_value = current_button_value
-        // //             this.#path_element.classList.value = `path ${current_button_value}`
-        // //         }
-        // //
-        // //         if (this.#current_value !== '') {
-        // //             this.#DQM.filters[this.field_name] = this.#current_value
-        // //         } else {
-        // //             delete this.#DQM.filters[this.field_name]
-        // //         }
-        // //
-        // //         console.log(this.#DQM.filters)
-        // //     })
-        //
-        // }
-        // return this
+
+    }
+
+    set_check(val = true) {
+        if (val) {
+            this.#is_checked = true
+            this.setAttribute('checked', `${val}`)
+            this.#input_checkbox.setAttribute('checked', `${val}`)
+        } else {
+            this.#is_checked = false
+            this.removeAttribute('checked')
+            this.#input_checkbox.removeAttribute('checked')
+        }
+
     }
 }
 
