@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timedelta
 
 import pytz
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from django.core.paginator import Paginator
@@ -12,9 +13,11 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, UpdateView
 from rest_framework import generics
+from rest_framework.response import Response
 
 from tudushnik.forms.task import AddTaskForm, TaskUpdateForm
 from tudushnik.middleware import set_client_timezone
+from tudushnik.models import TaskStatus
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
@@ -35,11 +38,35 @@ class TaskListView(ListView):
         tags_section = self.request.GET.get('tags')
         filter_section = self.request.GET.get('filter')
         per_page = manage_user_settings(self.request.user.id, per_page)
+        request_user_id = self.request.user.id
+
+        # all_projects = Project.objects.filter(
+        #     owner_id=self.request.user.id).all()
+        # all_tasks = Task.objects.filter(project__in=all_projects).all()
 
         all_projects = Project.objects.filter(
-            owner_id=self.request.user.id).all()
-        all_tasks = Task.objects.filter(project__in=all_projects).all()
-        all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
+            owner_id=request_user_id).all()
+
+        other_projects = Project.objects.filter(
+            Q(users_groups__users=request_user_id) & Q(
+                users_groups__is_active=True) & Q(
+                users_groups__permission_view_project=True))
+
+        all_projects = all_projects.union(other_projects)
+
+        all_tasks = Task.objects.filter(
+            project__owner_id=self.request.user.id
+        ).select_related(
+            'owner', 'project', 'accountable__profile_settings'
+        ).prefetch_related(
+            'tags', 'informed', 'consultant', 'responsible'
+        ).prefetch_related(
+            'informed__profile_settings',
+            'consultant__profile_settings',
+            'responsible__profile_settings'
+        )
+        all_statuses = TaskStatus.objects.all()
+        all_tags = Tag.objects.filter(owner_id=request_user_id).all()
 
         if search_section is not None:
             search_section_obj = json.loads(search_section)
@@ -54,6 +81,7 @@ class TaskListView(ListView):
             for t in tags_section_obj:
                 query |= Q(tags=t)
             all_tasks = all_tasks.filter(query).distinct()
+
         if sorting_section is not None:
             sorting_section_list = json.loads(sorting_section)
             ls = list()
@@ -61,21 +89,49 @@ class TaskListView(ListView):
                 ls.append(item['v'] + item['n'])
             print(ls)
             all_tasks = all_tasks.order_by(*ls)
+
         if filter_section is not None:
             filter_section_obj = json.loads(filter_section)
 
-            kw = dict()
-            for key, value in filter_section_obj.items():
-                if key == 'is_done':
-                    kw[key] = True if value == 'yes' else False
-                else:
-                    k = key + '__in'
-                    if k not in kw:
-                        kw[k] = list()
-                    for v in value:
-                        kw[k].append(v)
+            q_main = Q()
 
-            all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
+            for item in filter_section_obj:
+                key = item['n']
+                value = item['v']
+                is_many = item.get('m')
+                operand = item.get('o', 'o')
+                exclude = item.get('e', '0')
+
+                query = Q()
+
+                if is_many is None or is_many == '0':
+                    v = True if value == '1' else False
+                    query = Q(**{key: v})
+
+                else:
+                    values = value.split(',')
+                    if operand == 'o':
+                        for v in values:
+                            query |= Q(**{key: v})
+
+                        if exclude == '1':
+                            query = ~query
+
+                    elif operand == 'a':
+                        if exclude != '1':
+                            for v in values:
+                                all_tasks = all_tasks.filter(**{key: v})
+                        else:
+                            subquery = Q()
+                            for v in values:
+                                subquery &= Q(**{key: v})
+                            all_tasks = all_tasks.exclude(subquery)
+
+                q_main &= query
+
+            all_tasks = all_tasks.filter(q_main).distinct()
+
+        all_tasks = all_tasks.prefetch_related('tags')
 
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
@@ -83,8 +139,11 @@ class TaskListView(ListView):
         context['limit'] = per_page
         context['len_records'] = len(all_tasks)
         context['all_tags'] = all_tags
+        context['all_statuses'] = all_statuses
+        context['all_projects'] = all_projects
         context['json_data'] = {
-            'tags': [t.to_json() for t in all_tags]
+            'tags': [t.to_json() for t in all_tags],
+            'statuses':[t.to_json() for t in all_statuses],
         }
         context['page_title_eng'] = 'tasks_page'
         set_client_timezone(self.request, context)
@@ -105,20 +164,24 @@ class TaskDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        project_pk = context["task"].project.pk
+        owner_id = self.request.user.id
+
         target_project = Project.objects.filter(
-            Q(owner_id=self.request.user.id) & Q(pk=context["task"].project.pk)
+            Q(owner_id=owner_id) & Q(pk=project_pk)
         ).first()
         if target_project is None:
             target_project = Project.objects.filter(
-                Q(users_groups__users=self.request.user.id) & Q(
+                Q(users_groups__users=owner_id) & Q(
                     users_groups__is_active=True) & Q(
                     users_groups__permission_view_project_tasks=True) & Q(
-                    pk=context["task"].project.pk)).first()
+                    pk=project_pk)).first()
             if target_project is None:
                 raise PermissionDenied(
                     "You do not have permission to view this object.")
 
-        context['title'] = context["task"]
+        context['title'] = context["task"].title
+        context['referer'] = str(self.request.META['HTTP_REFERER'])
         set_client_timezone(self.request, context)
         return context
 
@@ -129,7 +192,8 @@ class TaskUpdateView(UpdateView):
     form_class = TaskUpdateForm
 
     def get_success_url(self):
-        if self.request.POST.get('referer') is not None and self.request.POST.get(
+        if self.request.POST.get(
+                'referer') is not None and self.request.POST.get(
                 'referer') != '':
             return self.request.POST.get('referer')
         return reverse('task_detail', kwargs={'pk': self.object.pk})
@@ -153,7 +217,8 @@ class TaskUpdateView(UpdateView):
 
         task_pk = current_task.pk
         owner_id = self.request.user.id
-        context['form'].initial['begin_at'] = context['form'].initial['begin_at'].replace(microsecond=0)
+        context['form'].initial['begin_at'] = context['form'].initial[
+            'begin_at'].replace(microsecond=0)
         if owner_editor:
             context['form'].fields['project'].queryset = Project.objects.filter(
                 owner_id=owner_id).all()
@@ -166,6 +231,8 @@ class TaskUpdateView(UpdateView):
             context['form'].fields['tags'].queryset = Tag.objects.filter(
                 owner_id=target_project.first().owner.id).filter(
                 projects=current_task.project.pk).all()
+
+        # context['form'].fields['accountable'].queryset = User.objects.filter(pk=1).all()
 
         all_other_tasks = Task.objects.filter(
             project=target_project.first()).exclude(
@@ -187,7 +254,10 @@ class TaskUpdateView(UpdateView):
             'all_other_tasks_and_not_children'] = other_tasks_without_children
         context['parents'] = all_parents_task
         context['page_title_eng'] = 'tasks_edit'
-        context['referer'] = str(self.request.META['HTTP_REFERER'])
+        if self.request.GET.get('referer') is not None:
+            context['referer'] = self.request.GET.get('referer')
+        else:
+            context['referer'] = str(self.request.META['HTTP_REFERER'])
         set_client_timezone(self.request, context)
         return context
 
@@ -253,14 +323,13 @@ def add_task(request, *args, **kwargs):
     if request.method == 'POST':
         form = AddTaskForm(request.POST, request.FILES)
         form.instance.owner = request.user
+        form.instance.accountable = request.user
 
         if form.is_valid():
             offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
             if str(offset) != '0:00:00':
-                print(form.instance.begin_at, flush=True)
-                print(offset, flush=True)
-                temp = form.instance.begin_at - offset
-                form.instance.begin_at = temp
+                begin = form.instance.begin_at
+                form.instance.begin_at = begin - offset
 
             form.save()
             if request.POST.get('referer') is not None and request.POST.get(
@@ -272,6 +341,8 @@ def add_task(request, *args, **kwargs):
         diagram_offset_x = request.GET.get('diagram_offset_x')
         if diagram_offset_x is not None:
             task.diagram_offset_x = int(diagram_offset_x)
+        else:
+            task.diagram_offset_x = 100
 
         begin_at = request.GET.get('begin_at')
         if begin_at is not None:
@@ -287,7 +358,7 @@ def add_task(request, *args, **kwargs):
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=request.user.id).all()
     kwargs.update({
-        'form': form, 'title': 'Добавление задачи',
+        'form': form, 'title': 'Создание задачи',
         'referer': request.META['HTTP_REFERER'],
         'page_title_eng': 'tasks_create'
     })
@@ -311,39 +382,32 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
     if request.method == 'POST':
         form = AddTaskForm(request.POST, request.FILES)
         form.instance.owner = request.user
+        form.instance.accountable = request.user
 
         if form.is_valid():
             offset = pytz.timezone(cur_tz).utcoffset(datetime.now())
             if str(offset) != '0:00:00':
-                # time.sleep(3)
                 begin = form.instance.begin_at
-                print('debug', begin)
-
                 form.instance.begin_at = begin - offset
             form.save()
             return redirect('project_detail', pk=project_pk)
     else:
+        task = Task(owner=request.user, project=target_project.first())
         diagram_offset_x = request.GET.get('diagram_offset_x')
-        begin_at = request.GET.get('begin_at')
-        if diagram_offset_x is not None and begin_at is not None:
-            form = AddTaskForm(
-                instance=Task(
-                    project=target_project.first(),
-                    owner=request.user,
-                    begin_at=begin_at,
-                    diagram_offset_x=int(diagram_offset_x)
-                )
-            )
+        if diagram_offset_x is not None:
+            task.diagram_offset_x = int(diagram_offset_x)
         else:
-            form = AddTaskForm(
-                instance=Task(
-                    project=target_project.first(),
-                    owner=request.user,
-                    begin_at=timezone.localtime(
-                        timezone.now(), pytz.timezone(cur_tz)
-                    ).strftime('%Y-%m-%dT%H:%M')
-                )
-            )
+            task.diagram_offset_x = 100
+
+        begin_at = request.GET.get('begin_at')
+        if begin_at is not None:
+            task.begin_at = begin_at
+        else:
+            task.begin_at = timezone.localtime(
+                timezone.now(), pytz.timezone(cur_tz)
+            ).strftime('%Y-%m-%dT%H:%M')
+
+        form = AddTaskForm(instance=task)
         form.fields['project'].queryset = target_project.all()
         form.fields['tags'].queryset = Tag.objects.filter(
             owner_id=target_project.first().owner.id).filter(
@@ -500,3 +564,11 @@ class TaskList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Task.objects.filter(owner_id=self.request.user.id).all()
+
+    def list(self, request, *args, **kwargs):
+        # Все задачи без пагинации
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return JsonResponse({
+            'results': serializer.data
+        })

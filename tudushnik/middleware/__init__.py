@@ -22,7 +22,8 @@ class DetectTimeZoneMiddleware:
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         if request.path.startswith('/admin/') or request.path.startswith(
-                '/media/') or request.path.startswith('/swagger/'):
+                '/media/') or request.path.startswith('/swagger/') \
+                or request.path.startswith('/__debug__/'):
             return
 
         view_kwargs.update(

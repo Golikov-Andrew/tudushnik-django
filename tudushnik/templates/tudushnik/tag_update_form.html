@@ -1,12 +1,59 @@
 {% extends 'tudushnik/base.html' %}
+{% load static %}
 
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/form.css' %}">
+{% endblock local_styles %}
 
 {% block content %}
-    <h2>Редактирование тэга</h2>
-    <form method="post">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="OK">
+    <h2>Редактирование тега</h2>
+    <form class="form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="referer" value="{{ referer }}">
+        <div class="form-error">{{ form.non_field_errors }}</div>
+
+        <div class="row">
+            <div class="cell form-cell">
+                <div class="fieldset opened">
+{#                    <div class="label">Основное</div>#}
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                Название
+                            </div>
+                            <div class="field-content">
+                                {{ form.title }}
+                            </div>
+
+                        </div>
+                        <div class="content-row">
+                            <div class="field-label">
+                                Цвет
+                            </div>
+                            <div class="field-content">
+                                {{ form.color }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="cell form-cell">
+            </div>
+        </div>
+
+
+
+    <div class="form_bottom_buttons">
+        <a class="btn_back" href="{{ referer }}">Отмена</a>
+        <input type="submit" value="Сохранить">
+    </div>
+
     </form>
 
 {% endblock content %}
 
+
+{% block local_scripts %}
+{% endblock local_scripts %}

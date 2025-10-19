@@ -11,6 +11,7 @@ from rest_framework import generics
 
 from tudushnik.forms.project import AddProjectForm, ProjectUpdateForm
 from tudushnik.middleware import set_client_timezone
+from tudushnik.models import TaskStatus
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
@@ -34,7 +35,8 @@ class ProjectListView(ListView):
 
         per_page = manage_user_settings(self.request.user.id, per_page)
 
-        all_projects = Project.objects.filter(owner_id=self.request.user.id).all()
+        all_projects = Project.objects.filter(
+            owner_id=self.request.user.id).all()
         all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
 
         kw = dict()
@@ -46,7 +48,6 @@ class ProjectListView(ListView):
                     key = 'owner__username'
                 kw[key + '__icontains'] = value
             all_projects = all_projects.filter(**kw).all()
-
 
         other_projects = Project.objects.filter(
             Q(users_groups__users=self.request.user.id) & Q(
@@ -92,44 +93,54 @@ class ProjectDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        request_user_id = self.request.user.id
+        project_id = context["project"].id
+
         target_project = Project.objects.filter(
-            Q(owner_id=self.request.user.id) & Q(pk=context["project"].id)
-        ).first()
+            Q(owner_id=request_user_id) & Q(pk=project_id)).first()
+
         if target_project is None:
             target_project = Project.objects.filter(
-                Q(users_groups__users=self.request.user.id) & Q(
+                Q(users_groups__users=request_user_id) & Q(
                     users_groups__is_active=True) & Q(
                     users_groups__permission_view_project=True) & Q(
-                    pk=context["project"].id)).first()
+                    pk=project_id)).first()
             if target_project is None:
                 raise PermissionDenied(
                     "You do not have permission to view this object.")
 
-        context['title'] = context["project"]
-        context['project_color'] = context["project"].color
-        project_id = context["project"].id
+        context['title'] = target_project.title
+        context['project_color'] = target_project.color
 
         all_tasks = Task.objects.filter(
-            project=context['project']).select_related().prefetch_related(
-            'tags')
+            project_id=project_id).select_related(
+            'owner', 'project', 'accountable__profile_settings'
+        ).prefetch_related(
+            'tags', 'informed', 'consultant', 'responsible'
+        ).prefetch_related(
+            'informed__profile_settings',
+            'consultant__profile_settings',
+            'responsible__profile_settings'
+        )
 
         per_page = self.request.GET.get('limit')
         search_section = self.request.GET.get('search')
         sorting_section = self.request.GET.get('sorting')
         tags_section = self.request.GET.get('tags')
         filter_section = self.request.GET.get('filter')
-        per_page = manage_user_settings(self.request.user.id, per_page)
+        per_page = manage_user_settings(request_user_id, per_page)
 
-        all_tags = Tag.objects.filter(owner_id=self.request.user.id).all()
+        all_tags = Tag.objects.filter(owner_id=request_user_id).all()
         all_projects = Project.objects.filter(
-            owner_id=self.request.user.id).all()
+            owner_id=request_user_id).all()
 
         other_projects = Project.objects.filter(
-            Q(users_groups__users=self.request.user.id) & Q(
+            Q(users_groups__users=request_user_id) & Q(
                 users_groups__is_active=True) & Q(
                 users_groups__permission_view_project=True))
 
         all_projects = all_projects.union(other_projects)
+        all_statuses = TaskStatus.objects.all()
 
         if search_section is not None:
             search_section_obj = json.loads(search_section)
@@ -156,18 +167,45 @@ class ProjectDetailView(DetailView):
         if filter_section is not None:
             filter_section_obj = json.loads(filter_section)
 
-            kw = dict()
-            for key, value in filter_section_obj.items():
-                if key == 'is_done':
-                    kw[key] = True if value == 'yes' else False
-                else:
-                    k = key + '__in'
-                    if k not in kw:
-                        kw[k] = list()
-                    for v in value:
-                        kw[k].append(v)
+            q_main = Q()
 
-            all_tasks = all_tasks.filter(**kw).annotate(dcount=Count('tags'))
+            for item in filter_section_obj:
+                key = item['n']
+                value = item['v']
+                is_many = item.get('m')
+                operand = item.get('o', 'o')
+                exclude = item.get('e', '0')
+
+                query = Q()
+
+                if is_many is None or is_many == '0':
+                    v = True if value == '1' else False
+                    query = Q(**{key: v})
+
+                else:
+                    values = value.split(',')
+                    if operand == 'o':
+                        for v in values:
+                            query |= Q(**{key: v})
+
+                        if exclude == '1':
+                            query = ~query
+
+                    elif operand == 'a':
+                        if exclude != '1':
+                            for v in values:
+                                all_tasks = all_tasks.filter(**{key: v})
+                        else:
+                            subquery = Q()
+                            for v in values:
+                                subquery &= Q(**{key: v})
+                            all_tasks = all_tasks.exclude(subquery)
+
+                q_main &= query
+
+            all_tasks = all_tasks.filter(q_main).distinct()
+
+        all_tasks = all_tasks.prefetch_related('tags')
 
         paginator = Paginator(all_tasks, int(per_page))
         page_number = self.request.GET.get('page')
@@ -176,10 +214,12 @@ class ProjectDetailView(DetailView):
         context['len_records'] = paginator.count
         context['all_tags'] = all_tags
         context['all_projects'] = all_projects
+        context['all_statuses'] = all_statuses
         context['project_id'] = project_id
         context['json_data'] = {
             'tags': [t.to_json() for t in all_tags],
-            'project': context["project"].to_json()
+            'statuses': [t.to_json() for t in all_statuses],
+            'project': target_project.to_json(),
         }
         context['entity_type'] = 'Проект'
         context['page_title_eng'] = 'projects_detail'
@@ -248,7 +288,6 @@ class ProjectList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Project.objects.filter(owner_id=self.request.user.id).all()
-
 
 # class ProjectAPI(generics.ListCreateAPIView):
 #     serializer_class = ProjectSerializer

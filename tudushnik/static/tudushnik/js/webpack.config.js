@@ -11,9 +11,10 @@ module.exports = {
         calendar: ['./src/calendar/index.js'],
         projects_detail: ['./src/projects_detail/index.js'],
         tasks_page: ['./src/tasks_page/index.js'],
+        task_update_form: ['./src/task_update_form/index.js'],
+        task_detail: ['./src/tasks_page/details.js'],
         user_profile: ['./src/user_profile/index.js'],
         data_query_manager: ['./src/data_query_manager/index.js'],
-        // custom_elements: ['./src/custom_elements/index.js'],
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

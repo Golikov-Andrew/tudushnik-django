@@ -2,7 +2,7 @@ import template from './template.html'
 import compiledCssString from './styles.less';
 import {
     get_dict_from_list_by_key_val,
-    get_dict_n_index_from_list_by_key_val
+    get_dict_n_index_from_list_by_key_val, remove_dict_from_list_by_key_val_if_exists
 } from "../../utils/utils";
 
 class BinaryFilterWidgetComponent extends HTMLElement {
@@ -11,14 +11,16 @@ class BinaryFilterWidgetComponent extends HTMLElement {
     #path_element;
     #buttons;
     #current_value;
+    #field_name;
 
     constructor() {
         super();
         this.#current_value = ''
+        this.#field_name = ''
 
     }
 
-    get DQN() {
+    get DQM() {
         return this.#DQM;
     }
 
@@ -38,14 +40,13 @@ class BinaryFilterWidgetComponent extends HTMLElement {
         this.shadowRootMy.adoptedStyleSheets = [styleSheet];
         this.shadowRootMy.append(templateContent);
 
-        this.field_name = this.getAttribute('data-field-name')
+        this.#field_name = this.getAttribute('data-field-name')
         this.#buttons = {
-            no: this.shadowRootMy.querySelector('.place.no'),
-            yes: this.shadowRootMy.querySelector('.place.yes'),
+            '0': this.shadowRootMy.querySelector('.place.no'),
+            '1': this.shadowRootMy.querySelector('.place.yes'),
         }
         this.#hand_element = this.shadowRootMy.querySelector('.hand')
         this.#path_element = this.shadowRootMy.querySelector('.path')
-        // this.#hand_element.setAttribute('data-field-name', this.field_name)
 
     }
 
@@ -59,23 +60,12 @@ class BinaryFilterWidgetComponent extends HTMLElement {
     }
 
     init() {
-        if (this.#DQM.filters.hasOwnProperty(this.field_name)) {
-            this.#current_value = this.#DQM.filters[this.field_name]
-            this.#path_element.classList.add(this.#current_value)
+        let filter_section = get_dict_from_list_by_key_val(this.#DQM.filters, 'n', this.#field_name)
+        if (filter_section !== false) {
+            this.#current_value = filter_section['v']
+            let class_value = (this.#current_value === '1') ? 'yes':'no';
+            this.#path_element.classList.add(class_value)
         }
-        // let it = get_dict_n_index_from_list_by_key_val(this.#DQM.filters, 'n', this.field_name)
-        // if (it !== false) {
-        //     for (const key in this.#buttons) {
-        //         debugger;
-        //         if (it.obj.n === this.field_name && it.obj.v === key) {
-        //             // this.#buttons[key].innerHTML += it.index
-        //             this.classList.add(it.obj.v)
-        //             this.#current_value = it.obj.v
-        //             this.classList.add(it.obj.v)
-        //             break;
-        //         }
-        //     }
-        // }
 
         // default listener
         for (const key in this.#buttons) {
@@ -94,11 +84,17 @@ class BinaryFilterWidgetComponent extends HTMLElement {
                 }
 
                 if (this.#current_value !== '') {
-                    this.#DQM.filters[this.field_name] = this.#current_value
+                    let it = get_dict_from_list_by_key_val(this.#DQM.filters, 'n', this.#field_name)
+                    if (it !== false) {
+                        it['v'] = this.#current_value
+                    } else {
+                        this.#DQM.filters.push({
+                            'n': this.#field_name, 'v': this.#current_value
+                        })
+                    }
                 } else {
-                    delete this.#DQM.filters[this.field_name]
+                    remove_dict_from_list_by_key_val_if_exists(this.#DQM.filters, 'n', this.#field_name)
                 }
-
                 console.log(this.#DQM.filters)
             })
 

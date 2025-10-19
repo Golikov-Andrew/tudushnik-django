@@ -1,74 +1,257 @@
 {% extends 'tudushnik/base.html' %}
 {% load static %}
 
+{% block local_styles %}
+    <link rel="stylesheet" href="{% static 'tudushnik/css/form.css' %}">
+{% endblock local_styles %}
+
 {% block content %}
+    <h2>Просмотр задачи -&gt; {{ title }}</h2>
+    <form class="form">
+        <input type="hidden" name="referer" value="{{ referer }}">
+        <div class="form-error">{{ form.non_field_errors }}</div>
 
-    <div>{{ object.title }}</div>
-    <br>
-    <div>
-        <button class="btn_item_delete" data-item-title="{{ object.title }}" data-entity-name="задачу"
-                data-redirect-url="{% url 'tasks_page' %}"
-                data-post-url="{% url 'task_delete' pk=object.pk %}">&#x2613;
-        </button>
-        <a href="{% url 'task_edit' pk=object.pk %}">&#9998;</a>
-    </div>
-    <br>
+        <div class="row">
+            <div class="cell form-cell">
+                <div class="fieldset opened">
+                    {#                    <div class="label">Основное</div>#}
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                Проект
+                            </div>
+                            <div class="field-content">
+                                <a href="{% url 'project_detail' object.project_id %}">
+                                    {{ object.project.title }}
+                                </a>
+                            </div>
 
-    <div>
-        Создана: {{ object.created_at|date:'Y-m-d H:i' }}
-    </div>
-    <div>
-        Обновлена: {{ object.updated_at|date:'Y-m-d H:i' }}
-    </div>
-    <div>
-        Начало: {{ object.begin_at|date:'Y-m-d H:i' }}
-    </div>
-    <div>
-        Выполнена: {{ object.is_done }}
-    </div>
-    <div>
-        Проект: <a href="{% url 'project_detail' object.project_id %}">
-        {{ object.project.title }}
-    </a>
-    </div>
-    <br>
-    <div>
-        Тэги:
-        {% for item in object.tags.all %}
-            <span style="background-color: {{ item.color }}">{{ item.title }}</span>
-        {% endfor %}
-    </div>
-    <div>
-        <h4>Содержание</h4>
-        <span>
-            {{ object.content|safe }}
-        </span>
-    </div>
-    <div>
-        <h4>Родительские задачи</h4>
-        <ul>
-            {% for task in object.parent.all %}
-                <li><a href="{% url 'task_detail' pk=task.parent.pk %}">
-                    {{ task.parent }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div>
-        <h4>Дочерние задачи</h4>
-        <ul>
-            {% for child in object.children.all %}
-                <li><a href="{% url 'task_detail' pk=child.pk %}">
-                    {{ child }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="field-label">
+                                Название
+                            </div>
+                            <div class="field-content">
+                                {{ object.title }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="label">Готова ?</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                Готова ?
+                            </div>
+                            <div class="field-content">
+                                <input type="checkbox" disabled
+                                        {% if object.is_done is True %}
+                                       checked
+                                        {% endif %}
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset">
+                    <div class="label">Статус</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                Статус
+                            </div>
+                            <div class="field-content">
+                                {{ object.status }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">Теги</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                {% for item in object.tags.all %}
+                                    <span style="background-color: {{ item.color }}">{{ item.title }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset opened">
+                    <div class="label hidden">Время</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-label">
+                                Начало
+                            </div>
+                            <div class="field-content">
+                                {{ object.begin_at|date:'Y-m-d H:i' }}
+                            </div>
+
+                        </div>
+                        <div class="content-row">
+                            <div class="field-label">
+                                Продолжительность
+                            </div>
+                            <div class="field-content">
+                                <input type="number" name="duration"
+                                       value="{{ object.duration }}" step="60"
+                                       min="0"
+                                       class="hidden" required=""
+                                       id="id_duration">
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="field-label">
+                                Обновлена
+                            </div>
+                            <div class="field-content">
+                                {{ object.updated_at|date:'Y-m-d H:i' }}
+                            </div>
+                        </div>
+                        <div class="content-row">
+                            <div class="field-label">
+                                Создана
+                            </div>
+                            <div class="field-content">
+                                {{ object.created_at|date:'Y-m-d H:i' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="cell form-cell">
+                <div class="fieldset opened">
+                    <div class="label">Содержание</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                {{ object.content|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="cell form-cell">
+                <div class="fieldset">
+                    <div class="label">Ответственный</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content one-widget">
+                                {{ object.accountable }}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">Исполнители</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                <ul>
+                                    {% for item in object.responsible.all %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">Консультирующие</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                <ul>
+                                    {% for item in object.consultant.all %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">Информируемые</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                <ul>
+                                    {% for item in object.informed.all %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell form-cell">
+                <div class="fieldset openable">
+                    <div class="label">Дочерние задачи</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                <ul>
+                                    {% for child in object.children.all %}
+                                        <li>
+                                            <a href="{% url 'task_detail' pk=child.pk %}">
+                                                {{ child }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldset openable">
+                    <div class="label">Родительские задачи</div>
+                    <div class="content">
+                        <div class="content-row">
+                            <div class="field-content">
+                                <ul>
+                                    {% for task in object.parent.all %}
+                                        <li>
+                                            <a href="{% url 'task_detail' pk=task.parent.pk %}">
+                                                {{ task.parent }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form_bottom_buttons">
+            <button class="btn_item_delete" data-item-title="{{ object.title }}"
+                    data-entity-name="задачу"
+                    data-redirect-url="{% url 'tasks_page' %}"
+                    data-post-url="{% url 'task_delete' pk=object.pk %}">
+                Удалить
+            </button>
+            <a class="btn_back" href="{{ referer }}">Назад</a>
+            <a class="btn_edit"
+               href="{% url 'task_edit' pk=object.pk %}?referer={{ referer }}">Редактировать</a>
+
+        </div>
+        {#    &#x2613;  &#9998;  <input type="submit" value="Сохранить">#}
+    </form>
 
 {% endblock content %}
 
 {% block local_scripts %}
-    {#    <script type="text/javascript" src="{% static 'tudushnik/js/pagination.js' %}"></script>#}
-    <script type="text/javascript" src="{% static 'tudushnik/js/crud.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/task_detail.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/searching.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tudushnik/js/sorting.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/task_detail.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/task_detail.js' %}"></script>
 {% endblock local_scripts %}

@@ -9,7 +9,9 @@
 @cold-gold: #D2B187;
 @cold-medium: #97D4FF;
 @cold-dark: #4A8FC1;
+@cold-dark-filter: brightness(0) saturate(100%) invert(48%) sepia(58%) saturate(416%) hue-rotate(163deg) brightness(96%) contrast(97%);
 @cold-very-dark: #34729f;
+@cold-very-dark-filter: brightness(0) saturate(100%) invert(39%) sepia(70%) saturate(442%) hue-rotate(163deg) brightness(89%) contrast(91%);
 @btn-color: #8f642d;
 @btn-bg-hover: #C18B47;
 @labelGray: #626262;
@@ -41,7 +43,7 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .modal_wrapper {
@@ -105,6 +107,20 @@
 
   &:hover {
     background-color: @cold-very-dark;
+  }
+}
+.var_btn_del_big {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: @red-delicate;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+
+  &:hover {
+    background-color: @red-delicate-medium;
   }
 }
 .var_btn_del{

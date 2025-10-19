@@ -1,0 +1,19 @@
+<svg class="icon" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <style>
+            svg{fill: none;}
+            .icon-fill-color { fill: currentColor; }
+            .icon-stroke-color { stroke: currentColor; }
+            svg .icon { display: none }
+            svg .icon:target { display: inline; }
+        </style>
+    </defs>
+
+    <svg viewBox="0 0 10.793 5.732">
+        <g id="chevron" class="icon" transform="translate(-1.1105 -3.9577)">
+            <path d="m1.9042 4.7514 4.603 4.1445 4.603-4.1445" fill="none"
+                  stroke="#000" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="1.5875"/>
+        </g>
+    </svg>
+</svg>

@@ -1,21 +1,23 @@
 from django import forms
+from django.contrib.auth.models import User
+from django.db.models import Q
 
 from tudushnik.models.task import Task
+from tudushnik.models.users_group import UsersGroup
 
 
 class AddTaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'content', 'project', 'tags', 'begin_at',
-                  'duration', 'diagram_offset_x'
-                  ]
+                  'duration', 'diagram_offset_x']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-input'
             }),
-            'content': forms.Textarea(attrs={
-                'cols': 60,
-                'rows': 10
+            'content': forms.Textarea(),
+            'project': forms.Select(attrs={
+                'class': 'form-input'
             }),
             'tags': forms.SelectMultiple(),
             'begin_at': forms.TextInput(attrs={
@@ -25,7 +27,7 @@ class AddTaskForm(forms.ModelForm):
                 'type': 'number',
                 'step': '60',
                 'min': '0',
-                'class': 'hidden_form_elem'
+                'class': 'hidden'
             }),
             'diagram_offset_x': forms.TextInput(attrs={
                 'type': 'number',
@@ -35,56 +37,58 @@ class AddTaskForm(forms.ModelForm):
         }
         labels = {
             'title': 'Название',
-            'content': 'Описание',
+            'content': 'Содержание',
             'project': 'Проект',
             'tags': 'Тэги',
             'begin_at': 'Начало',
             'duration': 'Продолж.',
-            'diagram_offset_x': 'Оффсет',
+            'diagram_offset_x': 'Оффсет X',
         }
 
 
-class TaskUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Task
-        fields = ['title', 'content', 'is_done', 'project', 'tags', 'begin_at',
-                  'duration', 'children'
-                  ]
+class TaskUpdateForm(AddTaskForm):
+    class Meta(AddTaskForm.Meta):
+        fields = AddTaskForm.Meta.fields + ['is_done', 'children',
+                                            'accountable', 'responsible',
+                                            'consultant', 'informed', 'status']
         widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'form-input'
-            }),
-            'content': forms.Textarea(attrs={
-                'cols': 60,
-                'rows': 10
-            }),
-
+            **AddTaskForm.Meta.widgets,
             'is_done': forms.CheckboxInput(attrs={
                 'class': 'form-input'
             }),
-            'project': forms.Select(attrs={
+            'children': forms.SelectMultiple(),
+            'accountable': forms.Select(attrs={
                 'class': 'form-input'
             }),
-
-            'tags': forms.SelectMultiple(),
-            'begin_at': forms.TextInput(attrs={
-                'type': 'datetime-local'
-            }),
-            'duration': forms.TextInput(attrs={
-                'type': 'number',
-                'step': '60',
-                'min': '0',
-                'class': 'hidden_form_elem'
-            }),
-            'children': forms.SelectMultiple(),
+            'responsible': forms.SelectMultiple(),
+            'consultant': forms.SelectMultiple(),
+            'informed': forms.SelectMultiple(),
+            'status': forms.Select(),
         }
         labels = {
-            'title': 'Название',
-            'content': 'Содержание',
-            'is_done': 'Done?',
-            'project': 'Проект',
-            'tags': 'Тэги',
-            'begin_at': 'Начало',
-            'duration': 'Продолж.',
+            **AddTaskForm.Meta.labels,
+            'is_done': 'Готово?',
             'children': 'Дочерние задачи',
+            'accountable': 'Ответственный',
+            'responsible': 'Исполнители',
+            'consultant': 'Консультирующие',
+            'informed': 'Информируемые',
+            'status': 'Статус',
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        project_id = self.initial['project']
+
+        user_groups_ids = UsersGroup.objects.filter(
+            projects__in=[project_id, ], is_active=True
+        ).values_list('id', flat=True)
+        users = User.objects.filter(
+            Q(users_groups__in=user_groups_ids,
+              users_groups__is_active=True) | Q(project=project_id)).distinct()
+
+        self.fields['accountable'].queryset = users
+        self.fields['responsible'].queryset = users
+        self.fields['consultant'].queryset = users
+        self.fields['informed'].queryset = users

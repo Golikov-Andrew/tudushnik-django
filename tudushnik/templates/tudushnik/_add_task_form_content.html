@@ -1,0 +1,105 @@
+{% csrf_token %}
+<input type="hidden" name="referer" value="{{ referer }}">
+<div class="form-error">{{ form.non_field_errors }}</div>
+
+<div class="row">
+    <div class="cell form-cell">
+        <div class="fieldset openable opened">
+            <div class="label">Основное</div>
+            <div class="content">
+                <div class="content-row">
+                    <div class="field-label">
+                        {{ form.project.label_tag }}
+                    </div>
+                    <div class="field-content">
+                        {{ form.project }}
+                    </div>
+
+                </div>
+                <div class="content-row">
+                    <div class="field-label">
+                        {{ form.title.label_tag }}
+                    </div>
+                    <div class="field-content">
+                        {{ form.title }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#                <div class="fieldset">#}
+        {#                    <div class="label">Статус</div>#}
+        {#                    <div class="content">#}
+        {#                        <div class="content-row">#}
+        {#                            <div class="field-label">#}
+        {#                                {{ form.is_done.label_tag }}#}
+        {#                            </div>#}
+        {#                            <div class="field-content">#}
+        {#                                {{ form.is_done }}#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                    </div>#}
+        {#                </div>#}
+        <div class="fieldset openable opened">
+            <div class="label">{{ form.tags.label_tag }}</div>
+            <div class="content">
+                <div class="content-row">
+                    <div class="field-content">
+                        {{ form.tags }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fieldset openable opened">
+            <div class="label">Время</div>
+            <div class="content">
+                <div class="content-row">
+                    <div class="field-label">
+                        {{ form.begin_at.label_tag }}
+                    </div>
+                    <div class="field-content">
+                        {{ form.begin_at }}
+                    </div>
+
+                </div>
+                <div class="content-row">
+                    <div class="field-label">
+                        {{ form.duration.label_tag }}
+                    </div>
+                    <div class="field-content">
+                        {{ form.duration }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fieldset openable opened hidden">
+            <div class="label">Дополнительно</div>
+            <div class="content">
+                <div class="content-row">
+                    <div class="field-label">
+                        {{ form.diagram_offset_x.label_tag }}
+                    </div>
+                    <div class="field-content one-widget">
+                        {{ form.diagram_offset_x }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="cell form-cell">
+        <div class="fieldset openable opened">
+            <div class="label">{{ form.content.label_tag }}</div>
+            <div class="content">
+                <div class="content-row">
+                    <div class="field-content">
+                        {{ form.content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="submit" value="Создать">

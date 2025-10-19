@@ -57,12 +57,32 @@ def create_table_column_multi_filter_widget(data_field_name: str,
     for val in val_list:
         options.append(
             f'<div class="object_item_tag" style="background-color: {val.color}">'
-            f'<label><input type="checkbox" class="object_pk_{val.pk}">{val.title}</label>'
+            f'<label><input type="checkbox" class="object_tags object_pk_{val.pk}">{val.title}</label>'
 
             '</div>')
     return mark_safe(f"""
     <div class="multi_filter_widget" data-field-name="{data_field_name}">
-    <button class="btn_show_tasks_tags_modal">Настроить фильтр</button>
+    <button class="btn_show_tasks_tags_modal" data-field-name="{data_field_name}">Настроить фильтр</button>
+    <div id="tasks_tags_modal" class="modal hidden">
+    <div class="object-tags">
+    {''.join(options)}
+    </div>
+    </div>
+    </div>
+    """)
+
+def create_multiselect_widget(data_field_name: str,
+                                            val_list: list):
+    options = list()
+    for val in val_list:
+        options.append(
+            f'<div class="object_item_tag">'
+            f'<label><input type="checkbox" class="object_statuses object_pk_{val.pk}">{val.title}</label>'
+
+            '</div>')
+    return mark_safe(f"""
+    <div class="multi_filter_widget" data-field-name="{data_field_name}">
+    <button class="btn_show_tasks_tags_modal" data-field-name="{data_field_name}">Настроить фильтр</button>
     <div id="tasks_tags_modal" class="modal hidden">
     <div class="object-tags">
     {''.join(options)}
@@ -85,3 +105,5 @@ register.filter('create_table_column_search_and_sorting_widget',
 register.filter('duration_humanize', duration_humanize)
 register.filter('create_table_column_multi_filter_widget',
                 create_table_column_multi_filter_widget)
+register.filter('create_multiselect_widget',
+                create_multiselect_widget)

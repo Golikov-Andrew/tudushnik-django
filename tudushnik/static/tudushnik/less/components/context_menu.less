@@ -1,0 +1,23 @@
+@import 'utils/_mixins';
+@import 'utils/_variables';
+
+.modal {
+  &.context_menu {
+    .window {
+      width: unset;
+      top: unset;
+      left: unset;
+      height: unset;
+    }
+  }
+}
+
+.btn_context_menu_action {
+  cursor: pointer;
+  padding: 8px;
+
+  &:hover {
+    background-color: @cold-dark;
+    color: @cold-light;
+  }
+}

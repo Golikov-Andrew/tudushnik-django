@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, UpdateView
 
-from tudushnik.forms.tag import TagUpdateForm, AddTagForm
+from tudushnik.forms.tag import TagForm
 from tudushnik.middleware import set_client_timezone
 
 from tudushnik.models.tag import Tag
@@ -61,18 +61,18 @@ class TagDetailView(DetailView):
 class TagUpdateView(UpdateView):
     model = Tag
     template_name_suffix = '_update_form'
-    form_class = TagUpdateForm
+    form_class = TagForm
 
 
 def add_tag(request, *args, **kwargs):
     if request.method == 'POST':
-        form = AddTagForm(request.POST, request.FILES)
+        form = TagForm(request.POST, request.FILES)
         if form.is_valid():
             form.instance.owner = get_user(request)
             form.save()
             return redirect('tags_page')
     else:
-        form = AddTagForm()
+        form = TagForm()
     return render(request, 'tudushnik/add_tag.html',
                   {'form': form, 'title': 'Создание тэга'})
 

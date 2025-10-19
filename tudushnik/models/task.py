@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
+from tudushnik.models import TaskStatus
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 
@@ -29,6 +30,18 @@ class Task(models.Model):
         symmetrical=False,
         through='TaskParentChild'
     )
+    # RACI matrix
+    responsible = models.ManyToManyField(User,
+                                         related_name='tasks_responsible',
+                                         blank=True)
+    accountable = models.ForeignKey(User, on_delete=models.SET_NULL,
+                                    related_name='tasks_accountable', null=True)
+    consultant = models.ManyToManyField(User, related_name='tasks_consultant',
+                                        blank=True)
+    informed = models.ManyToManyField(User, related_name='tasks_informed',
+                                      blank=True)
+    status = models.ForeignKey(TaskStatus, on_delete=models.PROTECT,
+                               related_name='tasks', default=1)
 
     # views = models.IntegerField(default=0)
     # slug = models.SlugField(max_length=255, unique=True,
@@ -60,7 +73,8 @@ class Task(models.Model):
             'diagram_offset_x': self.diagram_offset_x,
             'children': [c.to_json() for c in children],
             'parents': [i.pk for i in parents],
-            'tags': [t.to_json() for t in tags]
+            'tags': [t.to_json() for t in tags],
+            'status': self.status.title
         }
 
     class Meta:

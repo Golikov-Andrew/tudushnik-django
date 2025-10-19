@@ -11,14 +11,14 @@ DQM.init_GUI({
                     DQM.apply_params()
                 }],
                 ['keydown', (evt) => {
-                    if(evt.key === 'Enter'){
+                    if (evt.key === 'Enter') {
                         DQM.apply_params()
                     }
                 }],
             ],
         }
     ],
-    sorting:[
+    sorting: [
         {
             selector: 'sorting-widget',
             listeners: [
@@ -28,7 +28,7 @@ DQM.init_GUI({
             ],
         }
     ],
-    filters:[
+    filters: [
         {
             selector: 'binary-filter-widget',
             listeners: [
@@ -36,8 +36,18 @@ DQM.init_GUI({
                     DQM.apply_params(evt)
                 }]
             ],
-        }
+        },
+        {
+            selector: 'select-multiple-widget',
+            listeners: [
+                ['click', (evt) => {
+                    console.log('select-multiple-widget click')
+                    console.log(evt)
+                    // DQM.apply_params(evt)
+                }]
+            ],
+        },
+
     ]
 })
-
 console.log('DQM', DQM)

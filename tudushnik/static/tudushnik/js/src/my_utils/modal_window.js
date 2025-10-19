@@ -81,7 +81,7 @@ class ModalWindow {
 
     }
 
-    get app(){
+    get app() {
         return this.#app;
     }
 
@@ -102,6 +102,18 @@ class ModalWindow {
         this.content.element.innerHTML = html
     }
 
+    set_content_element(element) {
+        this.content.element.appendChild(element)
+    }
+
+    append_content(element) {
+        this.content.element.appendChild(element)
+    }
+
+    clear_content() {
+        this.content.element.innerHTML = ''
+    }
+
     perform_ok() {
 
     }
@@ -117,7 +129,8 @@ class ModalWindow {
     show_errors() {
         throw new Error('show_errors is not implemented!!!')
     }
-    init(){
+
+    init() {
         this.hide()
         document.body.appendChild(this.element)
     }
