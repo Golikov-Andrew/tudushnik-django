@@ -60,7 +60,7 @@
         <div class="object-tags">
             {% for tag in object.tags.all %}
                 <div class="object_item_tag"
-                     style="background-color: {{ tag.color }}">
+                     style="background-color: {{ tag.color }}; color: {{ tag.text_color }}">
                     <label><input type="checkbox"
                                   class="object_pk_{{ tag.pk }}">{{ tag.title }}
                     </label>

@@ -107,7 +107,7 @@
             <td class="task_item_tags">
                 {% for item in item.tags.all %}
                     <span class="task_item_tag"
-                          style="background-color: {{ item.color }}">{{ item.title }}</span>
+                          style="background-color: {{ item.color }}; color: {{ item.text_color }}">{{ item.title }}</span>
                 {% endfor %}
             </td>
 

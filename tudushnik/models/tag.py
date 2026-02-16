@@ -10,6 +10,7 @@ class Tag(models.Model):
     color = models.TextField(blank=False, default='#aaaaaa')
     owner = models.ForeignKey(User, on_delete=models.CASCADE,
                               related_name='tags')
+    text_color = models.TextField(blank=False, default='#34729f')
 
     def __str__(self):
         return self.title
@@ -18,7 +19,8 @@ class Tag(models.Model):
         return {
             'pk': self.pk,
             'title': self.title,
-            'color': self.color
+            'color': self.color,
+            'text_color': self.text_color,
         }
 
     def get_absolute_url(self):

@@ -73,7 +73,7 @@
                         <div class="content-row">
                             <div class="field-content">
                                 {% for item in object.tags.all %}
-                                    <span style="background-color: {{ item.color }}">{{ item.title }}</span>
+                                    <span style="background-color: {{ item.color }}; color: {{ item.text_color }}">{{ item.title }}</span>
                                 {% endfor %}
                             </div>
                         </div>

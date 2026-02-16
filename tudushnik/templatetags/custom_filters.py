@@ -56,7 +56,7 @@ def create_table_column_multi_filter_widget(data_field_name: str,
     options = list()
     for val in val_list:
         options.append(
-            f'<div class="object_item_tag" style="background-color: {val.color}">'
+            f'<div class="object_item_tag" style="background-color: {val.color}; color: {val.text_color}">'
             f'<label><input type="checkbox" class="object_tags object_pk_{val.pk}">{val.title}</label>'
 
             '</div>')
@@ -76,7 +76,7 @@ def create_multiselect_widget(data_field_name: str,
     options = list()
     for val in val_list:
         options.append(
-            f'<div class="object_item_tag">'
+            f'<div class="object_item_tag" style="background-color: {val.color}; color: {val.text_color}">'
             f'<label><input type="checkbox" class="object_statuses object_pk_{val.pk}">{val.title}</label>'
 
             '</div>')
