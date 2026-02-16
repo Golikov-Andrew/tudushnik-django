@@ -161,6 +161,7 @@ class Task {
             tag_elem.classList.add('task_tag')
             tag_elem.innerText = current_tag.title
             tag_elem.style.backgroundColor = current_tag.color
+            tag_elem.style.color = current_tag.text_color
             tags_container_elem.appendChild(tag_elem)
         }
         this.description_elem = document.createElement('div')
@@ -191,6 +192,12 @@ class Task {
         for (let i = 0; i < this.children.length; i++) {
             this.create_child_relation_svg_elem(this.children[i])
         }
+        this.elem.addEventListener('mouseenter',()=>{
+            this.elem.style.zIndex = '999999'
+        })
+        this.elem.addEventListener('mouseleave',()=>{
+            this.elem.style.zIndex = ''
+        })
     }
 
     static moveTask(task_obj, move_settings) {
