@@ -191,6 +191,12 @@ class Task {
         for (let i = 0; i < this.children.length; i++) {
             this.create_child_relation_svg_elem(this.children[i])
         }
+        this.elem.addEventListener('mouseenter',()=>{
+            this.elem.style.zIndex = '999999'
+        })
+        this.elem.addEventListener('mouseleave',()=>{
+            this.elem.style.zIndex = ''
+        })
     }
 
     static moveTask(task_obj, move_settings) {
