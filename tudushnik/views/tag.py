@@ -2,12 +2,15 @@ from django.contrib.auth import get_user
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, UpdateView
 
+from tudushnik.common import dispatch_event
 from tudushnik.forms.tag import TagForm
 from tudushnik.middleware import set_client_timezone
 
 from tudushnik.models.tag import Tag
+from tudushnik.models.user_profile_settings import UserProfileSettings
 
 
 class TagListView(ListView):
@@ -63,6 +66,18 @@ class TagUpdateView(UpdateView):
     template_name_suffix = '_update_form'
     form_class = TagForm
 
+    def get_success_url(self):
+        user_settings = UserProfileSettings.objects.get(
+            owner=self.request.user)
+        dispatch_event('update_tag', user_settings)
+
+        if self.request.POST.get(
+                'referer') is not None and self.request.POST.get(
+                'referer') != '':
+            return self.request.POST.get('referer')
+
+        return reverse('tag_detail', kwargs={'pk': self.object.pk})
+
 
 def add_tag(request, *args, **kwargs):
     if request.method == 'POST':
@@ -70,6 +85,11 @@ def add_tag(request, *args, **kwargs):
         if form.is_valid():
             form.instance.owner = get_user(request)
             form.save()
+
+            user_settings = UserProfileSettings.objects.get(
+                owner=request.user)
+            dispatch_event('create_tag', user_settings)
+
             return redirect('tags_page')
     else:
         form = TagForm()

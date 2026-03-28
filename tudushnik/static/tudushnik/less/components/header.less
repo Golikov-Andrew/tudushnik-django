@@ -6,10 +6,7 @@
   grid-template-areas:
         "logo-container profile-container"
         "navbar-container navbar-container";
-  .min580_all({
-    grid-template-areas:
-        "logo-container navbar-container profile-container";
-  });
+  grid-template-columns: 100px auto;
   position: fixed;
   gap: 4px;
   background-color: @warm-light;
@@ -19,9 +16,21 @@
   width: 100%;
   margin: 0 6px 6px 0;
   padding: 4px;
+
+  .min580_all({
+    grid-template-areas:
+        "logo-container navbar-container profile-container";
+    grid-template-columns: 100px auto 140px;
+  });
   .min_768({
     margin: 0 10px 10px 0;
     padding: 10px;
+  });
+  .min_1024({
+    grid-template-columns: 100px auto 270px;
+  });
+  .min_1200({
+    grid-template-columns: 160px auto 320px;
   });
   .min_1440({
     padding: 20px 40px;
@@ -63,6 +72,15 @@
   .profile-container {
     text-align: right;
     grid-area: profile-container;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+
+    .min_768({
+      gap: 8px;
+    });
   }
 }
 
@@ -92,4 +110,12 @@
   &.navbar-link-active {
     font-weight: bold;
   }
+}
+
+.level-rank-points {
+  padding: 0;
+  background-color: transparent;
+  color: @btn-bg-hover;
+  margin: 0 4px;
+  pointer-events: none;
 }

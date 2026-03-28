@@ -15,13 +15,15 @@ from django.views.generic import ListView, DetailView, UpdateView
 from rest_framework import generics
 from rest_framework.response import Response
 
+from tudushnik.common import dispatch_event
 from tudushnik.forms.task import AddTaskForm, TaskUpdateForm
 from tudushnik.middleware import set_client_timezone
 from tudushnik.models import TaskStatus
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
-from tudushnik.models.user_profile_settings import manage_user_settings
+from tudushnik.models.user_profile_settings import manage_user_settings, \
+    UserProfileSettings
 from tuduapi.serializers import TaskSerializer
 
 
@@ -192,10 +194,15 @@ class TaskUpdateView(UpdateView):
     form_class = TaskUpdateForm
 
     def get_success_url(self):
+        user_settings = UserProfileSettings.objects.get(
+            owner=self.request.user)
+        dispatch_event('update_task', user_settings)
+
         if self.request.POST.get(
                 'referer') is not None and self.request.POST.get(
                 'referer') != '':
             return self.request.POST.get('referer')
+
         return reverse('task_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
@@ -332,6 +339,11 @@ def add_task(request, *args, **kwargs):
                 form.instance.begin_at = begin - offset
 
             form.save()
+
+            user_settings = UserProfileSettings.objects.get(
+                owner=request.user)
+            dispatch_event('create_task', user_settings)
+
             if request.POST.get('referer') is not None and request.POST.get(
                     'referer') != '':
                 return redirect(request.POST.get('referer'))
@@ -390,6 +402,11 @@ def add_task_to_project(request, project_pk, *args, **kwargs):
                 begin = form.instance.begin_at
                 form.instance.begin_at = begin - offset
             form.save()
+
+            user_settings = UserProfileSettings.objects.get(
+                owner=request.user)
+            dispatch_event('create_task', user_settings)
+
             return redirect('project_detail', pk=project_pk)
     else:
         task = Task(owner=request.user, project=target_project.first())
@@ -505,6 +522,11 @@ def task_update_attrs(request, *args, **kwargs):
             target_object.children.add(new_child_task)
 
         target_object.save()
+
+        user_settings = UserProfileSettings.objects.get(
+            owner=request.user)
+        dispatch_event('update_task', user_settings)
+
         json_resp = {'success': True, 'task_id': task_id}
         json_resp.update(json_data)
         return JsonResponse(json_resp)

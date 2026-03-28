@@ -9,13 +9,17 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, UpdateView
 from rest_framework import generics
 
+from tudushnik.common import dispatch_event
 from tudushnik.forms.project import AddProjectForm, ProjectUpdateForm
 from tudushnik.middleware import set_client_timezone
 from tudushnik.models import TaskStatus
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
 from tudushnik.models.task import Task
-from tudushnik.models.user_profile_settings import manage_user_settings
+from tudushnik.models.user_event import UserEvent
+from tudushnik.models.user_event_snapshot import UserEventSnapshot
+from tudushnik.models.user_profile_settings import manage_user_settings, \
+    UserProfileSettings
 from tuduapi.serializers import ProjectSerializer
 
 
@@ -263,8 +267,12 @@ def add_project(request, *args, **kwargs):
     if request.method == 'POST':
         form = AddProjectForm(request.POST, request.FILES)
         if form.is_valid():
-            form.instance.owner = get_user(request)
+            current_user = get_user(request)
+            form.instance.owner = current_user
             form.save()
+            user_settings = UserProfileSettings.objects.get(owner=current_user)
+            dispatch_event('create_project', user_settings)
+
             return redirect('projects_page')
     else:
         form = AddProjectForm()

@@ -78,9 +78,19 @@
 
             <div class="profile-container">
                 {% if request.user.is_authenticated %}
+
+                    <div class="navbar-link level-rank-points">
+                        <div>{{ request.user.profile_settings.level.title }}
+                            / {{ request.user.profile_settings.rank.title }}</div>
+                        <div>{{ request.user.profile_settings.points_now }}
+                            / {{ request.user.profile_settings.points_total }}</div>
+                    </div>
+
+
                     <a class="navbar-link"
                        href="{% url 'profile' %}">Профиль</a>
-                    <a class="navbar-link" id="logout_link_button" href="{% url 'logout' %}">Выйти</a>
+                    <a class="navbar-link" id="logout_link_button"
+                       href="{% url 'logout' %}">Выйти</a>
                 {% else %}
                     <a class="navbar-link" href="{% url 'login' %}">Войти</a>
                     <a class="navbar-link" href="{% url 'register' %}">Регистрация</a>

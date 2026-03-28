@@ -45,6 +45,39 @@
             <img src="{{ user.profile_settings.avatar.url }}" alt="ava" class="user_avatar">
         </td>
     </tr>
+
+    <tr>
+        <td>
+            Уровень активности:
+        </td>
+        <td>
+            {{ user.profile_settings.level.title }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Звание:
+        </td>
+        <td>
+            {{ user.profile_settings.rank.title }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Очков сейчас:
+        </td>
+        <td>
+            {{ user.profile_settings.points_now }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Очков всего:
+        </td>
+        <td>
+            {{ user.profile_settings.points_total }}
+        </td>
+    </tr>
     </tbody>
     </table>
 

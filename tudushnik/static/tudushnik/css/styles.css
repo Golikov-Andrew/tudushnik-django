@@ -924,6 +924,8 @@ body > .wrapper {
 .page-content.tasks_add_to_project {
   margin-top: 20px;
 }
+@media (min-width: 500px) {
+}
 @media (max-width: 767px) {
   .page-content.projects_detail #move_settings {
     margin-top: 20px;
