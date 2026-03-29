@@ -30,4 +30,8 @@ pip freeze > requirements.txt
 ### Запуск приложения на продакшене
 `sudo bash ctrl.sh start`  
 
+### crontab  
+`*/30 * * * * docker exec personal-django-site-gav-tdm_server-1 bash -c "cron_user_level_n_rank_processing.py >> /var/log/cron.log 2>&1"`  
+`0 2 * * * docker exec personal-django-site-gav-tdm_server-1 bash -c "cron_user_event_processing.py >> /var/log/cron.log 2>&1"`  
+
 
