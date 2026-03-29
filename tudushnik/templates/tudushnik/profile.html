@@ -52,6 +52,7 @@
         </td>
         <td>
             {{ user.profile_settings.level.title }}
+            <span class="btn_wiki_modal_open" data-modal-id="levels_rule_table">&#9432;</span>
         </td>
     </tr>
     <tr>
@@ -60,6 +61,7 @@
         </td>
         <td>
             {{ user.profile_settings.rank.title }}
+            <span class="btn_wiki_modal_open" data-modal-id="ranks_rule_table">&#9432;</span>
         </td>
     </tr>
     <tr>
@@ -68,6 +70,7 @@
         </td>
         <td>
             {{ user.profile_settings.points_now }}
+            <span class="btn_wiki_modal_open" data-modal-id="activity_rule_table">&#9432;</span>
         </td>
     </tr>
     <tr>
@@ -81,9 +84,16 @@
     </tbody>
     </table>
 
+    {% include 'tudushnik/_activity_display_root.html' %}
+    {% include 'tudushnik/_levels_rule_table.html' %}
+    {% include 'tudushnik/_ranks_rule_table.html' %}
+    {% include 'tudushnik/_activity_rule_table.html' %}
+
 {% endblock content %}
 
 {% block local_scripts %}
     <script type="text/javascript" src="{% static 'tudushnik/js/dist/user_profile.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/user_detail.js' %}"></script>
 {% endblock local_scripts %}
 

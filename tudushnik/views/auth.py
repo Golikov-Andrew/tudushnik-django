@@ -57,6 +57,7 @@ def profile(request, **kwargs):
     set_client_timezone(request, kwargs)
     kwargs.update({'title': 'Профиль'})
     kwargs.update({'page_title_eng': 'account_page'})
+    kwargs.update({'user_settings_id': request.user.profile_settings.pk})
     return render(request, 'tudushnik/profile.html', kwargs)
 
 

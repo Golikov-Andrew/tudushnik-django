@@ -19,7 +19,7 @@ class UserEventSnapshot(models.Model):
     def to_json(self):
         return {
             'pk': self.pk,
-            'user_settings_id': self.user_settings,
+            'user_settings_id': self.user_settings.pk,
             'title': self.event_title,
             'description': self.event_description,
             'points_delta': self.event_points_delta,

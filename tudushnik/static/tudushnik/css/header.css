@@ -200,6 +200,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-content: flex-start;
 }
 @media (min-width: 768px) {
   .header-container .navbar-container {

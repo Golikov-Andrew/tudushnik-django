@@ -9,6 +9,7 @@
   cursor: pointer;
 }
 
+.modal,
 #modal_upload_avatar.modal {
 
   .overlay {
@@ -133,7 +134,8 @@
         color: red;
         font-size: 16px;
         grid-area: errors;
-        .hint{
+
+        .hint {
           color: #585858;
         }
       }
@@ -163,7 +165,7 @@
         color: white;
         background-color: #84b085;
 
-        &:hover{
+        &:hover {
           background-color: #5c8c5d;
         }
 
@@ -193,4 +195,41 @@
   .min_1200({
     width: 100%;
   });
+}
+
+#activity_display_root {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+
+  .tools {
+    display: flex;
+    gap: 4px;
+  }
+
+  .canvas {
+    canvas {
+      //width: 100%;
+      //height: 200px;
+      outline: 1px solid blue;
+    }
+  }
+}
+
+.modal {
+  #ranks_rule_table,
+  #activity_rule_table,
+  #levels_rule_table {
+    th,
+    td {
+      text-align: center;
+    }
+
+  }
+
+  .content:has(#ranks_rule_table,
+  #activity_rule_table,
+  #levels_rule_table) {
+    grid-template-rows: unset;
+  }
 }

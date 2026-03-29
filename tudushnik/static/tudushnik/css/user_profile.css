@@ -150,6 +150,7 @@ body > .wrapper {
   border-radius: 50px;
   cursor: pointer;
 }
+.modal .overlay,
 #modal_upload_avatar.modal .overlay {
   position: fixed;
   z-index: 1000;
@@ -160,6 +161,7 @@ body > .wrapper {
   background-color: black;
   opacity: 0.5;
 }
+.modal .window,
 #modal_upload_avatar.modal .window {
   position: fixed;
   z-index: 1001;
@@ -170,6 +172,7 @@ body > .wrapper {
   border-radius: 20px;
 }
 @media (max-width: 767px) and (orientation: portrait) {
+  .modal .window,
   #modal_upload_avatar.modal .window {
     left: 10vw;
     width: 80vw;
@@ -177,6 +180,7 @@ body > .wrapper {
   }
 }
 @media (max-width: 953px) and (orientation: landscape) {
+  .modal .window,
   #modal_upload_avatar.modal .window {
     left: 10vw;
     width: 80vw;
@@ -187,6 +191,7 @@ body > .wrapper {
   }
 }
 @media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait) {
+  .modal .window,
   #modal_upload_avatar.modal .window {
     left: 20vw;
     width: 60vw;
@@ -194,6 +199,7 @@ body > .wrapper {
   }
 }
 @media (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  .modal .window,
   #modal_upload_avatar.modal .window {
     left: 20vw;
     width: 60vw;
@@ -204,24 +210,28 @@ body > .wrapper {
   }
 }
 @media (min-width: 1200px) {
+  .modal .window,
   #modal_upload_avatar.modal .window {
     width: 648px;
     left: calc((100vw - 648px) / 2);
     top: 20vh;
   }
 }
+.modal .window .btn_close,
 #modal_upload_avatar.modal .window .btn_close {
   cursor: pointer;
   text-align: right;
   font-size: 38px;
   color: #969696;
 }
+.modal .window .content,
 #modal_upload_avatar.modal .window .content {
   padding: 4px;
   margin: 4px;
   grid-template-rows: 64px auto;
 }
 @media (max-width: 767px) and (orientation: portrait) {
+  .modal .window .content,
   #modal_upload_avatar.modal .window .content {
     display: flex;
     flex-direction: column;
@@ -229,6 +239,7 @@ body > .wrapper {
   }
 }
 @media (max-width: 953px) and (orientation: landscape) {
+  .modal .window .content,
   #modal_upload_avatar.modal .window .content {
     display: grid;
     grid-template-areas: "image input-file" "image errors";
@@ -238,6 +249,7 @@ body > .wrapper {
   }
 }
 @media (min-width: 768px) and (max-width: 1199px) and (orientation: portrait) {
+  .modal .window .content,
   #modal_upload_avatar.modal .window .content {
     display: flex;
     flex-direction: column;
@@ -245,6 +257,7 @@ body > .wrapper {
   }
 }
 @media (min-width: 954px) and (max-width: 1199px) and (orientation: landscape) {
+  .modal .window .content,
   #modal_upload_avatar.modal .window .content {
     display: grid;
     grid-template-areas: "image input-file" "image errors";
@@ -254,6 +267,7 @@ body > .wrapper {
   }
 }
 @media (min-width: 1200px) {
+  .modal .window .content,
   #modal_upload_avatar.modal .window .content {
     display: grid;
     grid-template-areas: "image input-file" "image errors";
@@ -262,6 +276,7 @@ body > .wrapper {
     row-gap: 4px;
   }
 }
+.modal .window .content input[type="file"],
 #modal_upload_avatar.modal .window .content input[type="file"] {
   margin: 16px;
   font-size: 20px;
@@ -270,23 +285,28 @@ body > .wrapper {
   grid-area: input-file;
 }
 @media (min-width: 1200px) {
+  .modal .window .content input[type="file"],
   #modal_upload_avatar.modal .window .content input[type="file"] {
     font-size: 16px;
   }
 }
+.modal .window .content .validation_errors,
 #modal_upload_avatar.modal .window .content .validation_errors {
   color: red;
   font-size: 16px;
   grid-area: errors;
 }
+.modal .window .content .validation_errors .hint,
 #modal_upload_avatar.modal .window .content .validation_errors .hint {
   color: #585858;
 }
+.modal .window .buttons,
 #modal_upload_avatar.modal .window .buttons {
   display: flex;
   justify-content: center;
   gap: 20px;
 }
+.modal .window .buttons button,
 #modal_upload_avatar.modal .window .buttons button {
   font-size: 20px;
   outline: none;
@@ -296,16 +316,19 @@ body > .wrapper {
   border-radius: 20px;
 }
 @media (min-width: 1200px) {
+  .modal .window .buttons button,
   #modal_upload_avatar.modal .window .buttons button {
     font-size: 16px;
     padding: 16px;
     border-radius: 16px;
   }
 }
+.modal .window .buttons .btn_ok,
 #modal_upload_avatar.modal .window .buttons .btn_ok {
   color: white;
   background-color: #84b085;
 }
+.modal .window .buttons .btn_ok:hover,
 #modal_upload_avatar.modal .window .buttons .btn_ok:hover {
   background-color: #5c8c5d;
 }
@@ -338,4 +361,29 @@ body > .wrapper {
   .modal_avatar_img {
     width: 100%;
   }
+}
+#activity_display_root {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+#activity_display_root .tools {
+  display: flex;
+  gap: 4px;
+}
+#activity_display_root .canvas canvas {
+  outline: 1px solid blue;
+}
+.modal #ranks_rule_table th,
+.modal #activity_rule_table th,
+.modal #levels_rule_table th,
+.modal #ranks_rule_table td,
+.modal #activity_rule_table td,
+.modal #levels_rule_table td {
+  text-align: center;
+}
+.modal .content:has(#ranks_rule_table,
+  #activity_rule_table,
+  #levels_rule_table) {
+  grid-template-rows: unset;
 }

@@ -63,6 +63,8 @@
                        href="{% url 'calendar_page' %}">Календарь</a>
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Группы' }}"
                        href="{% url 'users_groups_page' %}">Группы</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Люди' }}"
+                       href="{% url 'users_page' %}">Люди</a>
                 {% endif %}
                 {% if user.is_superuser %}
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}"

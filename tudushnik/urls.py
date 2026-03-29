@@ -19,6 +19,7 @@ from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
 from .views.task import add_task, TaskListView, TaskDetailView, task_delete, \
     TaskUpdateView, add_task_to_project, task_update_attrs, tasks_fetch, \
     TaskList
+from .views.user import UserListView, UserDetailView, events_fetch
 from .views.user_settings import upload_avatar
 from .views.users_group import UsersGroupListView, add_users_group, \
     UsersGroupDetailView, users_group_delete, UsersGroupUpdateView
@@ -92,6 +93,11 @@ urlpatterns = [
          name='users_group_delete'),
     path('users_group/edit/<int:pk>/', UsersGroupUpdateView.as_view(),
          name='users_group_edit'),
+
+    path('users_page/', UserListView.as_view(),
+         name='users_page'),
+    path('user/detail/<int:pk>/', UserDetailView.as_view(), name='user_detail'),
+    path('user/activity/', events_fetch, name='user_events_fetch'),
 
     path('swagger/',
          schema_view.with_ui(

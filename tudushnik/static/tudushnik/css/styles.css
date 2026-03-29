@@ -956,6 +956,121 @@ body > .wrapper {
   cursor: pointer;
   z-index: 100;
 }
+.objects_list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+}
+.objects_list a {
+  color: #4A8FC1;
+  text-decoration: unset;
+}
+.objects_list a:visited {
+  color: #4A8FC1;
+}
+.objects_list .list-row {
+  display: grid;
+}
+.objects_list .list-row:hover {
+  cursor: pointer;
+  outline: 1px solid #97D4FF;
+}
+.objects_list .list-header-row {
+  display: grid;
+}
+.objects_list .list-header-row:hover {
+  cursor: default;
+  outline: none;
+}
+.objects_list .list-cell {
+  padding: 4px;
+}
+@media (min-width: 500px) {
+  .objects_list .list-cell {
+    display: flex;
+    align-items: center;
+  }
+}
+.objects_list .list-header {
+  display: grid;
+}
+.objects_list .ava_container {
+  display: flex;
+}
+.objects_list .user_avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+}
+@media (min-width: 768px) {
+  .objects_list .user_avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+  }
+}
+@media (min-width: 768px) {
+  .users_list {
+    max-width: 954px;
+    margin: 0 auto;
+  }
+}
+.users_list .list-row {
+  grid-template-columns: 42px 160px 25% auto;
+  grid-template-areas: "grid-area-avatar grid-area-username grid-area-level grid-area-points-now" "grid-area-avatar grid-area-email grid-area-rank grid-area-points-total";
+}
+@media (min-width: 768px) {
+  .users_list .list-row {
+    grid-template-columns: 88px 272px 25% auto;
+  }
+}
+.users_list .list-header-row {
+  grid-template-columns: 50% 50%;
+  grid-template-areas: "grid-area-username grid-area-points-now" "grid-area-email grid-area-points-total";
+}
+@media (min-width: 768px) {
+  .users_list .list-header-row {
+    grid-template-columns: 88px 272px 25% auto;
+    grid-template-areas: "grid-area-avatar grid-area-username grid-area-level grid-area-points-now" "grid-area-avatar grid-area-email grid-area-rank grid-area-points-total";
+  }
+}
+.users_list .list-header {
+  display: grid;
+  grid-template-columns: auto 88px;
+  grid-template-areas: "grid-area-label grid-area-sort" "grid-area-search grid-area-sort";
+  align-items: center;
+  align-content: center;
+}
+.users_list .list-header .grid-area-label {
+  grid-area: grid-area-label;
+}
+.users_list .list-header .grid-area-search {
+  grid-area: grid-area-search;
+}
+.users_list .list-header .grid-area-sort {
+  grid-area: grid-area-sort;
+}
+.users_list .grid-area-avatar {
+  grid-area: grid-area-avatar;
+}
+.users_list .grid-area-username {
+  grid-area: grid-area-username;
+}
+.users_list .grid-area-email {
+  grid-area: grid-area-email;
+}
+.users_list .grid-area-level {
+  grid-area: grid-area-level;
+}
+.users_list .grid-area-rank {
+  grid-area: grid-area-rank;
+}
+.users_list .grid-area-points-now {
+  grid-area: grid-area-points-now;
+}
+.users_list .grid-area-points-total {
+  grid-area: grid-area-points-total;
+}
 .pagination {
   font-size: 14px;
   display: flex;

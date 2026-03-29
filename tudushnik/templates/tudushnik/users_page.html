@@ -1,0 +1,70 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+
+{% block local_styles %}
+    <link rel="stylesheet"
+          href="{% static 'tudushnik/css/projects_detail.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+    <div class="items_table_wrapper">
+
+
+        <div class="users_list">
+            {% include 'tudushnik/_pagination.html' %}
+
+            <div class="multiselect_container">
+                <div>Уровень:</div>
+                <button id="button_open_filter_modal_status"
+                        class="button_open_modal" data-field-name="level">
+                    Настроить фильтр
+                </button>
+                <div class="modal hidden">
+                    <select-multiple-widget data-field-name="level">
+                        {% for item in all_levels %}
+                            <chips-widget slot="item"
+                                          data-value="{{ item.title }}"
+                                          data-color="#aaaaaa"
+                                          data-id="{{ item.pk }}"
+                                          data-field-name="level"></chips-widget>
+                        {% endfor %}
+                    </select-multiple-widget>
+                </div>
+            </div>
+
+            <div class="multiselect_container">
+                <div>Звание:</div>
+                <button id="button_open_filter_modal_project"
+                        class="button_open_modal" data-field-name="rank">
+                    Настроить фильтр
+                </button>
+                <div class="modal hidden">
+                    <select-multiple-widget data-field-name="rank">
+                        {% for item in all_ranks %}
+                            <chips-widget slot="item"
+                                          data-value="{{ item.title }}"
+                                          data-color="#aaaaaa"
+                                          data-id="{{ item.pk }}"
+                                          data-field-name="rank"></chips-widget>
+                        {% endfor %}
+                    </select-multiple-widget>
+                </div>
+            </div>
+        </div>
+
+
+        {% include 'tudushnik/_users_table.html' %}
+    </div>
+
+{% endblock content %}
+
+{% block local_scripts %}
+    {{ json_data|json_script:"my-json-data" }}
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/pagination.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/crud.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/tasks_page.js' %}"></script>
+{% endblock local_scripts %}
