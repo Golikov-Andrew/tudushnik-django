@@ -31,7 +31,8 @@ pip freeze > requirements.txt
 `sudo bash ctrl.sh start`  
 
 ### crontab  
-`*/30 * * * * docker exec personal-django-site-gav-tdm_server-1 bash -c "cron_user_level_n_rank_processing.py >> /var/log/cron.log 2>&1"`  
-`0 2 * * * docker exec personal-django-site-gav-tdm_server-1 bash -c "cron_user_event_processing.py >> /var/log/cron.log 2>&1"`  
+Предварительно создать папки logs/cron_user_level_n_rank_processing и logs/cron_user_event_processing  
+`*/30 * * * * docker exec personal-django-site-gav-tdm_server-1 bash -c "python cron_user_level_n_rank_processing.py >> /var/log/cron.log 2>&1"`  
+`0 2 * * * docker exec personal-django-site-gav-tdm_server-1 bash -c "python cron_user_event_processing.py >> /var/log/cron.log 2>&1"`  
 
 
