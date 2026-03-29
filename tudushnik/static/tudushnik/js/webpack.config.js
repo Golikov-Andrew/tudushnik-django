@@ -11,6 +11,8 @@ module.exports = {
         calendar: ['./src/calendar/index.js'],
         projects_detail: ['./src/projects_detail/index.js'],
         tasks_page: ['./src/tasks_page/index.js'],
+        users_page: ['./src/users_page/index.js'],
+        user_detail: ['./src/user_detail/index.js'],
         task_update_form: ['./src/task_update_form/index.js'],
         task_detail: ['./src/tasks_page/details.js'],
         user_profile: ['./src/user_profile/index.js'],

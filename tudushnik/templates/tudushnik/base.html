@@ -63,6 +63,8 @@
                        href="{% url 'calendar_page' %}">Календарь</a>
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Группы' }}"
                        href="{% url 'users_groups_page' %}">Группы</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Люди' }}"
+                       href="{% url 'users_page' %}">Люди</a>
                 {% endif %}
                 {% if user.is_superuser %}
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Админка' }}"
@@ -78,9 +80,19 @@
 
             <div class="profile-container">
                 {% if request.user.is_authenticated %}
+
+                    <div class="navbar-link level-rank-points">
+                        <div>{{ request.user.profile_settings.level.title }}
+                            / {{ request.user.profile_settings.rank.title }}</div>
+                        <div>{{ request.user.profile_settings.points_now }}
+                            / {{ request.user.profile_settings.points_total }}</div>
+                    </div>
+
+
                     <a class="navbar-link"
                        href="{% url 'profile' %}">Профиль</a>
-                    <a class="navbar-link" id="logout_link_button" href="{% url 'logout' %}">Выйти</a>
+                    <a class="navbar-link" id="logout_link_button"
+                       href="{% url 'logout' %}">Выйти</a>
                 {% else %}
                     <a class="navbar-link" href="{% url 'login' %}">Войти</a>
                     <a class="navbar-link" href="{% url 'register' %}">Регистрация</a>

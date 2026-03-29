@@ -326,7 +326,7 @@
         text-decoration: none;
         cursor: pointer;
       }
-      table{
+      table {
         margin: 0;
       }
     }
@@ -368,7 +368,8 @@
         position: static;
         width: unset;
       });
-      > div{
+
+      > div {
         word-break: break-all;
       }
     }
@@ -439,8 +440,6 @@
 
   }
 }
-
-
 
 
 .page-content {
@@ -632,25 +631,173 @@
 }
 
 .tasks_table {
-  .ava_container{
+  .ava_container {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
   }
-  .ava_item_wrapper{
+
+  .ava_item_wrapper {
     position: relative;
     height: 30px;
   }
+
   .user_avatar {
     position: absolute;
     width: 30px;
     height: 30px;
     left: -15px;
     border-radius: 20px;
-    &:hover{
-      cursor:pointer;
+
+    &:hover {
+      cursor: pointer;
       z-index: 100;
     }
 
+  }
+}
+
+.objects_list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+
+  a {
+    color: @cold-dark;
+    text-decoration: unset;
+    &:visited {
+      color: @cold-dark;
+    }
+  }
+
+
+  .list-row {
+    display: grid;
+
+    &:hover {
+      cursor: pointer;
+      outline: 1px solid @cold-medium;
+    }
+  }
+
+  .list-header-row {
+    display: grid;
+
+    &:hover {
+      cursor: default;
+      outline: none;
+    }
+  }
+
+  .list-cell {
+    padding: 4px;
+    .min_500({
+      display: flex;
+      align-items: center;
+    });
+  }
+
+  .list-header {
+    display: grid;
+  }
+
+  .ava_container {
+    display: flex;
+  }
+
+  .ava_item_wrapper {
+
+  }
+
+  .user_avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+
+    .min_768 ({
+      width: 64px;
+      height: 64px;
+      border-radius: 32px;
+    });
+  }
+
+}
+
+.users_list {
+  //.list-header-row,
+  .min_768({
+    max-width: 954px;
+    margin: 0 auto;
+  });
+
+
+  .list-row {
+    grid-template-columns: 42px 160px 25% auto;
+    grid-template-areas: "grid-area-avatar grid-area-username grid-area-level grid-area-points-now"
+                         "grid-area-avatar grid-area-email grid-area-rank grid-area-points-total";
+    .min_768({
+      grid-template-columns: 88px 272px 25% auto;
+    });
+  }
+
+  .list-header-row {
+    grid-template-columns: 50% 50%;
+    grid-template-areas: "grid-area-username grid-area-points-now"
+                         "grid-area-email grid-area-points-total";
+    .min_768({
+      grid-template-columns: 88px 272px 25% auto;
+      grid-template-areas: "grid-area-avatar grid-area-username grid-area-level grid-area-points-now"
+                         "grid-area-avatar grid-area-email grid-area-rank grid-area-points-total";
+    });
+  }
+
+  .list-header {
+    display: grid;
+    grid-template-columns: auto 88px;
+    grid-template-areas: "grid-area-label grid-area-sort"
+                         "grid-area-search grid-area-sort";
+    align-items: center;
+    align-content: center;
+    //justify-content: space-between;
+
+    .grid-area-label {
+      grid-area: grid-area-label;
+    }
+
+    .grid-area-search {
+      grid-area: grid-area-search;
+    }
+
+    .grid-area-sort {
+      grid-area: grid-area-sort;
+    }
+  }
+
+  .grid-area-avatar {
+    grid-area: grid-area-avatar;
+  }
+
+  .grid-area-username {
+    grid-area: grid-area-username;
+  }
+
+  .grid-area-email {
+    grid-area: grid-area-email;
+  }
+
+  .grid-area-level {
+    grid-area: grid-area-level;
+  }
+
+  .grid-area-rank {
+    grid-area: grid-area-rank;
+  }
+
+  .grid-area-points-now {
+    grid-area: grid-area-points-now;
+  }
+
+  .grid-area-points-total {
+    grid-area: grid-area-points-total;
   }
 }

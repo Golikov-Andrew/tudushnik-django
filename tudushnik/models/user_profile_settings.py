@@ -2,6 +2,9 @@ from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
+from tudushnik.models.user_level import UserLevel
+from tudushnik.models.user_rank import UserRank
+
 
 class OverwriteStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
@@ -23,6 +26,14 @@ class UserProfileSettings(models.Model):
         upload_to=user_avatar_path,
         storage=OverwriteStorage()
     )
+
+    level = models.ForeignKey(UserLevel, on_delete=models.PROTECT,
+                              related_name='users', default=1)
+    rank = models.ForeignKey(UserRank, on_delete=models.PROTECT,
+                              related_name='users', default=1)
+
+    points_now = models.FloatField(default=0)
+    points_total = models.FloatField(default=0)
 
     class Meta:
         verbose_name = 'UserProfileSettings'

@@ -23,6 +23,14 @@ class App {
             button: null,
             modal: null,
         },
+        level: {
+            button: null,
+            modal: null,
+        },
+        rank: {
+            button: null,
+            modal: null,
+        },
     };
 
     constructor(root_element_selector, project, tags, status, data_query_manager) {
@@ -32,6 +40,7 @@ class App {
         this.#query_params = {
             tags: tags,
             status: status,
+            // ranks: status,
         }
         this.#btns_show_modal = document.querySelectorAll('.button_open_modal')
         for (let i = 0, button, field_name; i < this.#btns_show_modal.length; i++) {
@@ -65,6 +74,14 @@ class App {
 
     get status() {
         return this.#query_params.status
+    }
+
+    get level() {
+        return this.#query_params.level
+    }
+
+    get rank() {
+        return this.#query_params.rank
     }
 
     get DQM() {

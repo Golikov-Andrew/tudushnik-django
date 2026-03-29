@@ -1,0 +1,108 @@
+{% load custom_filters %}
+
+
+<div class="objects_list users_list">
+
+    <div class="list-row list-header-row">
+        <div class="list-cell list-header">
+
+        </div>
+        <div class="list-cell list-header grid-area-avatar">
+            <div class="grid-area-label">Аватарка</div>
+        </div>
+
+        <div class="list-cell list-header grid-area-username">
+            <div class="grid-area-label">Никнейм</div>
+            <search-widget-component data-field-name="owner__username"
+                                     class="grid-area-search"
+                                     size="3"></search-widget-component>
+            <sorting-widget data-field-name="owner__username"
+                            class="grid-area-sort"></sorting-widget>
+        </div>
+        <div class="list-cell list-header grid-area-email">
+            <div class="grid-area-label">Email</div>
+            <search-widget-component data-field-name="owner__email"
+                                     class="grid-area-search"
+                                     size="3"></search-widget-component>
+            <sorting-widget data-field-name="owner__email"
+                            class="grid-area-sort"></sorting-widget>
+        </div>
+        <div class="list-cell list-header grid-area-level">
+            <div class="grid-area-label">Уровень</div>
+        </div>
+        <div class="list-cell list-header grid-area-rank">
+            <div class="grid-area-label">Звание</div>
+        </div>
+        <div class="list-cell list-header grid-area-points-now">
+            <div class="grid-area-label">Очков сейчас</div>
+            <search-widget-component data-field-name="points_now"
+                                     class="grid-area-search"
+                                     size="3"></search-widget-component>
+            <sorting-widget data-field-name="points_now"
+                            class="grid-area-sort"></sorting-widget>
+        </div>
+        <div class="list-cell list-header grid-area-points-total">
+            <div class="grid-area-label">Очков всего</div>
+            <search-widget-component data-field-name="points_total"
+                                     class="grid-area-search"
+                                     size="3"></search-widget-component>
+            <sorting-widget data-field-name="points_total"
+                            class="grid-area-sort"></sorting-widget>
+        </div>
+
+    </div>
+    {% for item in page_obj %}
+        <a href="{% url 'user_detail' pk=item.pk %}">
+            <div class="list-row">
+                <div class="list-cell">
+                    {#                <a href="{% url 'user_detail' pk=item.pk %}">&#128065;</a>#}
+                </div>
+                <div class="list-cell grid-area-avatar"
+                     data-task-id="{{ item.pk }}">
+                    <div class="ava_container">
+                        <div class="ava_item_wrapper">
+                            <img src="{{ item.avatar.url }}"
+                                 alt="{{ item }}"
+                                 class="user_avatar"
+                                 title="{{ item }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="list-cell grid-area-username">
+                    <div class="ellipsed_text_1">
+                        {{ item.owner.username }}
+                    </div>
+                </div>
+                <div class="list-cell grid-area-email">
+                    <div class="ellipsed_text_2">
+                        {{ item.owner.email }}
+                    </div>
+                </div>
+
+                <div class="list-cell grid-area-level">
+                    <div class="ellipsed_text_1">
+                        {{ item.level }}
+                    </div>
+                </div>
+                <div class="list-cell grid-area-rank">
+                    <div class="ellipsed_text_1">
+                        {{ item.rank }}
+                    </div>
+                </div>
+
+                <div class="list-cell grid-area-points-now">
+                    <div class="ellipsed_text_1">
+                        {{ item.points_now }}
+                    </div>
+                </div>
+                <div class="list-cell grid-area-points-total">
+                    <div class="ellipsed_text_1">
+                        {{ item.points_total }}
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+
+</div>
