@@ -134,7 +134,7 @@
   grid-template-columns: 100px auto;
   position: fixed;
   gap: 4px;
-  background-color: #FFFAF4;
+  background-color: #ffedd8;
   z-index: 10;
   top: 0;
   left: 0;
@@ -166,7 +166,13 @@
 }
 @media (min-width: 1440px) {
   .header-container {
+    grid-template-columns: 160px auto 360px;
     padding: 20px 40px;
+  }
+}
+@media (min-width: 1600px) {
+  .header-container {
+    grid-template-columns: 160px auto 430px;
   }
 }
 .header-container .logo-container {
@@ -206,6 +212,7 @@
   .header-container .navbar-container {
     justify-content: center;
     gap: 8px;
+    align-content: center;
   }
 }
 .header-container .profile-container {
@@ -238,8 +245,20 @@
 }
 @media (min-width: 1200px) {
   .navbar-link {
+    font-size: 12px;
+    padding: 8px 6px;
+  }
+}
+@media (min-width: 1440px) {
+  .navbar-link {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
+@media (min-width: 1600px) {
+  .navbar-link {
     font-size: 14px;
-    padding: 8px 16px;
+    padding: 8px 12px;
   }
 }
 .navbar-link:hover {

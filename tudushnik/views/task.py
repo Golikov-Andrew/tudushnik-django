@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pytz
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.utils.translation import gettext_lazy as _
 
 from django.core.paginator import Paginator
 from django.db.models import Count, Q

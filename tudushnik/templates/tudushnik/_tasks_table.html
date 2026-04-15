@@ -1,4 +1,5 @@
 {% load custom_filters %}
+{% load i18n %}
 
 
 <table class="tasks_table">
@@ -13,18 +14,18 @@
             <table>
                 <tr>
                     <td class="user_role_responsible">
-                        Res
+                        {% translate 'Res' %}
                     </td>
                     <td class="user_role_accountable">
-                        Acc
+                        {% translate 'Acc' %}
                     </td>
                 </tr>
                 <tr>
                     <td class="user_role_consult">
-                        Con
+                        {% translate 'Con' %}
                     </td>
                     <td class="user_role_inform">
-                        Inf
+                        {% translate 'Inf' %}
                     </td>
                 </tr>
             </table>
@@ -190,7 +191,7 @@
                           style="background-color: {{ item.project.color }}">{{ item.project.title }}</span>
                 </div>
                 <div>
-                    <span class="status_chips">{{ item.status.title }}</span>
+                    <span class="status_chips">{% translate item.status.title %}</span>
                 </div>
             </td>
             <td class="task_item_description">

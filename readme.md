@@ -35,4 +35,11 @@ pip freeze > requirements.txt
 `*/30 * * * * docker exec personal-django-site-gav-tdm_server-1 bash -c "python cron_user_level_n_rank_processing.py >> /var/log/cron.log 2>&1"`  
 `0 2 * * * docker exec personal-django-site-gav-tdm_server-1 bash -c "python cron_user_event_processing.py >> /var/log/cron.log 2>&1"`  
 
+### Locale  
+Сгенерировать изначальные файлы po в папке locale:  
+`python manage.py makemessages -l ru --ignore=venv/*`  
+Затем заполнить переводы  
+Затем скомпилировать переводы  
+`python manage.py compilemessages --ignore="venv/*" --ignore="node_modules/*"`
+
 

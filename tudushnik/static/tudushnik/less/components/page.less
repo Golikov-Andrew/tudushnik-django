@@ -7,6 +7,12 @@
   margin: 96px 6px 0 6px;
   padding: 4px;
   color: @cold-dark;
+  .min_1200({
+    margin: 60px 6px 0 6px;
+  });
+  .min_1440({
+    margin: 88px 36px 0 36px;
+  });
 }
 
 .page-sidebar-left {
@@ -21,6 +27,8 @@
 
   .page-title-label {
     .small_label();
+
+
   }
 
   .toolbar,
@@ -113,7 +121,7 @@
         "entity_description entity_description entity_description";
   grid-template-columns: 148px 50px auto;
   row-gap: 8px;
-  margin-bottom: -16px;
+  //margin-bottom: -16px;
 }
 
 .flex-row {
@@ -126,6 +134,18 @@
 
   select {
     width: 100%;
+  }
+
+  .page-title {
+    .min_1200({
+      font-size: 20px;
+    });
+    .min_1440({
+      font-size: 24px;
+    });
+    .min_1600({
+      font-size: 28px;
+    });
   }
 }
 
@@ -326,6 +346,7 @@
         text-decoration: none;
         cursor: pointer;
       }
+
       table {
         margin: 0;
       }
@@ -563,6 +584,19 @@
     .entity_header {
       display: flex;
       flex-direction: column;
+    }
+
+    .toolbar {
+      .min_1200({
+        display: flex;
+        gap: 20px;
+      });
+      .min_1440({
+
+      });
+      .min_1600({
+
+      });
 
       form {
         font-size: 12px;
@@ -570,6 +604,17 @@
         flex-direction: column;
         .min_500({
           flex-direction: row;
+        });
+        .min_1200({
+          margin: 0;
+          padding: 4px;
+          gap: 20px;
+        });
+        .min_1440({
+          padding: 8px;
+        });
+        .min_1600({
+
         });
 
         input,
@@ -585,19 +630,30 @@
           });
         }
       }
+    }
 
-      .chart_datetimes {
-        display: flex;
-        gap: 4px;
-        .min_500({
-          flex-direction: column;
-        });
-        //.min_768({
-        //  flex-direction: row;
-        //});
-      }
+    .chart_datetimes {
+      display: flex;
+      gap: 4px;
+      .min_500({
+        flex-direction: column;
+      });
+      //.min_768({
+      //  flex-direction: row;
+      //});
+    }
 
+    .select_dt_scale_label {
 
+      .min_1200({
+        padding-top: 8px;
+      });
+      .min_1440({
+        padding-top: 12px;
+      });
+      .min_1600({
+
+      });
     }
 
   }
@@ -619,6 +675,10 @@
       .max_767({
         margin-top: 20px;
       });
+      .min_1200({
+        padding-top: 10px;
+      });
+
 
     }
   }
@@ -665,6 +725,7 @@
   a {
     color: @cold-dark;
     text-decoration: unset;
+
     &:visited {
       color: @cold-dark;
     }

@@ -33,7 +33,11 @@
     grid-template-columns: 160px auto 320px;
   });
   .min_1440({
+    grid-template-columns: 160px auto 360px;
     padding: 20px 40px;
+  });
+  .min_1600({
+    grid-template-columns: 160px auto 430px;
   });
 
   .logo-container {
@@ -67,6 +71,7 @@
     .min_768({
       justify-content: center;
       gap: 8px;
+      align-content: center;
     });
   }
 
@@ -98,8 +103,16 @@
     margin: 0;
   });
   .min_1200({
+    font-size: 12px;
+    padding: 8px 6px;
+  });
+  .min_1440({
+    font-size: 12px;
+    padding: 8px 12px;
+  });
+  .min_1600({
     font-size: 14px;
-    padding: 8px 16px;
+    padding: 8px 12px;
   });
 
   &:hover {

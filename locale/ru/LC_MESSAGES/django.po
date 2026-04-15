@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-15 16:36+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: tudushnik/models/task_status.py:5 tudushnik/views/task.py:153
+msgid "New"
+msgstr "Новая"
+
+#: tudushnik/models/task_status.py:6
+msgid "In Progress"
+msgstr "В процессе"
+
+#: tudushnik/models/task_status.py:7
+msgid "Done"
+msgstr "Выполнена"
+
+#: tudushnik/models/task_status.py:8
+msgid "Paused"
+msgstr "На паузе"
+
+#: tudushnik/models/task_status.py:9
+msgid "On Review"
+msgstr "На проверке"
+
+#: tudushnik/models/task_status.py:10
+msgid "Rejected"
+msgstr "Отклонена"
+
+#: tudushnik/models/task_status.py:11
+msgid "In Revision"
+msgstr "На доработке"
+
+#: tudushnik/models/task_status.py:12
+msgid "Closed"
+msgstr "Закрыта"
+
+#: tudushnik/models/task_status.py:13
+msgid "Archived"
+msgstr "В архиве"
+
+#: tudushnik/models/task_status.py:14
+msgid "Awaiting Resources"
+msgstr "Ожидание"
+
+#: tudushnik/templates/tudushnik/_tasks_table.html:17
+msgid "Res"
+msgstr "Исп"
+
+#: tudushnik/templates/tudushnik/_tasks_table.html:20
+msgid "Acc"
+msgstr "Отв"
+
+#: tudushnik/templates/tudushnik/_tasks_table.html:25
+msgid "Con"
+msgstr "Кон"
+
+#: tudushnik/templates/tudushnik/_tasks_table.html:28
+msgid "Inf"
+msgstr "Инф"

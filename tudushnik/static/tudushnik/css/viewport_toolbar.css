@@ -140,6 +140,16 @@
   height: 500px;
   position: relative;
 }
+@media (min-width: 1200px) {
+  .viewport_datetimeline {
+    height: calc(100vh - 240px);
+  }
+}
+@media (min-width: 1440px) {
+  .viewport_datetimeline {
+    height: calc(100vh - 280px);
+  }
+}
 .current_timeline {
   width: 100%;
   background-color: red;
@@ -149,7 +159,7 @@
 }
 .ruler {
   width: 100px;
-  background-color: #4A8FC1;
+  background-color: #adadad;
   position: absolute;
   top: 0;
   left: 0;
@@ -171,8 +181,8 @@
   padding-right: 20px;
 }
 .ruler_row {
-  outline: 1px solid #F5FBFF;
-  color: #F5FBFF;
+  outline: 1px solid #979797;
+  color: #626262;
 }
 .viewport_datetimeline_canvas {
   position: absolute;
