@@ -39,7 +39,7 @@ def gantt_chart_page(request, *args, **kwargs):
         gantt_apply_filters['selected_projects'] = selected_projects
         kwargs.update(
             {
-                "title": "Диаграмма Ганта", "all_projects": all_projects,
+                "title": "Гант", "all_projects": all_projects,
                 'selected_projects': selected_projects,
                 "gantt_apply_filters": json.dumps(gantt_apply_filters),
                 "page_title_eng": 'gantt'

@@ -1,5 +1,6 @@
 {% extends 'tudushnik/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block local_styles %}
     <link rel="stylesheet" href="{% static 'tudushnik/css/form.css' %}">
@@ -62,7 +63,7 @@
                                 Статус
                             </div>
                             <div class="field-content">
-                                {{ object.status }}
+                                {% translate object.status.title %}
                             </div>
                         </div>
                     </div>
