@@ -19,7 +19,7 @@
     {% block local_styles %}
     {% endblock local_styles %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
 <div class="wrapper">
     {% if client_timezone is none %}
         {% get_current_timezone as TIME_ZONE %}
@@ -61,6 +61,8 @@
                        href="{% url 'gantt_chart_page' %}">Гант</a>
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Календарь' }}"
                        href="{% url 'calendar_page' %}">Календарь</a>
+                    <a class="{{ title|create_class_of_navbar_link_by_title:'Интеллект-Карты' }}"
+                       href="{% url 'mindmaps_page' %}">Интеллект-Карты</a>
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Группы' }}"
                        href="{% url 'users_groups_page' %}">Группы</a>
                     <a class="{{ title|create_class_of_navbar_link_by_title:'Люди' }}"
@@ -79,6 +81,14 @@
             </nav>
 
             <div class="profile-container">
+                <div class="burger-menu-button">
+                    <svg viewBox="0 0 36 36" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <rect width="36" height="9" fill="#D2B187"/>
+                        <rect y="13.5" width="36" height="9" fill="#D2B187"/>
+                        <rect y="27" width="36" height="9" fill="#D2B187"/>
+                    </svg>
+                </div>
                 {% if request.user.is_authenticated %}
 
                     <div class="navbar-link level-rank-points">
@@ -89,10 +99,35 @@
                     </div>
 
 
-                    <a class="navbar-link"
-                       href="{% url 'profile' %}">Профиль</a>
-                    <a class="navbar-link" id="logout_link_button"
-                       href="{% url 'logout' %}">Выйти</a>
+                    <a class="navbar-link navbar-link-profile"
+                       href="{% url 'profile' %}">
+                        <div class="ava_container">
+                            <div class="ava_item_wrapper">
+                                <img src="{{ user.profile_settings.avatar.url }}"
+                                     alt="профиль"
+                                     class="user_avatar"
+                                     title="{{ user }}">
+                            </div>
+                        </div>
+                        <span>Профиль</span>
+                    </a>
+                    <a class="navbar-link navbar-link-logout" id="logout_link_button"
+                       href="{% url 'logout' %}">
+                        <div class="logout_icon">
+                            <svg viewBox="0 0 48 48" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M29 15V7H6V41H29V33" stroke="#D2B187"
+                                      stroke-width="4" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M15 24L39 24" stroke="#D2B187"
+                                      stroke-width="4" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M35 18L42 24L35 30" stroke="#D2B187"
+                                      stroke-width="4" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span>Выйти</span>
+                    </a>
                 {% else %}
                     <a class="navbar-link" href="{% url 'login' %}">Войти</a>
                     <a class="navbar-link" href="{% url 'register' %}">Регистрация</a>
@@ -131,6 +166,8 @@
         src="{% static 'tudushnik/js/detect_timezone.js' %}"></script>
 <script type="text/javascript"
         src="{% static 'tudushnik/js/utils.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'tudushnik/js/base.js' %}"></script>
 {% block local_scripts %}
 {% endblock local_scripts %}
 </body>

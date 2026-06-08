@@ -4,6 +4,8 @@ from swagger import schema_view
 from .views import index
 from .views.auth import LoginUser, profile, logout_user, RegisterUser
 from .views.calendar import calendar_page
+from .views.mindmap import MindMapListView, add_mindmap, mindmap_delete, \
+    MindMapUpdateView, MindMapDetailView, task_mindmap_update_attrs
 from .views.check import CheckListView, CheckDetailView, checks_fetch, \
     check_delete, CheckUpdateView, \
     check_update_attrs, add_check, add_check_to_budget
@@ -58,6 +60,16 @@ urlpatterns = [
     path('calendar/', calendar_page, name='calendar_page'),
     path('calendar/tasks/list', TaskList.as_view()),
     path('calendar/projects/list', ProjectList.as_view()),
+
+    path('mindmaps/', MindMapListView.as_view(), name='mindmaps_page'),
+    path('mindmaps/detail/<int:pk>/', MindMapDetailView.as_view(),
+         name='mindmap_detail'),
+    path('mindmaps/delete/<int:pk>/', mindmap_delete, name='mindmap_delete'),
+    path('mindmaps/edit/<int:pk>/', MindMapUpdateView.as_view(),
+         name='mindmap_edit'),
+    path('mindmaps/create', add_mindmap, name='add_mindmap'),
+    path('mindmaps/update_card_attrs', task_mindmap_update_attrs,
+         name='task_mindmap_update_attrs'),
 
     path('checks/', CheckListView.as_view(), name='checks_page'),
     path('checks/fetch', checks_fetch, name='checks_fetch'),

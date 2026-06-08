@@ -145,7 +145,8 @@ body > .wrapper {
   }
 }
 #content-container {
-  margin: 96px 6px 0 6px;
+  display: flex;
+  margin: 20px 6px 0 6px;
   padding: 4px;
   color: #4A8FC1;
 }
@@ -162,6 +163,8 @@ body > .wrapper {
 .page-content {
   margin-left: auto;
   margin-right: auto;
+  margin-top: 20px;
+  width: 100%;
 }
 .page-content .page-title-label {
   font-size: 10px;
@@ -900,7 +903,13 @@ body > .wrapper {
 @media (max-width: 499px) {
   .page-content.projects_detail,
   .page-content.gantt {
-    margin-top: 24px;
+    margin-top: 36px;
+  }
+}
+@media (min-width: 500px) {
+  .page-content.projects_detail,
+  .page-content.gantt {
+    margin-top: 40px;
   }
 }
 .page-content.projects_detail .entity_header,
@@ -980,6 +989,8 @@ body > .wrapper {
 }
 .page-content.tasks_add_to_project {
   margin-top: 20px;
+}
+@media (min-width: 500px) {
 }
 @media (max-width: 767px) {
   .page-content.projects_detail #move_settings {
@@ -1130,6 +1141,9 @@ body > .wrapper {
 }
 .users_list .grid-area-points-total {
   grid-area: grid-area-points-total;
+}
+.homepage .page-content {
+  margin-top: 40px;
 }
 .pagination {
   font-size: 14px;

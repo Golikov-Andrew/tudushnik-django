@@ -1,0 +1,71 @@
+{% extends 'tudushnik/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block local_styles %}
+    <link rel="stylesheet"
+          href="{% static 'tudushnik/css/mindmaps_detail.css' %}">
+{% endblock local_styles %}
+
+
+{% block content %}
+
+    <div class="entity_header">
+        <div class="page-title-container">
+            <div class="hidden object_pk">{{ object.pk }}</div>
+            <div class="hidden object_color">{{ object.color }}</div>
+            <div class="page-title-label">{{ entity_type }} "{{ title }}"</div>
+            {#            <div class="page-title">#}
+            {#                {{ entity_type }} &gt; {{ title }} &gt; {{ object.project }}#}
+            {#            </div>#}
+        </div>
+
+        <div class="entity_tools">
+            <button class="btn_item_delete"
+                    data-item-title="{{ object.title }}"
+                    data-entity-name="интеллект-карта"
+                    data-redirect-url="{% url 'mindmaps_page' %}"
+                    data-post-url="{% url 'mindmap_delete' pk=object.pk %}">
+                &#x2715;
+            </button>
+            <a href="{% url 'mindmap_edit' pk=object.pk %}">&#9998;</a>
+        </div>
+        <div class="entity_datetimes">
+            <div>
+                Создана: {{ object.created_at|date:'Y-m-d H:i' }}
+            </div>
+            <div>
+                Обновлена: {{ object.updated_at|date:'Y-m-d H:i' }}
+            </div>
+        </div>
+
+
+        <div class="entity_description">
+            <div class="entity_description_label">Проект
+                "{{ object.project }}"
+            </div>
+            <div class="entity_description_label">Описание</div>
+            <div class="entity_description_value">
+                {{ object.description|safe }}
+            </div>
+        </div>
+
+    </div>
+    <div id="mindmap_viewport" class="page-horizontal-block">
+{#        {% for task in all_tasks_mindmaps %}#}
+{#            <div>{{ task }}</div>#}
+{#        {% endfor %}#}
+
+    </div>
+
+
+
+{% endblock content %}
+
+
+{% block local_scripts %}
+{{ json_data|json_script:"my-json-data" }}
+<script type="text/javascript"
+            src="{% static 'tudushnik/js/dist/mindmap.js' %}"></script>
+
+{% endblock local_scripts %}
