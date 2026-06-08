@@ -8,6 +8,10 @@ class MindMapViewport {
     #safe_border_width;
     #start_mousedown_time;
     #is_mouse_pressed;
+    #cards_sides;
+    #cards_corners;
+    #move_sides_functions;
+    #move_corners_functions;
 
     constructor(root_selector) {
         this.#element = document.querySelector(root_selector)
@@ -21,12 +25,54 @@ class MindMapViewport {
         this.#is_mouse_pressed = false;
 
         this._drop_card = this.drop_card.bind(this)
-
         this._move_card = this.move_card.bind(this)
-        this._move_right_side = this.move_right_side.bind(this);
-        this._move_left_side = this.move_left_side.bind(this);
-        this._move_top_side = this.move_top_side.bind(this);
-        this._move_bottom_side = this.move_bottom_side.bind(this);
+
+        this.#cards_sides = {
+            'top': ['y', 'height'],
+            'right': ['width'],
+            'bottom': ['height'],
+            'left': ['x', 'width']
+        }
+        this.#cards_corners = {
+            'left': {
+                'top': ['y', 'height', 'x', 'width'],
+                'bottom': ['height', 'x', 'width']
+            },
+            'right': {
+                'top': ['y', 'height', 'width'],
+                'bottom': ['height', 'width'],
+            },
+        }
+        this.#move_sides_functions = {
+            'top': (evt) => {
+                const cursor_y = evt.clientY - this.cards_container_rect.top + 10;
+                let new_height = (this.#taken_card.y + this.#taken_card.height) - cursor_y;
+                this.#taken_card.set_y(cursor_y);
+                this.#taken_card.set_height(new_height);
+            },
+            'right': (evt) => {
+                const cursor_x = evt.clientX - this.cards_container_rect.left;
+                this.#taken_card.set_width(cursor_x - this.#taken_card.x);
+            },
+            'bottom': (evt) => {
+                const cursor_y = evt.clientY - this.cards_container_rect.top;
+                this.#taken_card.set_height(cursor_y - this.#taken_card.y);
+            },
+            'left': (evt) => {
+                const cursor_x = evt.clientX - this.cards_container_rect.left + 10;
+                let new_width = (this.#taken_card.x + this.#taken_card.width) - cursor_x;
+                this.#taken_card.set_x(cursor_x);
+                this.#taken_card.set_width(new_width);
+            }
+        }
+        for (const side in this.#cards_sides) {
+            this[`_move_side_${side}`] = this.move_side.bind(this, side)
+        }
+        for (const h_side in this.#cards_corners) {
+            for (const v_side in this.#cards_corners[h_side]) {
+                this[`_move_corner_${h_side}_${v_side}`] = this.move_corner.bind(this, h_side, v_side)
+            }
+        }
     }
 
     get canvas() {
@@ -107,7 +153,6 @@ class MindMapViewport {
     }
 
     take_card(card) {
-        console.log('take_card')
         this.#taken_card = card;
         this.#start_mousedown_time = Date.now();
         this.#is_mouse_pressed = true;
@@ -117,7 +162,6 @@ class MindMapViewport {
     }
 
     drop_card() {
-        console.log('drop_card')
         this.#is_mouse_pressed = false;
         this.element.removeEventListener('mousemove', this._move_card, {capture: true});
         this.element.removeEventListener('mouseleave', this._drop_card);
@@ -125,7 +169,6 @@ class MindMapViewport {
         const endTime = Date.now();
         const duration = endTime - this.#start_mousedown_time;
         if (duration < 200) {
-            console.log('was click')
             this.#taken_card.toggle_helpers()
             this.#taken_card.rollback_previous_data();
             this.#taken_card.reset_previous_data();
@@ -145,88 +188,40 @@ class MindMapViewport {
         this.scroll_if_in_safe_zone(evt.clientX, evt.movementX, evt.clientY, evt.movementY)
     }
 
-    take_right_side(card) {
-        console.log('take_right_side');
+    ///////////////
+
+    take_side(card, side) {
         this.#taken_card = card;
-        this.#taken_card.snap_previous_data('width')
-        this.element.addEventListener('mousemove', this._move_right_side);
+        this.#taken_card.snap_previous_data(...this.#cards_sides[side])
+        this.element.addEventListener('mousemove', this[`_move_side_${side}`]);
     }
 
-    drop_right_side() {
-        console.log('drop_right_side')
-        this.element.removeEventListener('mousemove', this._move_right_side);
-        this.update_card('width');
+    drop_side(side) {
+        this.element.removeEventListener('mousemove', this[`_move_side_${side}`]);
+        this.update_card(...this.#taken_card.previous_data_keys);
     }
 
-    move_right_side(evt) {
-        console.log('move_right_side')
-        const cursor_x = evt.clientX - this.cards_container_rect.left;
-        this.#taken_card.set_width(cursor_x - this.#taken_card.x);
+    move_side(side, evt) {
+        this.#move_sides_functions[side](evt);
     }
 
-    //
+    ///////////
 
-    take_left_side(card) {
-        console.log('take_left_side');
+    take_corner(card, h_side, v_side) {
         this.#taken_card = card;
-        this.#taken_card.snap_previous_data('x', 'width')
-        this.element.addEventListener('mousemove', this._move_left_side);
+        this.#taken_card.snap_previous_data(...this.#cards_corners[h_side][v_side])
+        this.element.addEventListener('mousemove', this[`_move_corner_${h_side}_${v_side}`]);
     }
 
-    drop_left_side() {
-        console.log('drop_left_side')
-        this.element.removeEventListener('mousemove', this._move_left_side);
-        this.update_card('x', 'width');
+    drop_corner(h_side, v_side) {
+        this.element.removeEventListener('mousemove', this[`_move_corner_${h_side}_${v_side}`]);
+        this.update_card(...this.#taken_card.previous_data_keys);
     }
 
-    move_left_side(evt) {
-        console.log('move_left_side')
-        const cursor_x = evt.clientX - this.cards_container_rect.left + 10;
-        let new_width = (this.#taken_card.x + this.#taken_card.width) - cursor_x;
-        this.#taken_card.set_x(cursor_x);
-        this.#taken_card.set_width(new_width);
+    move_corner(h_side, v_side, evt) {
+        this.#move_sides_functions[h_side](evt);
+        this.#move_sides_functions[v_side](evt);
     }
-    
-    take_top_side(card) {
-        console.log('take_top_side');
-        this.#taken_card = card;
-        this.#taken_card.snap_previous_data('y', 'height')
-        this.element.addEventListener('mousemove', this._move_top_side);
-    }
-
-    drop_top_side() {
-        console.log('drop_top_side')
-        this.element.removeEventListener('mousemove', this._move_top_side);
-        this.update_card('y', 'height');
-    }
-
-    move_top_side(evt) {
-        console.log('move_top_side')
-        const cursor_y = evt.clientY - this.cards_container_rect.top + 10;
-        let new_height = (this.#taken_card.y + this.#taken_card.height) - cursor_y;
-        this.#taken_card.set_y(cursor_y);
-        this.#taken_card.set_height(new_height);
-    }
-    
-    take_bottom_side(card) {
-        console.log('take_bottom_side');
-        this.#taken_card = card;
-        this.#taken_card.snap_previous_data('height')
-        this.element.addEventListener('mousemove', this._move_bottom_side);
-    }
-
-    drop_bottom_side() {
-        console.log('drop_bottom_side')
-        this.element.removeEventListener('mousemove', this._move_bottom_side);
-        this.update_card('height');
-    }
-
-    move_bottom_side(evt) {
-        console.log('move_bottom_side')
-        const cursor_y = evt.clientY - this.cards_container_rect.top;
-        this.#taken_card.set_height(cursor_y - this.#taken_card.y);
-    }
-
 
 }
 

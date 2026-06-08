@@ -133,7 +133,6 @@ class Card {
             right: new VerticalSide(handler_width, 'right'),
             top: new HorizontalSide(handler_width, 'top'),
             bottom: new HorizontalSide(handler_width, 'bottom'),
-
         }
 
         this.#wrapper.appendChild(this.#corners.left.top.element);
@@ -149,7 +148,6 @@ class Card {
         this.#wrapper.appendChild(this.#anchore);
         this.#wrapper.appendChild(this.#title);
         this.#element.appendChild(this.#wrapper);
-        //
 
         this.#anchore.addEventListener('mousedown', () => {
             this.#canvas.app.take_card(this)
@@ -158,70 +156,28 @@ class Card {
             this.#canvas.app.drop_card()
         })
 
+        for (const side in this.#sides) {
+            this.#sides[side].element.addEventListener('mousedown', () => {
+                this.#canvas.app.take_side(this, side)
+            })
+            this.#sides[side].element.addEventListener('mouseup', () => {
+                this.#canvas.app.drop_side(side)
+            })
+        }
 
-        this.#sides.right.element.addEventListener('mousedown', () => {
-            this.#canvas.app.take_right_side(this)
-        })
-        this.#sides.right.element.addEventListener('mouseup', () => {
-            this.#canvas.app.drop_right_side()
-        })
+        for (const horizont_side in this.#corners) {
+            for (const vertical_side in this.#corners[horizont_side]) {
+                this.#corners[horizont_side][vertical_side].element.addEventListener(
+                    'mousedown', () => {
+                        this.#canvas.app.take_corner(this, horizont_side, vertical_side)
+                    })
+                this.#corners[horizont_side][vertical_side].element.addEventListener(
+                    'mouseup', () => {
+                        this.#canvas.app.drop_corner(horizont_side, vertical_side)
+                    })
+            }
+        }
 
-        this.#sides.left.element.addEventListener('mousedown', () => {
-            this.#canvas.app.take_left_side(this)
-        })
-        this.#sides.left.element.addEventListener('mouseup', () => {
-            console.log('drop_left_side')
-            this.#canvas.app.drop_left_side()
-        })
-
-        this.#sides.top.element.addEventListener('mousedown', () => {
-            this.#canvas.app.take_top_side(this)
-        })
-        this.#sides.top.element.addEventListener('mouseup', () => {
-            console.log('drop_top_side')
-            this.#canvas.app.drop_top_side()
-        })
-        
-        this.#sides.bottom.element.addEventListener('mousedown', () => {
-            this.#canvas.app.take_bottom_side(this)
-        })
-        this.#sides.bottom.element.addEventListener('mouseup', () => {
-            console.log('drop_bottom_side')
-            this.#canvas.app.drop_bottom_side()
-        })
-
-        ////////////////////////
-
-        this.#corners.left.top.element.addEventListener('mousedown', this.take_left_top_corner.bind(this))
-        this.#corners.left.top.element.addEventListener('mouseup', this.drop_left_top_corner.bind(this))
-        this.#corners.left.top.element.addEventListener('mouseleave', this.drop_left_top_corner.bind(this))
-
-        this.#corners.right.top.element.addEventListener('mousedown', this.take_right_top_corner.bind(this))
-        this.#corners.right.top.element.addEventListener('mouseup', this.drop_right_top_corner.bind(this))
-        this.#corners.right.top.element.addEventListener('mouseleave', this.drop_right_top_corner.bind(this))
-
-        this.#corners.right.bottom.element.addEventListener('mousedown', this.take_right_bottom_corner.bind(this))
-        this.#corners.right.bottom.element.addEventListener('mouseup', this.drop_right_bottom_corner.bind(this))
-        this.#corners.right.bottom.element.addEventListener('mouseleave', this.drop_right_bottom_corner.bind(this))
-
-        this.#corners.left.bottom.element.addEventListener('mousedown', this.take_left_bottom_corner.bind(this))
-        this.#corners.left.bottom.element.addEventListener('mouseup', this.drop_left_bottom_corner.bind(this))
-        this.#corners.left.bottom.element.addEventListener('mouseleave', this.drop_left_bottom_corner.bind(this))
-
-
-        // this._move_card = this.move_card.bind(this);
-
-
-        // this._move_left_side = this.move_left_side.bind(this);
-        // this._move_top_side = this.move_top_side.bind(this);
-        // this._move_bottom_side = this.move_bottom_side.bind(this);
-
-        this._move_left_top_corner = this.move_left_top_corner.bind(this);
-        this._move_right_top_corner = this.move_right_top_corner.bind(this);
-        this._move_right_bottom_corner = this.move_right_bottom_corner.bind(this);
-        this._move_left_bottom_corner = this.move_left_bottom_corner.bind(this);
-
-        this._move_card_in_viewport = this.move_card_in_viewport.bind(this);
     }
 
     get element() {
@@ -258,7 +214,7 @@ class Card {
         this.#element.style.top = `${this.#y}px`;
     }
 
-    set_x_y(x, y){
+    set_x_y(x, y) {
         this.set_x(x);
         this.set_y(y);
     }
@@ -301,7 +257,6 @@ class Card {
     }
 
     redraw() {
-        // console.log('redraw', this.#width)
         this.#element.style.width = `${this.#width}px`;
         this.#element.style.left = `${this.#x}px`;
         this.#element.style.height = `${this.#height}px`;
@@ -309,12 +264,11 @@ class Card {
     }
 
     snap_previous_data(...attrs) {
-        console.log('snap_previous_data')
         attrs.map(attr => this.#previous_data[attr] = this[attr]);
     }
 
-    get_previous_data() {
-        return this.#previous_data;
+    get previous_data_keys() {
+        return Object.keys(this.#previous_data);
     }
 
     get_data(...attrs) {
@@ -324,159 +278,15 @@ class Card {
     }
 
     reset_previous_data() {
-        console.log('reset_previous_data')
         this.#previous_data = {};
     }
 
     rollback_previous_data() {
-        console.log('rollback_previous_data');
         for (const attr in this.#previous_data) {
             this[attr] = this.#previous_data[attr]
         }
         this.redraw();
     }
-
-    ////
-
-
-    /////
-
-
-    take_top_side(evt) {
-        this.element.addEventListener('mousemove', this._move_top_side);
-    }
-
-    drop_top_side(evt) {
-        this.element.removeEventListener('mousemove', this._move_top_side);
-    }
-
-    take_bottom_side(evt) {
-        this.element.addEventListener('mousemove', this._move_bottom_side);
-    }
-
-    drop_bottom_side(evt) {
-        this.element.removeEventListener('mousemove', this._move_bottom_side);
-    }
-
-
-    stopEditWidthTask(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        let new_width = parseInt(this.current_task_avatar.style.width)
-        $.ajax({
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrfToken
-            },
-            url: '/tasks/update_attrs',
-            data: JSON.stringify({
-                'task_id': this.pk,
-                'width': new_width
-            }),
-            success: (data) => {
-                const func = () => {
-                    this.remove_task_avatar()
-                    this.show_task_elem()
-                    window.removeEventListener('mouseup', this.stopEditWidthHandler)
-                    window.removeEventListener('mousemove', this.editWidthHandler)
-                    window.removeEventListener('touchend', this.stopEditWidthHandler)
-                    window.removeEventListener('touchmove', this.editWidthHandler)
-                }
-                if (data.success === true) {
-                    let cur_task_obj = this.viewport_dt_line.tasks[data.task_id]
-                    cur_task_obj = Object.assign(cur_task_obj, data)
-                    func();
-                    this.viewport_dt_line.draw_task(cur_task_obj)
-                } else {
-                    alert(data.error_message);
-                    func();
-                }
-            },
-            dataType: 'json'
-        });
-    }
-
-    move_left_side(evt) {
-        this.#width -= evt.movementX;
-        this.#x += evt.movementX;
-        this.#element.style.width = `${this.#width}px`;
-        this.#element.style.left = `${this.#x}px`;
-    }
-
-    move_top_side(evt) {
-        this.#height -= evt.movementY;
-        this.#y += evt.movementY;
-        this.#element.style.height = `${this.#height}px`;
-        this.#element.style.top = `${this.#y}px`;
-    }
-
-    move_bottom_side(evt) {
-        this.#height += evt.movementY;
-        this.#element.style.height = `${this.#height}px`;
-    }
-
-    /////
-
-
-    take_left_top_corner(evt) {
-        this.element.addEventListener('mousemove', this._move_left_top_corner);
-    }
-
-    drop_left_top_corner(evt) {
-        this.element.removeEventListener('mousemove', this._move_left_top_corner);
-    }
-
-    take_right_top_corner(evt) {
-        this.element.addEventListener('mousemove', this._move_right_top_corner);
-    }
-
-    drop_right_top_corner(evt) {
-        this.element.removeEventListener('mousemove', this._move_right_top_corner);
-    }
-
-    take_right_bottom_corner(evt) {
-        this.element.addEventListener('mousemove', this._move_right_bottom_corner);
-    }
-
-    drop_right_bottom_corner(evt) {
-        this.element.removeEventListener('mousemove', this._move_right_bottom_corner);
-    }
-
-    take_left_bottom_corner(evt) {
-        this.element.addEventListener('mousemove', this._move_left_bottom_corner);
-    }
-
-    drop_left_bottom_corner(evt) {
-        this.element.removeEventListener('mousemove', this._move_left_bottom_corner);
-    }
-
-    move_left_top_corner(evt) {
-        this.move_left_side(evt);
-        this.move_top_side(evt);
-    }
-
-    move_right_top_corner(evt) {
-        this.move_right_side(evt);
-        this.move_top_side(evt);
-    }
-
-    move_right_bottom_corner(evt) {
-        this.move_right_side(evt);
-        this.move_bottom_side(evt);
-    }
-
-    move_left_bottom_corner(evt) {
-        this.move_left_side(evt);
-        this.move_bottom_side(evt);
-    }
-
-    /////
-
-    move_card_in_viewport(evt) {
-        // console.log(this.#app.element)
-        // console.log('move_card_in_viewport', evt.offsetX, evt.offsetY);
-    }
-
 
 }
 
