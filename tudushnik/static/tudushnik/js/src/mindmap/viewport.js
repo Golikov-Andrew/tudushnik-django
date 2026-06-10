@@ -1,5 +1,4 @@
 import {Canvas} from "./canvas";
-import {Card} from "./card";
 
 class MindMapViewport {
     #element;
@@ -11,11 +10,11 @@ class MindMapViewport {
     #cards_sides;
     #cards_corners;
     #move_sides_functions;
-    #move_corners_functions;
 
     constructor(root_selector) {
         this.#element = document.querySelector(root_selector)
         this.#element.style.overflow = 'auto';
+        this.#element.style.position = 'relative';
 
         this.#canvas = new Canvas(this);
 
@@ -73,6 +72,12 @@ class MindMapViewport {
                 this[`_move_corner_${h_side}_${v_side}`] = this.move_corner.bind(this, h_side, v_side)
             }
         }
+
+        this.#element.addEventListener('scroll',(evt)=>{
+            this.#canvas.rulers.h._element.style.top = `${this.#element.scrollTop - 50}px`
+            this.#canvas.rulers.v._element.style.left = `${this.#element.scrollLeft - 50}px`
+        })
+
     }
 
     get canvas() {

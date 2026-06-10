@@ -259,6 +259,9 @@ body > .wrapper {
   width: 20px;
   height: 20px;
 }
+#mindmap_viewport .canvas .ruler .item {
+  font-size: 12px;
+}
 .page-horizontal-block {
   margin-top: 20px;
 }

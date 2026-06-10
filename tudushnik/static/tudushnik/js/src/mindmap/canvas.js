@@ -1,4 +1,5 @@
 import {Card} from "./card";
+import {HorizontalRuler, VerticalRuler} from "./ruler";
 
 class Origin {
     #element;
@@ -22,6 +23,14 @@ class Origin {
         this.#element.appendChild(this.#cards_container);
     }
 
+    get left_offset(){
+        return this.#left_offset;
+    }
+
+    get top_offset(){
+        return this.#top_offset;
+    }
+
     get cards_container() {
         return this.#cards_container;
     }
@@ -43,11 +52,10 @@ class Canvas {
     #element;
     #origin;
     #cards;
-
     #width;
     #height;
-    // #canvas_wrapper;
     #margin;
+    #rulers
 
     constructor(app) {
         this.#app = app;
@@ -66,12 +74,10 @@ class Canvas {
         this.#element.style.marginTop = `${this.#margin}px`;
         this.#element.style.marginLeft = `${this.#margin}px`;
 
-        // this.#canvas_wrapper = document.createElement('div');
-        // this.#canvas_wrapper.classList.add('canvas_wrapper');
-        // this.#canvas_wrapper.style.absolute = 'absolute';
-        // this.#canvas_wrapper.style.left = '0px';
-        // this.#canvas_wrapper.style.top = '0px';
-        // this.#canvas_wrapper.appendChild(this.#element);
+        this.#rulers = {
+            'h': new HorizontalRuler(this),
+            'v': new VerticalRuler(this),
+        }
 
         this.#cards = {};
 
@@ -92,6 +98,10 @@ class Canvas {
 
     get origin() {
         return this.#origin;
+    }
+
+    get rulers(){
+        return this.#rulers
     }
 
     add_card(card) {
@@ -125,6 +135,14 @@ class Canvas {
         this.set_dimensions(right_border - left_border, bottom_border - top_border);
         this.#origin.set_offsets(-left_border, -top_border);
 
+        this.redraw_rulers()
+
+    }
+
+    redraw_rulers(){
+        console.log('redraw_rulers')
+        this.#rulers.h.redraw('width', -this.#origin.left_offset - 50, this.#width -this.#origin.left_offset + 50)
+        this.#rulers.v.redraw('height', -this.#origin.top_offset - 50, this.#height -this.#origin.top_offset + 50)
     }
 
     increase_margin_top(value) {
