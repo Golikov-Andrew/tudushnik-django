@@ -252,6 +252,9 @@ body > .wrapper {
 #mindmap_viewport .canvas .card {
   background-color: white;
 }
+#mindmap_viewport .canvas .card .wrapper {
+  grid-template-rows: 24px 24px auto 24px;
+}
 #mindmap_viewport .canvas .card .anchore {
   display: inline-block;
   cursor: pointer;
@@ -259,9 +262,61 @@ body > .wrapper {
   width: 20px;
   height: 20px;
 }
+#mindmap_viewport .canvas .card .child_btn {
+  display: inline-block;
+  cursor: pointer;
+}
+#mindmap_viewport .canvas .card .child_btn.chosen-parent {
+  outline: 2px solid blue;
+}
+#mindmap_viewport .canvas .card .child_btn.potential-child:hover {
+  outline: 2px solid green;
+}
+#mindmap_viewport .canvas .card .tag {
+  display: inline-block;
+}
+#mindmap_viewport .canvas .card .status {
+  display: inline-block;
+}
+#mindmap_viewport .canvas .card.on_front {
+  z-index: 9;
+}
+#mindmap_viewport .canvas .card .content {
+  white-space: pre-wrap;
+}
 #mindmap_viewport .canvas .ruler .item {
   font-size: 12px;
 }
 .page-horizontal-block {
   margin-top: 20px;
+}
+.context_menu .overlay {
+  z-index: 1000000;
+}
+.context_menu .window {
+  width: unset;
+  height: unset;
+  z-index: 1000001;
+}
+.context_menu .window .btn_context_menu_action {
+  cursor: pointer;
+}
+.context_menu .window .btn_context_menu_action:hover {
+  background-color: #34729f;
+  color: #ffedd8;
+}
+.relations_container svg .hand {
+  fill: blue;
+  display: none;
+}
+.relations_container svg .relation-delete-btn {
+  fill: red;
+  display: none;
+}
+.relations_container svg.active {
+  z-index: 10;
+}
+.relations_container svg.active .relation-delete-btn,
+.relations_container svg.active .hand {
+  display: block;
 }

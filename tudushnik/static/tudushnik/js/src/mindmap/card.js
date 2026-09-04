@@ -68,8 +68,13 @@ class Card {
     #element;
     #data;
     #anchore;
+    #is_done;
+    #child_btn;
+    #status;
     #wrapper;
     #title;
+    #content;
+    #tags;
     #x;
     #y;
     #corners;
@@ -98,22 +103,47 @@ class Card {
         this.#element.style.left = `${card_data.x}px`;
         this.#element.style.width = `${card_data.width}px`;
         this.#element.style.height = `${card_data.height}px`;
+        this.#element.dataset.taskMindMapId = this.#pk;
+        this.#element.dataset.taskId = this.#data.task.pk;
 
         this.#wrapper = document.createElement('div');
         this.#wrapper.classList.add('wrapper');
         this.#wrapper.style.position = 'relative';
+        this.#wrapper.style.display = 'grid';
         this.#wrapper.style.width = '100%';
         this.#wrapper.style.height = '100%';
 
-        this.#title = document.createElement('input');
+        this.#title = document.createElement('div');
         this.#title.classList.add('title');
-        this.#title.value = card_data.task.title;
+        this.#title.innerHTML = card_data.task.title;
+
+        this.#content = document.createElement('div');
+        this.#content.classList.add('content');
+        this.#content.innerHTML = card_data.task.content;
+
+        this.#tags = document.createElement('div');
+        this.#tags.classList.add('tags');
+        this.#data.task.tags.forEach(t => {
+            this.#tags.appendChild(this.__create_tag(t))
+        })
 
         this.#anchore = document.createElement('div');
         this.#anchore.classList.add('anchore');
-        this.#anchore.innerHTML = 'a';
-        this.startTime = null;
-        this.isPressed = false;
+        this.#anchore.innerHTML = '&#8226;';
+
+        this.#is_done = document.createElement('input');
+        this.#is_done.setAttribute('type', 'checkbox')
+        this.#is_done.setAttribute('disabled', 'disabled')
+        this.#is_done.classList.add('is_done');
+        this.#is_done.checked = this.#data.task.is_done
+
+        this.#child_btn = document.createElement('div');
+        this.#child_btn.classList.add('child_btn');
+        this.#child_btn.innerHTML = '&#43612;';
+
+        this.#status = document.createElement('div');
+        this.#status.classList.add('status');
+        this.#status.innerHTML = card_data.task.status;
 
         let handler_width = 10;
 
@@ -145,9 +175,31 @@ class Card {
         this.#wrapper.appendChild(this.#sides.top.element);
         this.#wrapper.appendChild(this.#sides.bottom.element);
 
-        this.#wrapper.appendChild(this.#anchore);
-        this.#wrapper.appendChild(this.#title);
+        this.#wrapper.appendChild(this.__create_row([
+            this.#anchore, this.#is_done, this.#child_btn, this.#status
+        ]));
+        this.#wrapper.appendChild(this.__create_row([
+            this.#title
+        ]));
+
+        const row_content = this.__create_row([
+            this.#content
+        ])
+        row_content.style.overflow = 'auto';
+        this.#wrapper.appendChild(row_content);
+
+        this.#wrapper.appendChild(this.__create_row([
+            this.#tags
+        ]));
+
         this.#element.appendChild(this.#wrapper);
+
+        this.#element.addEventListener('mouseenter', () => {
+            this.#element.classList.add('on_front');
+        });
+        this.#element.addEventListener('mouseleave', () => {
+            this.#element.classList.remove('on_front');
+        });
 
         this.#anchore.addEventListener('mousedown', () => {
             this.#canvas.app.take_card(this)
@@ -178,6 +230,74 @@ class Card {
             }
         }
 
+        this.#child_btn.addEventListener('click', (evt) => {
+            let all_bind_child_btn = document.querySelectorAll('.child_btn')
+
+
+            if (this.#canvas.parent_task_for_binding_chosen === null) {
+                this.#canvas.parent_task_for_binding_chosen = this
+                this.#child_btn.classList.add('chosen-parent')
+                for (let i = 0; i < all_bind_child_btn.length; i++) {
+                    if (this.#child_btn !== all_bind_child_btn[i])
+                        all_bind_child_btn[i].classList.add('potential-child');
+                }
+            } else {
+                if (this.#canvas.parent_task_for_binding_chosen !== this) {
+                    let target_card = evt.target.closest('.card');
+                    let child_task_id = target_card.dataset.taskId;
+                    let child_task_mindmap_id = target_card.dataset.taskMindMapId;
+                    this.#canvas.parent_task_for_binding_chosen.add_child_task(child_task_id, child_task_mindmap_id)
+                }
+                this.#canvas.parent_task_for_binding_chosen.child_btn.classList.remove('chosen-parent')
+                this.#canvas.parent_task_for_binding_chosen = null
+                for (let i = 0; i < all_bind_child_btn.length; i++) {
+                    all_bind_child_btn[i].classList.remove('potential-child');
+                }
+            }
+
+        })
+
+    }
+
+    add_child_task(child_task_id, child_task_mindmap_id) {
+        console.log('parent -> child_task', this.data.task.title, this.#canvas.cards[+child_task_mindmap_id].data.task.title)
+        $.ajax({
+            type: "POST",
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            url: '/tasks/update_attrs',
+            data: JSON.stringify({
+                'task_id': this.#data.task.pk,
+                'new_child_id': +child_task_id,
+            }),
+            success: (data) => {
+                if (data.success === true) {
+                    console.log('task_id', data.task_id);
+                    this.#canvas.add_relation(this, this.#canvas.cards[+child_task_mindmap_id], {});
+                } else {
+                    console.error(data.error_message);
+                }
+            },
+            dataType: 'json'
+        });
+    }
+
+    __create_row(children) {
+        const new_row = document.createElement('div');
+        new_row.classList.add('row')
+        children.forEach(c => new_row.appendChild(c))
+        return new_row
+    }
+
+    __create_tag(tag) {
+        const new_elem = document.createElement('div');
+        new_elem.classList.add('tag');
+        new_elem.dataset.tagId = tag.pk;
+        new_elem.innerHTML = tag.title;
+        new_elem.style.backgroundColor = tag.color;
+        new_elem.style.color = tag.text_color;
+        return new_elem
     }
 
     get element() {
@@ -245,6 +365,12 @@ class Card {
         this.#element.style.height = `${this.#height}px`;
     }
 
+    get center() {
+        let x = this.#x + this.#width / 2;
+        let y = this.#y + this.#height / 2;
+        return {x, y}
+    }
+
     toggle_helpers() {
         for (const lr in this.#corners) {
             for (const tb in this.#corners[lr]) {
@@ -271,6 +397,10 @@ class Card {
         return Object.keys(this.#previous_data);
     }
 
+    get data() {
+        return this.#data;
+    }
+
     get_data(...attrs) {
         let result = {}
         attrs.map(attr => result[attr] = this[attr]);
@@ -286,6 +416,21 @@ class Card {
             this[attr] = this.#previous_data[attr]
         }
         this.redraw();
+    }
+
+    get child_btn() {
+        return this.#child_btn;
+    }
+
+    get canvas() {
+        return this.#canvas;
+    }
+
+    delete_tag(tag_id, tag_elem){
+        debugger;
+        const tags = this.#data.tags
+        const tag = this.#tags.querySelector('')
+        this.#tags.removeChild(tag_elem)
     }
 
 }

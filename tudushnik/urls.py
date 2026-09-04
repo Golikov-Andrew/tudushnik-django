@@ -5,7 +5,8 @@ from .views import index
 from .views.auth import LoginUser, profile, logout_user, RegisterUser
 from .views.calendar import calendar_page
 from .views.mindmap import MindMapListView, add_mindmap, mindmap_delete, \
-    MindMapUpdateView, MindMapDetailView, task_mindmap_update_attrs
+    MindMapUpdateView, MindMapDetailView, task_mindmap_update_attrs, \
+    task_mindmap_update_cards_relation, task_mindmap_delete_cards_relation
 from .views.check import CheckListView, CheckDetailView, checks_fetch, \
     check_delete, CheckUpdateView, \
     check_update_attrs, add_check, add_check_to_budget
@@ -20,7 +21,7 @@ from .views.tag import TagListView, TagDetailView, tag_delete, TagUpdateView, \
 
 from .views.task import add_task, TaskListView, TaskDetailView, task_delete, \
     TaskUpdateView, add_task_to_project, task_update_attrs, tasks_fetch, \
-    TaskList
+    TaskList, task_tag
 from .views.user import UserListView, UserDetailView, events_fetch
 from .views.user_settings import upload_avatar
 from .views.users_group import UsersGroupListView, add_users_group, \
@@ -52,6 +53,7 @@ urlpatterns = [
     path('tasks/delete/<int:pk>/', task_delete, name='task_delete'),
     path('tasks/edit/<int:pk>/', TaskUpdateView.as_view(), name='task_edit'),
     path('tasks/update_attrs', task_update_attrs, name='task_update_attrs'),
+    path('task/tag/', task_tag, name='task_tag'),
     path('tasks/create', add_task, name='add_task'),
     path('tasks/add_to_project/<int:project_pk>/', add_task_to_project,
          name='add_task_to_project'),
@@ -70,6 +72,10 @@ urlpatterns = [
     path('mindmaps/create', add_mindmap, name='add_mindmap'),
     path('mindmaps/update_card_attrs', task_mindmap_update_attrs,
          name='task_mindmap_update_attrs'),
+    path('mindmaps/update_cards_relation', task_mindmap_update_cards_relation,
+         name='task_mindmap_update_cards_relation'),
+    path('mindmaps/delete_cards_relation', task_mindmap_delete_cards_relation,
+         name='task_mindmap_delete_cards_relation'),
 
     path('checks/', CheckListView.as_view(), name='checks_page'),
     path('checks/fetch', checks_fetch, name='checks_fetch'),

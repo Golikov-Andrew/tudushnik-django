@@ -13,9 +13,6 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     begin_at = models.DateTimeField(null=True)
-    # begin_at = models.DateTimeField(auto_now_add=True)
-    # photo = models.ImageField(upload_to='photos/%Y/%m/%d/',
-    # verbose_name='Изображение', blank=True)
     is_done = models.BooleanField(default=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE,
                                 related_name='tasks')
@@ -74,7 +71,7 @@ class Task(models.Model):
             'children': [c.to_json() for c in children],
             'parents': [i.pk for i in parents],
             'tags': [t.to_json() for t in tags],
-            'status': self.status.title
+            'status': self.status.get_title_display()
         }
 
     class Meta:
@@ -88,6 +85,15 @@ class TaskParentChild(models.Model):
                                related_name='child')
     child = models.ForeignKey(Task, on_delete=models.DO_NOTHING,
                               related_name='parent')
+    curve = models.JSONField(default=dict, blank=True)
+
+    def to_json(self):
+        return {
+            'pk': self.pk,
+            'parent_id': self.parent.pk,
+            'child_id': self.child.pk,
+            'curve': self.curve
+        }
 
     class Meta:
         constraints = [

@@ -88,9 +88,9 @@ class MindMapViewport {
         return this.#element;
     }
 
-    init(cards_list) {
+    init(cards_list, tasks_parent_child) {
         this.#element.appendChild(this.#canvas.element);
-        this.#canvas.load_cards(cards_list);
+        this.#canvas.load_cards(cards_list, tasks_parent_child);
     }
 
     scroll_if_in_safe_zone(clientX, movementX, clientY, movementY) {
@@ -142,6 +142,7 @@ class MindMapViewport {
                 }
                 this.#taken_card.reset_previous_data();
                 this.#taken_card = null;
+                this.#canvas.redraw_relations()
             },
             error: (data) => {
                 console.error(data);

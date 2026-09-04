@@ -18,7 +18,7 @@ from tudushnik.models.mindmap import MindMap
 
 from tudushnik.models.project import Project
 from tudushnik.models.tag import Tag
-from tudushnik.models.task import Task
+from tudushnik.models.task import Task, TaskParentChild
 from tudushnik.models.task_mindmap import TaskMindMap
 
 from tudushnik.models.user_profile_settings import manage_user_settings, \
@@ -89,6 +89,8 @@ class MindMapDetailView(DetailView):
 
         target_mindmap = MindMap.objects.filter(
             Q(owner_id=request_user_id) & Q(pk=mindmap_id)).first()
+
+        project = Project.objects.get(pk=target_mindmap.project.pk)
 
         context['title'] = target_mindmap.title
 
@@ -187,6 +189,8 @@ class MindMapDetailView(DetailView):
             )
 
         all_tasks = all_tasks.prefetch_related('tags')
+        all_relations = TaskParentChild.objects.filter(
+            Q(child__in=all_tasks) | Q(parent__in=all_tasks))
         context['all_tags'] = all_tags
         context['all_tasks'] = all_tasks
         context['all_tasks_mindmaps'] = all_tasks_mindmaps
@@ -197,9 +201,12 @@ class MindMapDetailView(DetailView):
             'statuses': [t.to_json() for t in all_statuses],
             'mindmap': target_mindmap.to_json(),
             'tasks_mindmaps': [t.to_json() for t in all_tasks_mindmaps],
+            'project_id': project.pk,
+            'tasks_parent_child': [t.to_json() for t in all_relations],
         }
         context['entity_type'] = 'Интеллект-Карта'
         context['page_title_eng'] = 'mindmaps_detail'
+        # context['tasks_parent_child'] = 'tasks_parent_child'
         set_client_timezone(self.request, context)
         return context
 
@@ -303,5 +310,79 @@ def task_mindmap_update_attrs(request, *args, **kwargs):
         target_object.save()
 
         json_resp = {'success': True, 'task_mindmap': target_object.to_json()}
+        json_resp.update(json_data)
+        return JsonResponse(json_resp)
+
+
+def task_mindmap_update_cards_relation(request, *args, **kwargs):
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        parent_id = int(json_data['parent_id'])
+        child_id = int(json_data['child_id'])
+        curve = json_data['curve']
+
+        target_object = None
+        try:
+            target_object = TaskParentChild.objects.filter(
+                parent_id=parent_id, child_id=child_id).first()
+
+        except ObjectDoesNotExist:
+            json_resp = {
+                'success': False,
+                'error_message': f'Ошибка! '
+                                 f'Такой CardsRelation не существует: {parent_id}->{child_id}!'
+            }
+            json_resp.update(json_data)
+            return JsonResponse(json_resp)
+
+        except PermissionDenied:
+            json_resp = {
+                'success': False,
+                'error_message': 'You do not have permission for this operation!'
+            }
+            json_resp.update(json_data)
+            return JsonResponse(json_resp)
+
+        target_object.curve = curve
+        target_object.save()
+
+        json_resp = {'success': True,
+                     # 'task_mindmap': target_object.to_json()
+                     }
+        json_resp.update(json_data)
+        return JsonResponse(json_resp)
+
+
+def task_mindmap_delete_cards_relation(request, *args, **kwargs):
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        parent_id = int(json_data['parent_id'])
+        child_id = int(json_data['child_id'])
+
+        target_object = None
+        try:
+            target_object = TaskParentChild.objects.filter(
+                parent_id=parent_id, child_id=child_id).first()
+
+        except ObjectDoesNotExist:
+            json_resp = {
+                'success': False,
+                'error_message': f'Ошибка! '
+                                 f'Такой CardsRelation не существует: {parent_id}->{child_id}!'
+            }
+            json_resp.update(json_data)
+            return JsonResponse(json_resp)
+
+        except PermissionDenied:
+            json_resp = {
+                'success': False,
+                'error_message': 'You do not have permission for this operation!'
+            }
+            json_resp.update(json_data)
+            return JsonResponse(json_resp)
+
+        target_object.delete()
+
+        json_resp = {'success': True}
         json_resp.update(json_data)
         return JsonResponse(json_resp)
