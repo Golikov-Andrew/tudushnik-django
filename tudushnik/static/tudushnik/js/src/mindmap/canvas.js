@@ -72,6 +72,7 @@ class Canvas {
     #margin;
     #rulers;
     #parent_task_for_binding_chosen;
+    #tags;
 
     constructor(app) {
         this.#app = app;
@@ -131,8 +132,8 @@ class Canvas {
                             if ('success' in json_obj) {
                                 if (json_obj['success'] === true) {
                                     const tags = current_card.data.task.tags
-                                    for (let i = 0; i <tags.length; i++) {
-                                        if(tags[i].pk === +current_tag_id){
+                                    for (let i = 0; i < tags.length; i++) {
+                                        if (tags[i].pk === +current_tag_id) {
                                             tags.splice(i, 1)
                                             break;
                                         }
@@ -144,10 +145,64 @@ class Canvas {
                         }, csrfToken)
                     })
                 )
+
                 console.log(context_menu);
                 context_menu.create();
                 return
             }
+
+            const create_add_tag_button = evt.target.closest('.create_add_tag_button');
+            if (create_add_tag_button) {
+                const current_card_elem = create_add_tag_button.closest('.card');
+                const task_mindmap_id = current_card_elem.dataset.taskMindMapId;
+                const current_card = this.#cards[task_mindmap_id]
+                const current_task_id = current_card_elem.dataset.taskId;
+                const context_menu = new ContextMenu({
+                    event: evt,
+                    data: {
+                        task_id: +current_task_id,
+                    }
+                })
+
+                for (let i = 0, cur_t; i < this.#tags.length; i++) {
+                    cur_t = this.#tags[i]
+                    let is_tag_already_exists = false;
+                    for (let j = 0; j < current_card.data.task.tags.length; j++) {
+                        if (cur_t.pk === current_card.data.task.tags[j].pk) {
+                            is_tag_already_exists = true;
+                            break;
+                        }
+                    }
+                    if (is_tag_already_exists) continue;
+
+                    context_menu.add_action(
+                        new ContextMenuAction(cur_t.title, () => {
+                            console.log(`${cur_t.title} выбран`);
+
+                            send_json(evt, 'POST', `/task/tag/`, {
+                                task_id: +current_task_id,
+                                tag_id: +cur_t.pk
+                            }, (resp) => {
+                                let json_obj = JSON.parse(resp)
+                                if ('success' in json_obj) {
+                                    if (json_obj['success'] === true) {
+                                        const new_tag = structuredClone(cur_t)
+                                        current_card.data.task.tags.push(new_tag);
+                                        current_card.add_tag(new_tag)
+                                        context_menu.destroy()
+                                    }
+                                }
+                            }, csrfToken)
+                        })
+                    )
+                }
+
+
+                console.log(context_menu);
+                context_menu.create();
+                return
+            }
+
 
             console.log('closest', evt.target.closest('.card'))
             const target = evt.target.closest('.card');
@@ -285,6 +340,10 @@ class Canvas {
 
         }
         this.refresh_view();
+    }
+
+    load_tags(tags_json_list) {
+        this.#tags = tags_json_list
     }
 
     remove_card(task_mindmap_id) {

@@ -1,3 +1,6 @@
+import {ModalWindow} from "../my_utils/modal_window";
+import {DOMElem} from "../../dom_utils";
+
 class Corner {
     #element;
     #width;
@@ -83,6 +86,7 @@ class Card {
     #height;
     #pk;
     #previous_data;
+    #create_add_tag_button;
 
     constructor(canvas, card_data) {
         // this.#app = app;
@@ -123,8 +127,12 @@ class Card {
 
         this.#tags = document.createElement('div');
         this.#tags.classList.add('tags');
+
+        this.#create_add_tag_button = this.__create_add_tag_button()
+        this.#tags.appendChild(this.#create_add_tag_button)
+
         this.#data.task.tags.forEach(t => {
-            this.#tags.appendChild(this.__create_tag(t))
+            this.add_tag(t)
         })
 
         this.#anchore = document.createElement('div');
@@ -181,12 +189,76 @@ class Card {
         this.#wrapper.appendChild(this.__create_row([
             this.#title
         ]));
+        this.#title.addEventListener('dblclick', () => {
+            const modal = new ModalWindow({
+                unique_id: 'modal_input_editor', buttons: ['ok', 'cancel']
+            })
+            modal.init()
+            const input_element = new DOMElem('input', {
+                attrs: {
+                    'value': this.#data.task.title
+                }
+            }).element
+            modal.set_content_element(
+                new DOMElem('div', {
+                    children: [
+                        input_element
+                    ]
+                }).element
+            )
+            modal.show()
+            modal.perform_ok = () => {
+                send_json(undefined, 'POST', `/tasks/update_attrs`, {
+                    task_id: +this.#data.task.pk,
+                    title: input_element.value
+                }, (resp) => {
+                    let json_obj = JSON.parse(resp)
+                    if ('success' in json_obj) {
+                        if (json_obj['success'] === true) {
+                            this.#data.task.title = input_element.value
+                            this.#title.innerHTML = this.#data.task.title
+                        }
+                    }
+                }, csrfToken)
+            }
+        })
 
         const row_content = this.__create_row([
             this.#content
         ])
         row_content.style.overflow = 'auto';
         this.#wrapper.appendChild(row_content);
+        this.#content.addEventListener('dblclick', () => {
+            const modal = new ModalWindow({
+                unique_id: 'modal_textarea_editor', buttons: ['ok', 'cancel']
+            })
+            modal.init()
+            const textarea_element = new DOMElem('textarea', {
+                html: this.#content.innerHTML
+            }).element
+            modal.set_content_element(
+                new DOMElem('div', {
+                    children: [
+                        textarea_element
+                    ]
+                }).element
+            )
+            modal.show()
+            modal.perform_ok = () => {
+                send_json(undefined, 'POST', `/tasks/update_attrs`, {
+                    task_id: +this.#data.task.pk,
+                    content: textarea_element.value
+                }, (resp) => {
+                    let json_obj = JSON.parse(resp)
+                    if ('success' in json_obj) {
+                        if (json_obj['success'] === true) {
+                            this.#data.task.content = textarea_element.value
+                            this.#content.innerHTML = this.#data.task.content
+                        }
+                    }
+                }, csrfToken)
+            }
+        })
 
         this.#wrapper.appendChild(this.__create_row([
             this.#tags
@@ -259,6 +331,13 @@ class Card {
 
     }
 
+    __create_add_tag_button() {
+        const new_elem = document.createElement('div');
+        new_elem.classList.add('create_add_tag_button');
+        new_elem.innerHTML = '&plus;';
+        return new_elem
+    }
+
     add_child_task(child_task_id, child_task_mindmap_id) {
         console.log('parent -> child_task', this.data.task.title, this.#canvas.cards[+child_task_mindmap_id].data.task.title)
         $.ajax({
@@ -290,14 +369,14 @@ class Card {
         return new_row
     }
 
-    __create_tag(tag) {
+    add_tag(tag) {
         const new_elem = document.createElement('div');
         new_elem.classList.add('tag');
         new_elem.dataset.tagId = tag.pk;
         new_elem.innerHTML = tag.title;
         new_elem.style.backgroundColor = tag.color;
         new_elem.style.color = tag.text_color;
-        return new_elem
+        this.#tags.insertBefore(new_elem, this.#create_add_tag_button);
     }
 
     get element() {
@@ -426,8 +505,7 @@ class Card {
         return this.#canvas;
     }
 
-    delete_tag(tag_id, tag_elem){
-        debugger;
+    delete_tag(tag_id, tag_elem) {
         const tags = this.#data.tags
         const tag = this.#tags.querySelector('')
         this.#tags.removeChild(tag_elem)

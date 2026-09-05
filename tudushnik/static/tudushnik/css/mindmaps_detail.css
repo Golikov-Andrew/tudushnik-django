@@ -272,8 +272,13 @@ body > .wrapper {
 #mindmap_viewport .canvas .card .child_btn.potential-child:hover {
   outline: 2px solid green;
 }
+#mindmap_viewport .canvas .card .tags {
+  display: flex;
+  gap: 8px;
+}
 #mindmap_viewport .canvas .card .tag {
   display: inline-block;
+  cursor: pointer;
 }
 #mindmap_viewport .canvas .card .status {
   display: inline-block;
@@ -319,4 +324,9 @@ body > .wrapper {
 .relations_container svg.active .relation-delete-btn,
 .relations_container svg.active .hand {
   display: block;
+}
+.create_add_tag_button {
+  color: darkgreen;
+  display: inline-block;
+  cursor: pointer;
 }
