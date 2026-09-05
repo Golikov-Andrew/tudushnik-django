@@ -73,6 +73,7 @@ class Canvas {
     #rulers;
     #parent_task_for_binding_chosen;
     #tags;
+    #statuses;
 
     constructor(app) {
         this.#app = app;
@@ -107,7 +108,7 @@ class Canvas {
         this.#element.addEventListener('contextmenu', (evt) => {
             evt.preventDefault()
 
-            const tag_closest = evt.target.closest('.tag');
+            const tag_closest = evt.target.closest('.card .tag');
             if (tag_closest) {
                 console.log('context on tag')
                 const current_card_elem = tag_closest.closest('.card');
@@ -203,6 +204,47 @@ class Canvas {
                 return
             }
 
+            const status_element = evt.target.closest('.card .status');
+            if (status_element) {
+                const current_card_elem = status_element.closest('.card');
+                const task_mindmap_id = current_card_elem.dataset.taskMindMapId;
+                const current_card = this.#cards[task_mindmap_id]
+                const current_task_id = current_card_elem.dataset.taskId;
+                const context_menu = new ContextMenu({
+                    event: evt,
+                    data: {
+                        task_id: +current_task_id,
+                    }
+                })
+
+                for (let i = 0, cur_s; i < this.#statuses.length; i++) {
+                    cur_s = this.#statuses[i]
+                    if (cur_s.title === current_card.data.task.status) continue;
+
+                    context_menu.add_action(
+                        new ContextMenuAction(cur_s.title, () => {
+                            send_json(undefined, 'POST', `/tasks/update_attrs`, {
+                                task_id: current_card.data.task.pk,
+                                status_id: cur_s.pk
+                            }, (resp) => {
+                                let json_obj = JSON.parse(resp)
+                                if ('success' in json_obj) {
+                                    if (json_obj['success'] === true) {
+                                        const new_status = structuredClone(cur_s)
+                                        current_card.status = new_status.title
+                                    }
+                                }
+                                context_menu.destroy()
+                            }, csrfToken)
+                        })
+                    )
+                }
+
+
+                console.log(context_menu);
+                context_menu.create();
+                return
+            }
 
             console.log('closest', evt.target.closest('.card'))
             const target = evt.target.closest('.card');
@@ -344,6 +386,10 @@ class Canvas {
 
     load_tags(tags_json_list) {
         this.#tags = tags_json_list
+    }
+
+    load_statuses(statuses_json_list) {
+        this.#statuses = statuses_json_list
     }
 
     remove_card(task_mindmap_id) {

@@ -383,6 +383,11 @@ class Card {
         return this.#element;
     }
 
+    set status(htmlValue) {
+        this.#data.task.status = htmlValue;
+        this.#status.innerHTML = htmlValue;
+    }
+
     get pk() {
         return this.#pk;
     }

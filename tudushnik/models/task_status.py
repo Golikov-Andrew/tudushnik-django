@@ -29,5 +29,5 @@ class TaskStatus(models.Model):
     def to_json(self):
         return {
             'pk': self.pk,
-            'title': self.title
+            'title': self.get_title_display()
         }

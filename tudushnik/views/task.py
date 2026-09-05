@@ -523,6 +523,11 @@ def task_update_attrs(request, *args, **kwargs):
         if is_done is not None:
             target_object.is_done = is_done
 
+        status_id = json_data.get('status_id')
+        if status_id is not None:
+            target_object.status = TaskStatus.objects.filter(
+                pk=status_id).first()
+
         title = json_data.get('title')
         if title is not None:
             target_object.title = title

@@ -7,7 +7,8 @@ const data = JSON.parse(jsonDataElement.textContent);
 mindmap_viewport_object.init(
     data['tasks_mindmaps'],
     data['tasks_parent_child'],
-    data['tags']
+    data['tags'],
+    data['statuses']
 );
 window.MINDMAP_PROJECT_ID = data.project_id;
 

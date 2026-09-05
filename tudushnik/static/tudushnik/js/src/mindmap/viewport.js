@@ -88,10 +88,11 @@ class MindMapViewport {
         return this.#element;
     }
 
-    init(cards_list, tasks_parent_child, tags) {
+    init(cards_list, tasks_parent_child, tags, statuses) {
         this.#element.appendChild(this.#canvas.element);
         this.#canvas.load_cards(cards_list, tasks_parent_child);
         this.#canvas.load_tags(tags);
+        this.#canvas.load_statuses(statuses);
     }
 
     scroll_if_in_safe_zone(clientX, movementX, clientY, movementY) {
