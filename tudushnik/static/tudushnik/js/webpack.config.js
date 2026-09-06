@@ -17,6 +17,7 @@ module.exports = {
         task_detail: ['./src/tasks_page/details.js'],
         user_profile: ['./src/user_profile/index.js'],
         data_query_manager: ['./src/data_query_manager/index.js'],
+        mindmap: ['./src/mindmap/index.js'],
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

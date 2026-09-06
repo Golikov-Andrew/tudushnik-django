@@ -87,7 +87,6 @@ class ActivityDisplay {
     }
 
     draw_point(x, y) {
-        // debugger;
         // this.#ctx.save();
         this.#ctx.beginPath();
         this.#ctx.arc(x, y, 2, 0, 2 * Math.PI);

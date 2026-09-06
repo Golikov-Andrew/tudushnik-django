@@ -6,7 +6,7 @@
   grid-template-areas:
         "logo-container profile-container"
         "navbar-container navbar-container";
-  grid-template-columns: 100px auto;
+  grid-template-columns: 80px auto;
   position: fixed;
   gap: 4px;
   background-color: @warm-light;
@@ -17,27 +17,23 @@
   margin: 0 6px 6px 0;
   padding: 4px;
 
-  .min580_all({
-    grid-template-areas:
-        "logo-container navbar-container profile-container";
-    grid-template-columns: 100px auto 140px;
-  });
+  //.min580_all({
+  //  grid-template-areas:
+  //      "logo-container navbar-container profile-container";
+  //  grid-template-columns: 100px auto 140px;
+  //});
   .min_768({
     margin: 0 10px 10px 0;
     padding: 10px;
   });
   .min_1024({
-    grid-template-columns: 100px auto 270px;
+    grid-template-columns: 100px auto;
   });
   .min_1200({
-    grid-template-columns: 160px auto 320px;
+    grid-template-columns: 160px auto;
   });
   .min_1440({
-    grid-template-columns: 160px auto 360px;
     padding: 20px 40px;
-  });
-  .min_1600({
-    grid-template-columns: 160px auto 430px;
   });
 
   .logo-container {
@@ -61,10 +57,11 @@
   }
 
   .navbar-container {
+    display: none;
     width: 100%;
     text-align: center;
     grid-area: navbar-container;
-    display: flex;
+
     flex-wrap: wrap;
     justify-content: center;
     align-content: flex-start;
@@ -73,6 +70,10 @@
       gap: 8px;
       align-content: center;
     });
+
+    &.opened {
+      display: flex;
+    }
   }
 
   .profile-container {
@@ -87,6 +88,72 @@
     .min_768({
       gap: 8px;
     });
+
+    .ava_container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+
+      .min_1200({
+        display: none;
+      });
+
+      .ava_item_wrapper {
+        position: relative;
+        height: 30px;
+
+        .user_avatar {
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          left: -15px;
+          border-radius: 20px;
+
+          &:hover {
+            cursor: pointer;
+            z-index: 100;
+          }
+
+        }
+      }
+    }
+
+    .navbar-link-logout,
+    .navbar-link-profile {
+      width: 40px;
+      .min_1200({
+        width: unset;
+      });
+
+      span {
+        display: none;
+
+        .min_1200({
+          display: inline;
+        });
+      }
+
+    }
+
+    .logout_icon {
+      display: flex;
+
+      .min_1200({
+        display: none;
+      });
+
+    }
+
+    .navbar-link-logout {
+      .max_1199({
+        padding: 4px 5px;
+      });
+    }
+  }
+
+  .burger-menu-button {
+    display: flex;
+    width: 20px;
   }
 }
 
@@ -133,3 +200,7 @@
   margin: 0 4px;
   pointer-events: none;
 }
+
+
+
+

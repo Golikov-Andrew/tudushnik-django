@@ -2,9 +2,8 @@
 @import 'utils/_variables';
 
 #content-container {
-  //display: flex;
-  //flex-wrap: wrap;
-  margin: 96px 6px 0 6px;
+  display: flex;
+  margin: 20px 6px 0 6px;
   padding: 4px;
   color: @cold-dark;
   .min_1200({
@@ -23,6 +22,8 @@
 
   margin-left: auto;
   margin-right: auto;
+  margin-top: 20px;
+  width: 100%;
 
 
   .page-title-label {
@@ -104,6 +105,7 @@
   &.login_page,
   &.register_page,
   &.account_page {
+
     width: 320px;
     .min_500({
       width: 420px;
@@ -577,8 +579,12 @@
 
   &.projects_detail,
   &.gantt {
+
     .max_499({
-      margin-top: 24px;
+      margin-top: 36px;
+    });
+    .min_500({
+      margin-top: 40px;
     });
 
     .entity_header {
@@ -860,5 +866,12 @@
 
   .grid-area-points-total {
     grid-area: grid-area-points-total;
+  }
+}
+
+.homepage {
+  .page-content {
+    margin-top: 40px;
+
   }
 }
