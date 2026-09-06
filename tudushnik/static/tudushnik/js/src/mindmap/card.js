@@ -152,6 +152,9 @@ class Card {
         this.#status = document.createElement('div');
         this.#status.classList.add('status');
         this.#status.innerHTML = card_data.task.status;
+        const cur_status = this.#canvas.get_status_object_by_title(card_data.task.status);
+        this.#status.style.color = cur_status.text_color;
+        this.#status.style.backgroundColor = cur_status.color;
 
         let handler_width = 10;
 
@@ -386,6 +389,9 @@ class Card {
     set status(htmlValue) {
         this.#data.task.status = htmlValue;
         this.#status.innerHTML = htmlValue;
+        const cur_status = this.#canvas.get_status_object_by_title(htmlValue);
+        this.#status.style.color = cur_status.text_color;
+        this.#status.style.backgroundColor = cur_status.color;
     }
 
     get pk() {
@@ -405,8 +411,8 @@ class Card {
     }
 
     set_x(value) {
-        this.#x = value;
-        this.#element.style.left = `${this.#x}px`;
+        this.#element.style.left = `${value}px`;
+        this.#x = value * this.scale;
     }
 
     set y(value) {
@@ -414,8 +420,8 @@ class Card {
     }
 
     set_y(value) {
-        this.#y = value;
-        this.#element.style.top = `${this.#y}px`;
+        this.#element.style.top = `${value}px`;
+        this.#y = value * this.scale;
     }
 
     set_x_y(x, y) {
@@ -436,8 +442,8 @@ class Card {
     }
 
     set_width(width) {
-        this.#width = width;
-        this.#element.style.width = `${this.#width}px`;
+        this.#element.style.width = `${width}px`;
+        this.#width = width * this.scale;
     }
 
     set height(value) {
@@ -446,7 +452,7 @@ class Card {
 
     set_height(value) {
         this.#height = value;
-        this.#element.style.height = `${this.#height}px`;
+        this.#element.style.height = `${this.#height * this.scale}px`;
     }
 
     get center() {
@@ -467,10 +473,14 @@ class Card {
     }
 
     redraw() {
-        this.#element.style.width = `${this.#width}px`;
-        this.#element.style.left = `${this.#x}px`;
-        this.#element.style.height = `${this.#height}px`;
-        this.#element.style.top = `${this.#y}px`;
+        this.#element.style.width = `${this.#width * this.scale}px`;
+        this.#element.style.left = `${this.#x * this.scale}px`;
+        this.#element.style.height = `${this.#height * this.scale}px`;
+        this.#element.style.top = `${this.#y * this.scale}px`;
+    }
+
+    get scale(){
+        return this.#canvas.scale
     }
 
     snap_previous_data(...attrs) {

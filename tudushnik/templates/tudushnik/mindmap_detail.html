@@ -39,7 +39,6 @@
             </div>
         </div>
 
-
         <div class="entity_description">
             <div class="entity_description_label">Проект
                 "{{ object.project }}"
@@ -49,14 +48,20 @@
                 {{ object.description|safe }}
             </div>
         </div>
+        <div class="mindmap_toolbar">
+            <label for="select_mindmap_scale">
+                Масштаб:
+                <select name="scale" id="select_mindmap_scale">
+                    <option value="2:1">2:1</option>
+                    <option value="1:1">1:1</option>
+                    <option value="1:2">1:2</option>
+                    <option value="1:4">1:4</option>
+                </select>
+            </label>
+        </div>
 
     </div>
-    <div id="mindmap_viewport" class="page-horizontal-block">
-{#        {% for task in all_tasks_mindmaps %}#}
-{#            <div>{{ task }}</div>#}
-{#        {% endfor %}#}
-
-    </div>
+    <div id="mindmap_viewport" class="page-horizontal-block"></div>
 
 
 
@@ -64,8 +69,8 @@
 
 
 {% block local_scripts %}
-{{ json_data|json_script:"my-json-data" }}
-<script type="text/javascript"
+    {{ json_data|json_script:"my-json-data" }}
+    <script type="text/javascript"
             src="{% static 'tudushnik/js/dist/mindmap.js' %}"></script>
 
 {% endblock local_scripts %}

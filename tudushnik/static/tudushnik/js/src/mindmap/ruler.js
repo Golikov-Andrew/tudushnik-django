@@ -24,15 +24,18 @@ class Ruler {
     }
 
     redraw(prop_for_size, min_val, max_val) {
-        console.log(this.constructor.name, 'redraw');
         this._element.innerHTML = '';
         const offset = (0 - min_val) % 50;
         if (offset > 0){
             this._element.appendChild(createRulerItem(prop_for_size, offset, min_val));
         }
-        for (let i = min_val + offset; i < max_val - 50; i += 50) {
+        for (let i = min_val + offset; i < max_val - 50; i += (50 / this.scale)) {
             this._element.appendChild(createRulerItem(prop_for_size, 50, i));
         }
+    }
+
+    get scale(){
+        return this._canvas.scale
     }
 }
 

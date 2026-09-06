@@ -18,22 +18,31 @@
 
 .entity_header {
   grid-template-areas:
-          "page-title-container page-title-container"
-          "entity_tools entity_datetimes"
-          "entity_description entity_description";
-  grid-template-columns: 64px auto;
+          "page-title-container page-title-container page-title-container"
+          "entity_tools entity_datetimes mindmap_toolbar"
+          "entity_description entity_description mindmap_toolbar";
+  grid-template-columns: 64px 150px auto;
   row-gap: 8px;
   margin-top: 20px;
   .min_768({
     grid-template-areas:
-          "page-title-container page-title-container"
+          "page-title-container entity_description"
           "entity_tools entity_description"
-          "entity_datetimes entity_description";
+          "entity_datetimes mindmap_toolbar";
     grid-template-columns: 182px auto;
   });
   .min_1200({
     margin-top: 0;
   });
+
+  .mindmap_toolbar {
+    grid-area: mindmap_toolbar;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    display: flex;
+    gap: 4px;
+  }
 }
 
 .entity_tools {

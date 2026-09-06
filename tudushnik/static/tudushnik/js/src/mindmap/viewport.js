@@ -10,6 +10,9 @@ class MindMapViewport {
     #cards_sides;
     #cards_corners;
     #move_sides_functions;
+    #select_mindmap_scale;
+    #scale;
+    #scale_config;
 
     constructor(root_selector) {
         this.#element = document.querySelector(root_selector)
@@ -17,9 +20,26 @@ class MindMapViewport {
         this.#element.style.position = 'relative';
 
         this.#canvas = new Canvas(this);
+        this.#scale_config = {
+            '2:1': 2,
+            '1:1': 1,
+            '1:2': 0.5,
+            '1:4': 0.25,
+        };
+
+        this.scale = localStorage.getItem('mindmap_scale')
+        this.#select_mindmap_scale = document.querySelector('#select_mindmap_scale');
+        this.#select_mindmap_scale.value = localStorage.getItem('mindmap_scale')
+        this.#select_mindmap_scale.addEventListener('change', () => {
+            this.scale = this.#select_mindmap_scale.value;
+            this.#canvas.refresh_view()
+            this.#canvas.redraw_cards();
+            this.#canvas.redraw_relations();
+        })
+
+        this.#safe_border_width = 50;
 
         this.#taken_card = null;
-        this.#safe_border_width = 50;
         this.#start_mousedown_time = 0;
         this.#is_mouse_pressed = false;
 
@@ -44,21 +64,21 @@ class MindMapViewport {
         }
         this.#move_sides_functions = {
             'top': (evt) => {
-                const cursor_y = evt.clientY - this.cards_container_rect.top + 10;
+                const cursor_y = evt.clientY * this.scale - this.cards_container_rect.top + 10;
                 let new_height = (this.#taken_card.y + this.#taken_card.height) - cursor_y;
                 this.#taken_card.set_y(cursor_y);
                 this.#taken_card.set_height(new_height);
             },
             'right': (evt) => {
-                const cursor_x = evt.clientX - this.cards_container_rect.left;
+                const cursor_x = evt.clientX * this.scale - this.cards_container_rect.left;
                 this.#taken_card.set_width(cursor_x - this.#taken_card.x);
             },
             'bottom': (evt) => {
-                const cursor_y = evt.clientY - this.cards_container_rect.top;
+                const cursor_y = evt.clientY * this.scale - this.cards_container_rect.top;
                 this.#taken_card.set_height(cursor_y - this.#taken_card.y);
             },
             'left': (evt) => {
-                const cursor_x = evt.clientX - this.cards_container_rect.left + 10;
+                const cursor_x = evt.clientX * this.scale - this.cards_container_rect.left + 10;
                 let new_width = (this.#taken_card.x + this.#taken_card.width) - cursor_x;
                 this.#taken_card.set_x(cursor_x);
                 this.#taken_card.set_width(new_width);
@@ -73,11 +93,32 @@ class MindMapViewport {
             }
         }
 
-        this.#element.addEventListener('scroll',(evt)=>{
+        // размещение линеек при скроле viewport
+        this.#element.addEventListener('scroll', (evt) => {
             this.#canvas.rulers.h._element.style.top = `${this.#element.scrollTop - 50}px`
             this.#canvas.rulers.v._element.style.left = `${this.#element.scrollLeft - 50}px`
         })
+    }
 
+    init(cards_list, tasks_parent_child, tags, statuses) {
+        this.#element.appendChild(this.#canvas.element);
+        this.#canvas.load_tags(tags);
+        this.#canvas.load_statuses(statuses);
+        this.#canvas.load_cards(cards_list, tasks_parent_child);
+        this.#canvas.refresh_view();
+        this.#canvas.redraw_cards();
+        this.#canvas.redraw_relations();
+    }
+
+    set scale(value) {
+        if (['2:1', '1:1', '1:2', '1:4'].indexOf(value) === -1) value = '1:1';
+        localStorage.setItem('mindmap_scale', value)
+        this.#scale = this.#scale_config[value];
+    }
+
+    get scale() {
+        if ([2, 1, 0.5, 0.25].indexOf(this.#scale) === -1) this.#scale = 1;
+        return this.#scale;
     }
 
     get canvas() {
@@ -88,12 +129,6 @@ class MindMapViewport {
         return this.#element;
     }
 
-    init(cards_list, tasks_parent_child, tags, statuses) {
-        this.#element.appendChild(this.#canvas.element);
-        this.#canvas.load_cards(cards_list, tasks_parent_child);
-        this.#canvas.load_tags(tags);
-        this.#canvas.load_statuses(statuses);
-    }
 
     scroll_if_in_safe_zone(clientX, movementX, clientY, movementY) {
         let viewportBoundingRect = this.#element.getBoundingClientRect()
@@ -190,8 +225,8 @@ class MindMapViewport {
     move_card(evt) {
         const container = this.cards_container_rect;
         this.#taken_card.set_x_y(
-            evt.clientX - container.left - 10,
-            evt.clientY - container.top - 10
+            (evt.clientX - container.left) - 10,
+            (evt.clientY - container.top) - 10
         )
         this.scroll_if_in_safe_zone(evt.clientX, evt.movementX, evt.clientY, evt.movementY)
     }

@@ -16,8 +16,10 @@ class RelationHand {
     #cy;
     #r;
     #relation;
+    #canvas;
 
-    constructor(relation, key, x, y) {
+    constructor(canvas, relation, key, x, y) {
+        this.#canvas = canvas;
         this.#relation = relation
         this.#key = key
         this.#element = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -38,6 +40,10 @@ class RelationHand {
         return this.#element;
     }
 
+    get scale(){
+        return this.#canvas.scale;
+    }
+
     get key() {
         return this.#key;
     }
@@ -53,12 +59,11 @@ class RelationHand {
     set_xy(x, y) {
         this.#cx = x;
         this.#cy = y;
-        this.#relation
     }
 
     redraw() {
-        this.#element.setAttribute('cx', this.#cx);
-        this.#element.setAttribute('cy', this.#cy);
+        this.#element.setAttribute('cx', this.#cx * this.scale);
+        this.#element.setAttribute('cy', this.#cy * this.scale);
     }
 }
 
@@ -79,8 +84,10 @@ class CardsRelation {
     #taken_hand;
     #curve;
     #delete_button;
+    #canvas;
 
-    constructor(parent_card, child_card, curve) {
+    constructor(canvas, parent_card, child_card, curve) {
+        this.#canvas = canvas;
         this.#parent_card = parent_card;
         this.#child_card = child_card;
         this.#element = createSVGElem('svg');
@@ -116,13 +123,13 @@ class CardsRelation {
 
         if (this.#curve.cx !== undefined) {
             this.#hands = {
-                child: new RelationHand(this, 'child', this.#curve.cx, this.#curve.cy),
-                parent: new RelationHand(this, 'parent', this.#curve.px, this.#curve.py),
+                child: new RelationHand(this.#canvas, this, 'child', this.#curve.cx, this.#curve.cy),
+                parent: new RelationHand(this.#canvas, this, 'parent', this.#curve.px, this.#curve.py),
             }
         } else {
             this.#hands = {
-                child: new RelationHand(this, 'child', 200, 200),
-                parent: new RelationHand(this, 'parent', 0, 0),
+                child: new RelationHand(this.#canvas, this, 'child', 200, 200),
+                parent: new RelationHand(this.#canvas, this, 'parent', 0, 0),
             }
         }
 
@@ -143,7 +150,6 @@ class CardsRelation {
         this.#element.appendChild(this.#delete_button);
 
         this.#delete_button.addEventListener('click', () => {
-            console.log('delete');
             const d = {
                 'parent_id': this.#parent_card.data.task.pk,
                 'child_id': this.#child_card.data.task.pk
@@ -158,10 +164,10 @@ class CardsRelation {
                 data: JSON.stringify(d),
                 success: (data) => {
                     if (data.success === true) {
-                        console.log('success true');
                         this.#parent_card.canvas.remove_relation(this.#parent_card, this.#child_card)
                     } else {
                         console.log('success false')
+                        console.log(data)
                     }
                 },
                 error: (data) => {
@@ -189,6 +195,10 @@ class CardsRelation {
         return this.#element;
     }
 
+    get scale(){
+        return this.#canvas.scale
+    }
+
     redraw() {
         const parent_center = this.#parent_card.center;
         const child_center = this.#child_card.center;
@@ -198,32 +208,30 @@ class CardsRelation {
         this.#width = Math.abs(parent_center.x - child_center.x)
         this.#height = Math.abs(parent_center.y - child_center.y)
 
-        this.#element.style.top = `${this.#top}px`;
-        this.#element.style.left = `${this.#left}px`;
-        this.#element.style.width = `${this.#width}px`;
-        this.#element.style.height = `${this.#height}px`;
+        this.#element.style.top = `${this.#top * this.scale}px`;
+        this.#element.style.left = `${this.#left * this.scale}px`;
+        this.#element.style.width = `${this.#width * this.scale}px`;
+        this.#element.style.height = `${this.#height * this.scale}px`;
 
         let x1, y1, x2, y2;
         if (parent_center.y > child_center.y) {
             y1 = 0;
-            y2 = this.#height;
+            y2 = this.#height * this.scale;
         } else {
-            y1 = this.#height;
+            y1 = this.#height * this.scale;
             y2 = 0;
         }
 
         if (parent_center.x > child_center.x) {
             x1 = 0;
-            x2 = this.#width;
+            x2 = this.#width * this.scale;
         } else {
-            x1 = this.#width;
+            x1 = this.#width * this.scale;
             x2 = 0;
         }
-        this.#d = `M${x1},${y1} C${this.#hands.parent.x},${this.#hands.parent.y} ${this.#hands.child.x},${this.#hands.child.y} ${x2},${y2}`;
+        this.#d = `M${x1},${y1} C${this.#hands.parent.x * this.scale},${this.#hands.parent.y * this.scale} ${this.#hands.child.x * this.scale},${this.#hands.child.y * this.scale} ${x2},${y2}`;
 
-        // this.#hands.parent.set_xy(x1, y1)
         this.#hands.parent.redraw()
-        // this.#hands.child.set_xy(x2, y2)
         this.#hands.child.redraw()
 
         this.#path.setAttribute('d', this.#d);
@@ -240,47 +248,21 @@ class CardsRelation {
         this.#arrow.setAttribute('transform', `rotate(${tangent.angle}, ${point.x}, ${point.y})`);
 
         const point_delete_button = this.#path.getPointAtLength(length_delete_button);
-        const tangent_delete_button = getTangentAtLength(this.#path, length_delete_button);
         this.#delete_button.setAttribute('x', point_delete_button.x - 5);
         this.#delete_button.setAttribute('y', point_delete_button.y - 5);
-        // this.#delete_button.setAttribute('transform', `rotate(${tangent_delete_button.angle}, ${point_delete_button.x}, ${point_delete_button.y})`);
-        // this.#delete_button.setAttribute('y', point.y - 20);
-        // this.#delete_button.setAttribute('transform', `rotate(${tangent.angle}, ${point.x - 15}, ${point.y - 15})`);
     }
-
-    // redraw_path_d() {
-    //     // console.log(this.#d)
-    //     let arr = this.#d.split(' ')
-    //     if (this.#taken_hand.key === 'parent') {
-    //         console.log('parent')
-    //         arr[1] = `C${this.#taken_hand.x},${this.#taken_hand.y}`
-    //     } else if (this.#taken_hand.key === 'child') {
-    //         console.log('child')
-    //         arr[2] = `${this.#taken_hand.x},${this.#taken_hand.y}`
-    //     }
-    //     console.log(arr.join(' '))
-    //     this.#d = arr.join(' ')
-    //     console.log(this.#d)
-    //     this.#path.setAttribute('d', this.#d)
-    //
-    // }
 
     takeHand(hand) {
         this.#taken_hand = hand;
-        // takenHandPointKey = pointKey;
         this.#taken_hand.element.addEventListener('mousemove', this._move_hand);
         this.#taken_hand.element.addEventListener('mouseleave', this._drop_hand);
-        // takeArrow(useArrow)
     }
 
     dropHand() {
         this.#taken_hand.element.removeEventListener('mousemove', this._move_hand);
         this.#taken_hand.element.removeEventListener('mouseleave', this._drop_hand);
         this.#taken_hand = null;
-        // takenHandPointKey = null;
-        // this.dropArrow()
         this.update()
-
     }
 
     moveHand(evt) {
@@ -289,15 +271,7 @@ class CardsRelation {
         const newCx = currentCx + evt.movementX;
         const newCy = currentCy + evt.movementY;
         this.#taken_hand.set_xy(newCx, newCy)
-        // this.#taken_hand.redraw()
         this.redraw()
-
-        // let newDValueArray = controlPath.getAttribute('d').split(' ');
-        // newDValueArray[+takenHandPointKey] = `${newCx},${newCy}`;
-        // if (takenHandPointKey === '1') newDValueArray[1] = 'C' + newDValueArray[1];
-        // controlPath.setAttribute('d', newDValueArray.join(' '))
-
-        // moveArrow(evt)
     }
 
     update() {
@@ -321,22 +295,13 @@ class CardsRelation {
             url: '/mindmaps/update_cards_relation',
             data: JSON.stringify(d),
             success: (data) => {
-                if (data.success === true) {
-                    console.log('success true');
-                    // this.#canvas.refresh_view();
-                } else {
+                if (data.success !== true) {
                     console.log('success false')
-                    // this.#taken_card.rollback_previous_data();
+                    console.log(data)
                 }
-                // this.#taken_card.reset_previous_data();
-                // this.#taken_card = null;
-                // this.#canvas.redraw_relations()
             },
             error: (data) => {
                 console.error(data);
-                // this.#taken_card.rollback_previous_data();
-                // this.#taken_card.reset_previous_data();
-                // this.#taken_card = null;
             },
             dataType: 'json'
         });

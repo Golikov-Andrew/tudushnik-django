@@ -9,8 +9,10 @@ class Origin {
     #cards_container;
     #left_offset;
     #top_offset;
+    #canvas;
 
-    constructor() {
+    constructor(canvas) {
+        this.#canvas = canvas;
         this.#element = document.createElement('div');
         this.#element.classList.add('origin');
         this.#element.style.position = 'absolute';
@@ -55,8 +57,8 @@ class Origin {
     set_offsets(left, top) {
         this.#left_offset = left;
         this.#top_offset = top;
-        this.#element.style.left = `${this.#left_offset}px`;
-        this.#element.style.top = `${this.#top_offset}px`;
+        this.#element.style.left = `${this.#left_offset * this.#canvas.scale + (50 * this.#canvas.scale - 50)}px`;
+        this.#element.style.top = `${this.#top_offset * this.#canvas.scale + (50 * this.#canvas.scale - 50)}px`;
     }
 }
 
@@ -82,15 +84,15 @@ class Canvas {
         this.#element.style.position = 'relative';
         this.#width = 1000;
         this.#height = 1000;
-        this.#element.style.width = `${this.#width}px`;
-        this.#element.style.height = `${this.#width}px`;
+        this.#element.style.width = `${this.#width * this.scale}px`;
+        this.#element.style.height = `${this.#height * this.scale}px`;
 
         this.#element.style.backgroundColor = '#CCCCCC';
         this.#margin = 50;
-        this.#element.style.marginRight = `${this.#margin}px`;
-        this.#element.style.marginBottom = `${this.#margin}px`;
-        this.#element.style.marginTop = `${this.#margin}px`;
-        this.#element.style.marginLeft = `${this.#margin}px`;
+        this.#element.style.marginRight = `${this.#margin * this.scale}px`;
+        this.#element.style.marginBottom = `${this.#margin * this.scale}px`;
+        this.#element.style.marginTop = `${this.#margin * this.scale}px`;
+        this.#element.style.marginLeft = `${this.#margin * this.scale}px`;
         this.#parent_task_for_binding_chosen = null;
 
         this.#rulers = {
@@ -102,7 +104,7 @@ class Canvas {
         this.#cards_relations = {};
         this.#task_id_card_id__dict = {};
 
-        this.#origin = new Origin();
+        this.#origin = new Origin(this);
         this.#element.appendChild(this.#origin.element);
 
         this.#element.addEventListener('contextmenu', (evt) => {
@@ -110,7 +112,6 @@ class Canvas {
 
             const tag_closest = evt.target.closest('.card .tag');
             if (tag_closest) {
-                console.log('context on tag')
                 const current_card_elem = tag_closest.closest('.card');
                 const task_mindmap_id = current_card_elem.dataset.taskMindMapId;
                 const current_card = this.#cards[task_mindmap_id]
@@ -274,9 +275,7 @@ class Canvas {
                                 if ('success' in json_obj) {
                                     if (json_obj['success'] === true) {
                                         this.remove_card(task_mindmap_id)
-                                        // evt.target.parentElement.removeChild(evt.target)
                                         context_menu.destroy()
-                                        // window.location.reload()
                                     }
                                 }
                             }, csrfToken)
@@ -289,7 +288,6 @@ class Canvas {
                 context_menu.add_action(
                     new ContextMenuAction('Создать задачу', () => {
                         window.location.href = `/tasks/create?project_id=${project_id}`
-                        // window.location.href = `/tasks/add_to_project/${project_id}/`
                     })
                 )
             }
@@ -338,7 +336,7 @@ class Canvas {
     }
 
     add_relation(parent_card, child_card, curve) {
-        const relation = new CardsRelation(parent_card, child_card, curve)
+        const relation = new CardsRelation(this, parent_card, child_card, curve)
         this.#cards_relations[`${parent_card.pk}_${child_card.pk}`] = relation
         this.#origin.relations_container.appendChild(relation.element)
     }
@@ -353,6 +351,16 @@ class Canvas {
         for (const key in this.#cards_relations) {
             this.#cards_relations[key].redraw()
         }
+    }
+
+    redraw_cards() {
+        for (const key in this.#cards) {
+            this.#cards[key].redraw()
+        }
+    }
+
+    get_status_object_by_title(title) {
+        return get_dict_from_list_by_key_val(this.#statuses,'title', title, null)
     }
 
     load_cards(cards_list, tasks_parent_child) {
@@ -381,7 +389,6 @@ class Canvas {
             }
 
         }
-        this.refresh_view();
     }
 
     load_tags(tags_json_list) {
@@ -393,22 +400,10 @@ class Canvas {
     }
 
     remove_card(task_mindmap_id) {
-        console.log('Карточка', task_mindmap_id, 'удаляется');
         const target_card = this.#cards[task_mindmap_id];
         this.#origin.cards_container.removeChild(target_card.element)
         delete this.#cards[task_mindmap_id];
-        console.log('Карточка', task_mindmap_id, 'удалена');
     }
-
-    // remove_tag(task_mindmap_id) {
-    //     console.log('Карточка', task_mindmap_id);
-    //     const target_card = this.#cards[task_mindmap_id];
-    //     const task_pk = target_card.data.task.pk;
-    //     console.log('Задача', task_pk);
-    //     this.#origin.cards_container.removeChild(target_card.element)
-    //     delete this.#cards[task_mindmap_id];
-    //     console.log('Карточка', task_mindmap_id, 'удалена');
-    // }
 
     refresh_view() {
         let top_border = -500;
@@ -426,13 +421,14 @@ class Canvas {
 
         this.set_dimensions(right_border - left_border, bottom_border - top_border);
         this.#origin.set_offsets(-left_border, -top_border);
-
         this.redraw_rulers()
+    }
 
+    get scale(){
+        return this.#app.scale;
     }
 
     redraw_rulers() {
-        console.log('redraw_rulers')
         this.#rulers.h.redraw('width', -this.#origin.left_offset - 50, this.#width - this.#origin.left_offset + 50)
         this.#rulers.v.redraw('height', -this.#origin.top_offset - 50, this.#height - this.#origin.top_offset + 50)
     }
@@ -448,8 +444,8 @@ class Canvas {
     set_dimensions(width, height) {
         this.#width = width;
         this.#height = height;
-        this.#element.style.width = `${this.#width}px`;
-        this.#element.style.height = `${this.#height}px`;
+        this.#element.style.width = `${this.#width * this.scale}px`;
+        this.#element.style.height = `${this.#height * this.scale}px`;
         this.#element.style.marginLeft = `${this.#margin}px`;
         this.#element.style.marginTop = `${this.#margin}px`;
     }

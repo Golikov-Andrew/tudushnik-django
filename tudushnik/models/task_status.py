@@ -17,6 +17,8 @@ STATUS_CHOICES = [
 
 class TaskStatus(models.Model):
     title = models.CharField(max_length=50, unique=True, choices=STATUS_CHOICES)
+    color = models.CharField(max_length=7, default='#FFFFFF')
+    text_color = models.CharField(max_length=7, default='#000000')
 
     def __str__(self):
         return self.get_title_display()
@@ -29,5 +31,7 @@ class TaskStatus(models.Model):
     def to_json(self):
         return {
             'pk': self.pk,
-            'title': self.get_title_display()
+            'title': self.get_title_display(),
+            'color': self.color,
+            'text_color': self.text_color,
         }

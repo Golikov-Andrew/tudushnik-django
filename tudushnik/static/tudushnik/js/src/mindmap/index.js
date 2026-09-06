@@ -10,6 +10,6 @@ mindmap_viewport_object.init(
     data['tags'],
     data['statuses']
 );
-window.MINDMAP_PROJECT_ID = data.project_id;
 
+window.MINDMAP_PROJECT_ID = data.project_id;
 window.mindmap_viewport_object = mindmap_viewport_object
